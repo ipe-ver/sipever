@@ -12,7 +12,7 @@ class CatDependenciasTableSeeder extends Seeder
      */
     public function run()
     {
-        $filename = str_replace("\\", "/", public_path('seed_xls\cat_dependencias.sql'));
-        dump(\DB::unprepared(file_get_contents($filename)));  
+        //$filename = str_replace("\\", "/", public_path('seed_xls\cat_dependencias.sql'));
+        //dump(\DB::unprepared(file_get_contents($filename)));  
     }
 }

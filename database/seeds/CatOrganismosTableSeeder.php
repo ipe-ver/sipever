@@ -14,7 +14,7 @@ class CatOrganismosTableSeeder extends Seeder
     public function run()
     {
         
-        Excel::load('public'.DIRECTORY_SEPARATOR.'seed_xls'.DIRECTORY_SEPARATOR.'cat_organismos.xlsx', function($reader) {
+       /* Excel::load('public'.DIRECTORY_SEPARATOR.'seed_xls'.DIRECTORY_SEPARATOR.'cat_organismos.xlsx', function($reader) {
  
             foreach ($reader->get() as $organismo) {
                 Organismo::create([
@@ -52,5 +52,5 @@ class CatOrganismosTableSeeder extends Seeder
             }
         });
         return Organismo::all();  
-    }
+    }*/
 }

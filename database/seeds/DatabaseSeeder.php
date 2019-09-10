@@ -52,10 +52,10 @@ class DatabaseSeeder extends Seeder
         $this->call(CatOficinasTableSeeder::class);
 
         // Seed Organismos
-        $this->call(CatOrganismosTableSeeder::class);
+        //$this->call(CatOrganismosTableSeeder::class);
 
         // Seed Dependencias
-        $this->call(CatDependenciasTableSeeder::class);
+        //$this->call(CatDependenciasTableSeeder::class);
 
         // Seed Dependencias
         $this->call(CatArticulosTableSeeder::class);

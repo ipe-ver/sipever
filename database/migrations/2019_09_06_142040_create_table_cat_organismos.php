@@ -43,14 +43,14 @@ class CreateTableCatOrganismos extends Migration
             $table->boolean('estatus')->default(1);
 
 
-            $table->integer('id_estado')->unsigned()->nullable();
-            $table->foreign('id_estado')->references('id')->on('cat_estados');
+           // $table->integer('id_estado')->unsigned()->nullable();
+            //$table->foreign('id_estado')->references('id')->on('cat_estados');
 
-            $table->integer('id_municipio')->unsigned()->nullable();
-            $table->foreign('id_municipio')->references('id')->on('cat_municipios');
+            //$table->integer('id_municipio')->unsigned()->nullable();
+            //$table->foreign('id_municipio')->references('id')->on('cat_municipios');
 
-            $table->integer('id_localidad')->unsigned()->nullable();
-            $table->foreign('id_localidad')->references('id')->on('cat_localidades');
+            //$table->integer('id_localidad')->unsigned()->nullable();
+            //$table->foreign('id_localidad')->references('id')->on('cat_localidades');
 
 
             $table->timestamps();

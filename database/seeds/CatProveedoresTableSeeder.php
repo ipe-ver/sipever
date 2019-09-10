@@ -1,0 +1,53 @@
+<?php
+
+use Illuminate\Database\Seeder;
+use App\Model\Catalogos\Proveedor;
+
+class CatProveedoresTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $proveedores = array(
+            ['id' => '1', 'no_proveedor' => '891','rfc'=>'OFI920113KZ8','nombre'=>'OFIX S.A DE C.V.','calle'=>'URANO','numero'=>'585','colonia'=>'YLANG YLANG','cp'=>'94298','ciudad'=>'BOCA DEL RIO','estado'=>'','telefono'=>'923 22 70','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '2', 'no_proveedor' => '963','rfc'=>'FCV830518TXA','nombre'=>'FOTOCONTINO DE VERACRUZ, S.A. DE C.V.','calle'=>'PLAZA CRISTAL LOCAL','numero'=>'7','colonia'=>'FRANCISCO VILLA','cp'=>'91930','ciudad'=>'XALAPA','estado'=>'','telefono'=>'8152557','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '3', 'no_proveedor' => '1146','rfc'=>'PCE9104014L7','nombre'=>'PROLIMP DEL CENTRO, S.A. DE C.V.','calle'=>'ADOLFO RUIZ CORTINES','numero'=>'','colonia'=>'REPRESA DEL CARMEN','cp'=>'91000','ciudad'=>'XALAPA','estado'=>'','telefono'=>'8904077','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '4', 'no_proveedor' => '1442','rfc'=>'SOS950921DF9','nombre'=>'S.O.S. EN COMPUTACION, S.A. DE C.V.','calle'=>'20 DE NOVIEMBRE','numero'=>'3206','colonia'=>'REFORMA','cp'=>'91919','ciudad'=>'VERACRUZ','estado'=>'','telefono'=>'9379212','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '5', 'no_proveedor' => '2625','rfc'=>'ACO961216RBA','nombre'=>'ACOSA (ALTA COMERCIALIZACION EN OFICINAS S.A. DE C.V.)','calle'=>'AV. 20 DE NOV. OTE.','numero'=>'374','colonia'=>'CENTRO','cp'=>'91000','ciudad'=>'XALAPA','estado'=>'','telefono'=>'841 62 72','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '6', 'no_proveedor' => '11154','rfc'=>'CUSG570927Q20','nombre'=>'ALFONSO CRUZ SAAVEDRA RECOMTEL','calle'=>'JOSE ANTONIO ARIZA','numero'=>'59','colonia'=>'LIBERTAD','cp'=>'91080','ciudad'=>'XALAPA','estado'=>'','telefono'=>'1867094','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '7', 'no_proveedor' => '12057','rfc'=>'MEG0202136S8','nombre'=>'MUEBLES Y EQUIPOS DEL GOLFO S.A. DE C.V.','calle'=>'JOSE MA. MORELOS Y PAVON','numero'=>'51','colonia'=>'CENTRO','cp'=>'91000','ciudad'=>'XALAPA','estado'=>'','telefono'=>'8121886','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '8', 'no_proveedor' => '13315','rfc'=>'ROSA680225E96','nombre'=>'ROJAS SANCHEZ ALMA LETICIA','calle'=>'FACULTAD DE HUMANIDADES','numero'=>'8','colonia'=>'JJ PANES','cp'=>'91050','ciudad'=>'XALAPA','estado'=>'','telefono'=>'8173521','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '9', 'no_proveedor' => '14127','rfc'=>'GAVC6511138K2','nombre'=>'CARLOS GARCIA VELOZ','calle'=>'MARTIRES 28 DE AGOSTO','numero'=>'258','colonia'=>'FRANCISCO FERRER GUARDIA','cp'=>'91020','ciudad'=>'XALAPA','estado'=>'','telefono'=>'890 35 37','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '10', 'no_proveedor' => '16844','rfc'=>'UAGS640225HS6','nombre'=>'SANDRA USCANGA GARCIA','calle'=>'CALLE 2','numero'=>'104','colonia'=>'LAZARO CARDENAS','cp'=>'91180','ciudad'=>'XALAPA','estado'=>'','telefono'=>'811 66 29','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '11', 'no_proveedor' => '17651','rfc'=>'PALS701212RC6','nombre'=>'SUSANA GUADALUPE PAZ LAISEQUILLA','calle'=>'JUAREZ','numero'=>'159','colonia'=>'CENTRO','cp'=>'91000','ciudad'=>'XALAPA','estado'=>'','telefono'=>'8185503','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '12', 'no_proveedor' => '19177','rfc'=>'CSM970122TE9','nombre'=>'CARD SYSTEMS DE MEXICO, S.A. DE C.V.','calle'=>'GONZALEZ GALLO','numero'=>'2770','colonia'=>'MIRADOR EL ALAMO','cp'=>'44490','ciudad'=>'GUADALAJARA','estado'=>'','telefono'=>'13336358508','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '13', 'no_proveedor' => '19286','rfc'=>'CARR580830','nombre'=>'CARMONA RODRIGUEZ RICARDO ADRIAN','calle'=>'AZUCENA','numero'=>'9','colonia'=>'HERON PROAL','cp'=>'91110','ciudad'=>'XALAPA','estado'=>'','telefono'=>'1925740','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '14', 'no_proveedor' => '24024','rfc'=>'SIV960830D65','nombre'=>'SERVICIOS DE INFORMATICA Y VARIABLES EMPRESA INTEGRADORA, S.A. DE C.V.','calle'=>'REBSAMEN','numero'=>'112A','colonia'=>'MARTIRES DE CHICAGO','cp'=>'91090','ciudad'=>'XALAPA','estado'=>'','telefono'=>'8188288','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '15', 'no_proveedor' => '24800','rfc'=>'CFI951116J25','nombre'=>'COMBUSTIBLES FINOS, S.A. DE C.V.','calle'=>'ZARAGOZA','numero'=>'176','colonia'=>'CENTRO','cp'=>'91500','ciudad'=>'COATEPEC','estado'=>'','telefono'=>'8161424','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '16', 'no_proveedor' => '28492','rfc'=>'MOAT7502112PC1','nombre'=>'MORALES AVILA MARIA TERESA','calle'=>'LIBERTAD NUM. 2','numero'=>'2','colonia'=>'CENTRO','cp'=>'91000','ciudad'=>'XALAPA','estado'=>'','telefono'=>'8151996','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '17', 'no_proveedor' => '28675','rfc'=>'ECG070126KF6','nombre'=>'ESPECIALIDADES CLIMATICAS DEL GOLFO, S.A. DE C.V.','calle'=>'REVILLAGIGEDO','numero'=>'3493','colonia'=>'CENTRO','cp'=>'91700','ciudad'=>'VERACRUZ','estado'=>'','telefono'=>'229 1781956','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '18', 'no_proveedor' => '32725','rfc'=>'MOAE680113576','nombre'=>'MORALES AVILA ELISEO','calle'=>'REVOLUCION','numero'=>'128','colonia'=>'CENTRO','cp'=>'91000','ciudad'=>'XALAPA','estado'=>'','telefono'=>'818 78 48','ext'=>'','fax'=>'817 53 63','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '19', 'no_proveedor' => '34144','rfc'=>'MARE8705201Y5','nombre'=>'EDGAR MARTIN DEL CAMPO ROJAS','calle'=>'20 DE NOVIEMBRE','numero'=>'426','colonia'=>'CENTRO','cp'=>'91000','ciudad'=>'XALAPA','estado'=>'','telefono'=>'8124941','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '20', 'no_proveedor' => '34783','rfc'=>'POPE791019597','nombre'=>'ELISA PONCE PEREZ','calle'=>'VOLCAN DE LA UNION','numero'=>'200','colonia'=>'CIUDAD OLMECA','cp'=>'96535','ciudad'=>'COATZACOALCOS','estado'=>'','telefono'=>'1521328','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '21', 'no_proveedor' => '35399','rfc'=>'CGC070209173','nombre'=>'CARCOT GRUPO COMERCIAL S,A. DE C.V.','calle'=>'NICARAGUA','numero'=>'77-A','colonia'=>'REFORMA','cp'=>'91080','ciudad'=>'XALAPA','estado'=>'','telefono'=>'812 38 55','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '22', 'no_proveedor' => '37094','rfc'=>'UIX 080805AK2','nombre'=>'UNIFORMES INDUSTRIALES XALAPA','calle'=>'JUAREZ','numero'=>'113','colonia'=>'CENTRO','cp'=>'91000','ciudad'=>'XALAPA','estado'=>'','telefono'=>'8186275','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '23', 'no_proveedor' => '37566','rfc'=>'NUCC740208B48','nombre'=>'CYNTHIA YOLANDA NUÑEZ CORTES','calle'=>'AV. CENTRAL','numero'=>'9','colonia'=>'FERROCARRILERA','cp'=>'91120','ciudad'=>'XALAPA','estado'=>'','telefono'=>'8400721','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '24', 'no_proveedor' => '38483','rfc'=>'BALH770425CT2','nombre'=>'HBL - ACABADOS EN TABLAROCA, ALUMINIO Y CRISTAL TEMPLADO (HECTOR BAIZABAL DE LA LUZ)','calle'=>'ANTONIO CHEDRAUI CARAM','numero'=>'450B','colonia'=>'CASABLANCA','cp'=>'91155','ciudad'=>'XALAPA','estado'=>'','telefono'=>'834 01 51','ext'=>'','fax'=>'','celular'=>'2287 51 17 66','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '25', 'no_proveedor' => '38781','rfc'=>'COAJ761228ULO','nombre'=>'OCHOA ARAUJO JUAN MANUEL','calle'=>'VICTORIA','numero'=>'8','colonia'=>'CENTRO','cp'=>'91000','ciudad'=>'XALAPA','estado'=>'','telefono'=>'8177850','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '26', 'no_proveedor' => '39688','rfc'=>'SOSB550516284','nombre'=>'LEONOR MONSERRAT GONZALEZ SOBRINO','calle'=>'VENUSTIANO CARRANZA','numero'=>'74B','colonia'=>'CENTRO','cp'=>'91000','ciudad'=>'XALAPA','estado'=>'','telefono'=>'8412168','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '27', 'no_proveedor' => '41345','rfc'=>'GALV591209GD8','nombre'=>'VICTOR GARCIA LOPEZ','calle'=>'CIRCUITO JACARANDAS','numero'=>'22','colonia'=>'EL CAFETAL','cp'=>'91157','ciudad'=>'XALAPA','estado'=>'','telefono'=>'8900387','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '28', 'no_proveedor' => '42392','rfc'=>'SIN100213UW9','nombre'=>'SINWERGIA INTEGRACION, S.A. DE C.V.','calle'=>'JM PEÑA','numero'=>'44-2','colonia'=>'FAROS','cp'=>'91709','ciudad'=>'VERACRUZ','estado'=>'','telefono'=>'9236600','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '29', 'no_proveedor' => '43174','rfc'=>'HEAC851203DJ8','nombre'=>'CARLOS ALBERTO HERNANDEZ ABURTO','calle'=>'BENITO JUAREZ','numero'=>'53','colonia'=>'CENTRO','cp'=>'91300','ciudad'=>'BANDERILLA','estado'=>'','telefono'=>'811 03 33','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '30', 'no_proveedor' => '43560','rfc'=>'RINO690518QD3','nombre'=>'OSCAR RIVERA NORIEGA','calle'=>'RETORNO LOMA ESCONDIDA','numero'=>'19B','colonia'=>'LOMAS VERDES','cp'=>'91098','ciudad'=>'XALAPA','estado'=>'','telefono'=>'819 39 88','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1'],
+            ['id' => '31', 'no_proveedor' => '46659','rfc'=>'TLO030313JE8','nombre'=>'TRANSPORTES LOCK S.A. DE C.V.','calle'=>'KM 1.5 CARR. EL TEJAR','numero'=>'','colonia'=>'GRANJAS BOTICARIA','cp'=>'0','ciudad'=>'VERACRUZ','estado'=>'','telefono'=>'','ext'=>'','fax'=>'','celular'=>'','correo_electronico'=>'','estatus'=>'1']
+		);
+
+		foreach ($proveedores as $proveedor) {
+			Proveedor::create($proveedor);
+		}
+    }
+}

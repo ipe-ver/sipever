@@ -46,6 +46,36 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.
 Route::group(['middleware' => ['auth'], 'prefix' => 'compras', 'as' => 'compras.'], function() {
     Route::get('/', function() { return view('compras.index'); })->name('index');
 });
+
+Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'expediente.'], function(){
+	
+	// MOSTRAR LA PAGINA PRINCIPAL DEL EXPEDIENTE ELECTRONICO
+	Route::get('/', function () { return view('expediente.index'); })->name('index');
+
+	// DIRECCIONA PARA AGREGAR FORMULARIO DEL ACTIVO O PENSIONADO
+	Route::get('add', 'Expediente\ExpedienteController@create');
+	
+	// INSERTAR VALORES EN EL FORMULARIO
+	Route::post('/actpen', 'Expediente\ExpedienteController@store');
+
+	// MOSTRAR LA INFORMACION DE LOS ACTIVOS Y PENSIONADOS EN LA TABLA DE LA PAGINA PRINCIPAL
+	Route::get('get_expediente','Expediente\ExpedienteController@getExpedientes');
+
+	// MOSTRAR EL DETALLE DEL ACTIVO O PENSIONADO DESDE LA TABLA DE LA PAGINA PRINCIPAL
+	Route::get('/{id}', 'Expediente\ExpedienteController@show');
+
+	//EDITAR REGISTRO
+	Route::get('/edit/{id}','Expediente\ExpedienteController@edit'); //LLeva al formulario
+	Route::put('/update/{id}', 'Expediente\ExpedienteController@update'); //Edita la información
+
+	//Route::get('/organismos/{idOrganismo}', 'Expediente\ExpedienteController@getDependencias');
+
+	Route::get('{id}/plaza','Expediente\ExpedienteController@plaza'); //LLeva al formulario
+
+	
+});
+
+//$router->get('import', 'ImportController@import');
  
 
 

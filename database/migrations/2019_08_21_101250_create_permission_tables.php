@@ -30,10 +30,10 @@ class CreatePermissionTables extends Migration
             $table->timestamps();
         });*/
 
-        /*Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames) {
-            $table->unsignedInteger('permission_id', 100);
+       /* Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames) {
+            $table->unsignedInteger('permission_id');
 
-            $table->string('model_type', 100);
+            $table->string('model_type');
             $table->unsignedBigInteger($columnNames['model_morph_key']);
             $table->index([$columnNames['model_morph_key'], 'model_type', ]);
 
@@ -49,7 +49,7 @@ class CreatePermissionTables extends Migration
         Schema::create($tableNames['model_has_roles'], function (Blueprint $table) use ($tableNames, $columnNames) {
             $table->unsignedInteger('role_id');
 
-            $table->string('model_type', 100);
+            $table->string('model_type');
             $table->unsignedBigInteger($columnNames['model_morph_key']);
             $table->index([$columnNames['model_morph_key'], 'model_type', ]);
 
@@ -60,9 +60,8 @@ class CreatePermissionTables extends Migration
 
             $table->primary(['role_id', $columnNames['model_morph_key'], 'model_type'],
                     'model_has_roles_role_model_type_primary');
-        });
+        });*/
 
-        */
         Schema::create($tableNames['role_has_permissions'], function (Blueprint $table) use ($tableNames) {
             $table->unsignedInteger('permission_id');
             $table->unsignedInteger('role_id');
@@ -94,9 +93,8 @@ class CreatePermissionTables extends Migration
     {
         $tableNames = config('permission.table_names');
 
-        //Schema::drop($tableNames['role_has_permissions']);
-        
-        //Schema::drop($tableNames['model_has_roles']);
+        Schema::drop($tableNames['role_has_permissions']);
+       // Schema::drop($tableNames['model_has_roles']);
         //Schema::drop($tableNames['model_has_permissions']);
         Schema::drop($tableNames['roles']);
         Schema::drop($tableNames['permissions']);

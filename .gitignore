@@ -2,6 +2,8 @@
 node_modules/
 npm-debug.log
 
+documentacion/Diagramas de robustez/*.drawio
+
 # Laravel 4 specific
 bootstrap/compiled.php
 app/storage/

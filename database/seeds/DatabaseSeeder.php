@@ -42,9 +42,6 @@ class DatabaseSeeder extends Seeder
         // Seed Unidades de Almacén
         $this->call(CatUnidadesAlmacenTableSeeder::class);
 
-        // Seed Ubpp
-        $this->call(CatUbppTableSeeder::class);
-
         // Seed Proveedores
         $this->call(CatProveedoresTableSeeder::class);
 

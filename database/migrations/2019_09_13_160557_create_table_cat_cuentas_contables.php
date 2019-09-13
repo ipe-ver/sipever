@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableCatUbpp extends Migration
+class CreateTableCatCuentasContables extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,17 @@ class CreateTableCatUbpp extends Migration
      */
     public function up()
     {
-        Schema::create('cat_ubpp', function (Blueprint $table) {
+        Schema::create('cat_cuentas_contables', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('clave',4);
+            $table->char('cta',4);
+            $table->char('scta',4);
+            $table->char('sscta',4);
             $table->string('nombre');
+            $table->string('ctaarmo')->nullable();
+            $table->string('nomarmo')->nullable();
+            $table->char('grupo',1)->nullable();
             $table->boolean('estatus')->default(1);
+
             $table->timestamps();
         });
     }
@@ -29,6 +35,7 @@ class CreateTableCatUbpp extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cat_ubpp');
+        Schema::dropIfExists('cat_cuentas_contables');
     }
 }
+

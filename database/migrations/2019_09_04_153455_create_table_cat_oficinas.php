@@ -15,12 +15,11 @@ class CreateTableCatOficinas extends Migration
     {
         Schema::create('cat_oficinas', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('clave',4);
-            $table->string('nombre');
+            $table->char('ubpp',4);
+            $table->char('oficina',2);
+            $table->string('descripcion');
+            $table->char('subdir',4);
             $table->boolean('estatus')->default(1);
-
-            $table->integer('id_ubpp')->unsigned()->nullable();
-            $table->foreign('id_ubpp')->references('id')->on('cat_ubpp');
             
             $table->timestamps();
         }); 
@@ -36,3 +35,5 @@ class CreateTableCatOficinas extends Migration
         Schema::dropIfExists('cat_oficinas');
     }
 }
+
+

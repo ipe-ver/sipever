@@ -4,44 +4,107 @@
 
 @section('content')
 
-    <div class="box-body">
-        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
-                <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
-            </ol>
-            <div class="carousel-inner">
-                <div class="item active">
-                    <img src="http://placehold.it/900x500/39CCCC/ffffff&text=I+Love+Bootstrap" alt="First slide">
+<div class="row">
+    <div class="col-md-5">
+        <div class="box box-info">
+            <div class="box-header with-border">
+      
+                <i class="fa fa-bullhorn"></i>
 
-                    <div class="carousel-caption">
-                        First Slide
-                    </div>
-                </div>
-                <div class="item">
-                    <img src="http://placehold.it/900x500/3c8dbc/ffffff&text=I+Love+Bootstrap" alt="Second slide">
+                <h3 class="box-title">Valores del Mes</h3>
+            </div>
+      
+            <div class="box-body">
+                <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                        <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
+                        <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
+                    </ol>
 
-                    <div class="carousel-caption">
-                        Second Slide
-                    </div>
-                </div>
-                <div class="item">
-                    <img src="http://placehold.it/900x500/f39c12/ffffff&text=I+Love+Bootstrap" alt="Third slide">
+                    <div class="carousel-inner">
+                        <div class="item active">
+                            <img src="{!! url('') !!}/img_system/CARTEL-AGOSTO.jpg" style="width: 800px; height: 450px;">	
+                        </div>
+                        <div class="item">
+                            <img src="{!! url('') !!}/img_system/CARTEL-VOCACION-JULIO.jpg" style="width: 800px; height: 450px;">	
+                        </div>
 
-                    <div class="carousel-caption">
-                        Third Slide
+                        <div class="item">
+                            <img src="{!! url('') !!}/img_system/CARTEL-FEBRERO.jpg" style="width: 800px; height: 450px;">	
+                        </div>
                     </div>
+
+                    <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                        <span class="fa fa-angle-left"></span>
+                    </a>
+
+                    <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                        <span class="fa fa-angle-right"></span>
+                    </a>
+
                 </div>
             </div>
-            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
-                <span class="fa fa-angle-left"></span>
-            </a>
-            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
-                <span class="fa fa-angle-right"></span>
-            </a>
         </div>
     </div>
+  <!-- /.col -->
+
+  <div class="col-md-5">
+    <div class="box box-default">
+      <div class="box-header with-border">
+        <i class="fa fa-bullhorn"></i>
+
+        <h3 class="box-title">Callouts</h3>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+        
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                <h3>Noticias!</h3>
+
+                <p>New Orders</p>
+                </div>
+                <div class="icon">
+                <i class="ion ion-bag"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+
+          
+       
+            <div class="small-box bg-green">
+            <div class="inner">
+             <h3>Citas en Linea</h3>
+
+              <p>Bounce Rate</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+
+        
+        
+      </div>
+      <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+<!-- END ALERTS AND CALLOUTS -->
+
+
+
+
+
+
+
+
+    
            
 	
 @endsection

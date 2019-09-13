@@ -57,10 +57,24 @@
 						<!-- User Account Menu -->
 						<li class="dropdown user user-menu">
 	                        @if (Auth::guest())
+					
+								<li>
+									<form action="#" method="get" class="navbar-form dark">
+										<div class="input-group">
+											<input type="text" name="q" class="form-control" placeholder="Buscar Extensiones...">
+											<span class="input-group-btn">
+												<button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+												</button>
+											</span>
+										</div>
+									</form>
+								</li>
+
 	                            <li><a href="{{ route('login') }}">
 									<i class="fa fa-lock" aria-hidden="true"></i>
 									 Iniciar sesión</a>
 								</li>
+								
 	                            {{--<li><a href="{{route('register')}}">Register</a></li>--}}
 	                        @else
 	                            <li class="dropdown">
@@ -171,10 +185,69 @@
 				<!-- Sidebar Menu -->
 
 				<ul class="sidebar-menu" data-widget="tree">
+				@if(!Auth::user())
 
-					<li class=""><a href=""><i class="fa fa-link"></i> <span>INTRANET</span></a></li>
+					<!-- MODULO DE INTRANET -->	
+					<li class=""><a href=""><i class="fa fa-home"></i> <span>INTRANET</span></a></li>
 
-							
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-user"></i>
+							<span>NOSOTROS</span>
+							<span class="pull-right-container">
+							<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="UI/general.html"><i class="fa fa-spinner"></i> Marco Histórico</a></li>
+							<li><a href="UI/icons.html"><i class="fa fa-spinner"></i> Misión - Visión - Filosofía</a></li>
+							<li><a href="UI/buttons.html"><i class="fa fa-spinner"></i> Información Institucional</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Derechos y Obligaciones</a></li>
+							<li><a href="UI/timeline.html"><i class="fa fa-spinner"></i> Organigrama</a></li>
+							<li><a href="UI/modals.html"><i class="fa fa-spinner"></i> Marco Legal</a></li>
+							<li><a href="UI/modals.html"><i class="fa fa-spinner"></i> Directorio Teléfonico</a></li>
+						</ul>
+					</li>
+
+						<!-- MODULO DE SERVICIOS -->	
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-tags"></i>
+							<span>SERVICIOS</span>
+							<span class="pull-right-container">
+							<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="UI/general.html"><i class="fa fa-spinner"></i> Pensionados y Jubilados</a></li>
+							<li><a href="UI/icons.html"><i class="fa fa-spinner"></i> Afiliación y Vigencia</a></li>
+							<li><a href="UI/buttons.html"><i class="fa fa-spinner"></i> Préstamos</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Devoluciones</a></li>
+							<li><a href="UI/timeline.html"><i class="fa fa-spinner"></i> Otras Prestaciones</a></li>
+							<li><a href="UI/modals.html"><i class="fa fa-spinner"></i> Marco Legal</a></li>
+							<li><a href="UI/modals.html"><i class="fa fa-spinner"></i> Cambio de Forma de Pago</a></li>
+						</ul>
+					</li>
+
+					<!-- MODULO DE TRANSPARENCIA -->	
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-link"></i>
+							<span>TRANSPARENCIA</span>
+							<span class="pull-right-container">
+							<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="UI/general.html"><i class="fa fa-spinner"></i> Ley General</a></li>
+							<li><a href="UI/icons.html"><i class="fa fa-spinner"></i> Ley 875</a></li>
+							<li><a href="UI/buttons.html"><i class="fa fa-spinner"></i> Reserva Técnica</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> S.A.R</a></li>
+							<li><a href="UI/timeline.html"><i class="fa fa-spinner"></i> Ley 848</a></li>
+						</ul>
+					</li>
+
+					@endif			
 				</ul>
 
 

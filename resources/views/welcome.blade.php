@@ -6,7 +6,7 @@
 
 <div class="row">
     <div class="col-md-5">
-        <div class="box box-info">
+        <div class="box box-warning">
             <div class="box-header with-border">
       
                 <i class="fa fa-bullhorn"></i>
@@ -24,14 +24,23 @@
 
                     <div class="carousel-inner">
                         <div class="item active">
-                            <img src="{!! url('') !!}/img_system/CARTEL-AGOSTO.jpg" style="width: 800px; height: 450px;">	
+                            <img src="{!! url('') !!}/img_system/CARTEL-AGOSTO.jpg" style="width: 800px; height: 450px;">
+                            <div class="carousel-caption">
+                                <h3 style="color:black;"><strong>CÓDIGO DE CONFIDENCIALIDAD</strong></h3>
+                            </div>	
                         </div>
                         <div class="item">
-                            <img src="{!! url('') !!}/img_system/CARTEL-VOCACION-JULIO.jpg" style="width: 800px; height: 450px;">	
+                            <img src="{!! url('') !!}/img_system/CARTEL-VOCACION-JULIO.jpg" style="width: 800px; height: 450px;">
+                            <div class="carousel-caption">
+                                <h3 style="color:black;"><strong>VOCACIÓN DE SERVICIO</strong></h3>
+                            </div>	
                         </div>
 
                         <div class="item">
-                            <img src="{!! url('') !!}/img_system/CARTEL-FEBRERO.jpg" style="width: 800px; height: 450px;">	
+                            <img src="{!! url('') !!}/img_system/CARTEL-FEBRERO.jpg" style="width: 800px; height: 450px;">
+                            <div class="carousel-caption">
+                                <h3 style="color:black;"><strong>ÉTICA PÚBLICA</strong></h3>
+                            </div>	
                         </div>
                     </div>
 
@@ -42,15 +51,15 @@
                     <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
                         <span class="fa fa-angle-right"></span>
                     </a>
-
                 </div>
+                
             </div>
         </div>
     </div>
   <!-- /.col -->
 
   <div class="col-md-5">
-    <div class="box box-default">
+    <div class="box box-warning">
       <div class="box-header with-border">
         <i class="fa fa-bullhorn"></i>
 

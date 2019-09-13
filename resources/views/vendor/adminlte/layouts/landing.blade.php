@@ -219,13 +219,10 @@
 							</span>
 						</a>
 						<ul class="treeview-menu">
-							<li><a href="UI/general.html"><i class="fa fa-spinner"></i> Pensionados y Jubilados</a></li>
-							<li><a href="UI/icons.html"><i class="fa fa-spinner"></i> Afiliación y Vigencia</a></li>
-							<li><a href="UI/buttons.html"><i class="fa fa-spinner"></i> Préstamos</a></li>
-							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Devoluciones</a></li>
-							<li><a href="UI/timeline.html"><i class="fa fa-spinner"></i> Otras Prestaciones</a></li>
-							<li><a href="UI/modals.html"><i class="fa fa-spinner"></i> Marco Legal</a></li>
-							<li><a href="UI/modals.html"><i class="fa fa-spinner"></i> Cambio de Forma de Pago</a></li>
+							<li><a href="UI/general.html"><i class="fa fa-spinner"></i> Dirección General</a></li>
+							<li><a href="UI/icons.html"><i class="fa fa-spinner"></i> Bienes Inmuebles</a></li>
+							<li><a href="UI/buttons.html"><i class="fa fa-spinner"></i> Unidad de Género</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Unidad de Transparencia</a></li>
 						</ul>
 					</li>
 
@@ -246,6 +243,8 @@
 							<li><a href="UI/timeline.html"><i class="fa fa-spinner"></i> Ley 848</a></li>
 						</ul>
 					</li>
+
+					
 
 					@endif			
 				</ul>

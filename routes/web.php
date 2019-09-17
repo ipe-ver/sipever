@@ -24,6 +24,8 @@ Route::group(['middleware' => 'auth'], function () {
     #adminlte_routes
 });
 
+Route::get('get_extensiones','Directorio\ExtensionController@getExtensiones');
+
 
 
 /*Route::group(['middleware' => ['role:admin']], function () {

@@ -44,99 +44,38 @@
 				<span class="logo-lg"><b>IPE</b></span>
 			</a>
 
-			<!-- Header Navbar -->
 			<nav class="navbar navbar-static-top" role="navigation">
-				<!-- Sidebar toggle button-->
-				<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+				<a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
 					<span class="sr-only">Toggle navigation</span>
 				</a>
-				<!-- Navbar Right Menu -->
 				<div class="navbar-custom-menu">
-					<ul class="nav navbar-nav">					
-
-						<!-- User Account Menu -->
+					<ul class="nav navbar-nav">
 						<li class="dropdown user user-menu">
-	                        @if (Auth::guest())
-					
-								<li>
-									<form action="#" method="get" class="navbar-form dark">
-										<div class="input-group">
-											<input type="text" name="q" class="form-control" placeholder="Buscar Extensiones...">
-											<span class="input-group-btn">
-												<button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-												</button>
-											</span>
-										</div>
-									</form>
-								</li>
-
-	                            <li><a href="{{ route('login') }}">
-									<i class="fa fa-lock" aria-hidden="true"></i>
-									 Iniciar sesión</a>
-								</li>
-								
-	                            {{--<li><a href="{{route('register')}}">Register</a></li>--}}
-	                        @else
-	                            <li class="dropdown">
-	                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-	                                    {{ Auth::user()->name }} <span class="caret"></span>
-	                                </a>
-
-	                                <ul class="dropdown-menu" role="menu">
-	                                    <li>
-	                                        <a href="{{ route('logout') }}"
-	                                            onclick="event.preventDefault();
-	                                                     document.getElementById('logout-form').submit();">
-	                                            Salir
-	                                        </a>
-
-	                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-	                                            {{ csrf_field() }}
-	                                        </form>
-	                                    </li>
-	                                </ul>
-	                            </li>
-	                        @endif							
-
-							
-							<!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								
-								{--{ HTML::image('components/admin-lte/dist/img/user2-160x160.jpg', 'User Image', array('class' => 'user-image')) }--}																
-								<span class="hidden-xs">Alexander Pierce</span>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="icon icon-phone-alt"></i>
+								<span class="hidden-xs">Directorio</span>
 							</a>
 							<ul class="dropdown-menu">
-								
-								<li class="user-header">
-									{-- HTML::image('components/admin-lte/dist/img/user2-160x160.jpg', 'User Image', array('class' => 'img-circle')) --}									
-									<p>
-									Alexander Pierce - Web Developer
-									<small>Member since Nov. 2012</small>
-									</p>
-								</li>								
+								<!-- Form login -->
 								<li class="user-body">
-									<div class="row">
-										<div class="col-xs-4 text-center">
-											<a href="#">Followers</a>
+									<form method="post" role="form" action="">
+										<div class="form-group has-feedback">
+											<input id="btn-extensiones" type="text" class="form-control" placeholder="Buscar extensiones..." autocomplete="off">
+											<span class="icon icon-phone-alt form-control-feedback"></span>
 										</div>
-										<div class="col-xs-4 text-center">
-											<a href="#">Sales</a>
-										</div>
-										<div class="col-xs-4 text-center">
-											<a href="#">Friends</a>
-										</div>
-									</div>									
-								</li>								
-								<li class="user-footer">
-									<div class="pull-left">
-										<a href="#" class="btn btn-default btn-flat">Profile</a>
-									</div>
-									<div class="pull-right">
-										<a href="#" class="btn btn-default btn-flat">Sign out</a>
-									</div>
+											<a href="{!! url('get_extensiones') !!}" class="btn btn-default btn-block btn-flat">Ver todas las extensiones</a>
+											<a href="" class="btn btn-warning btn-block btn-flat" target="_blank">Descargar Directorio</a>
+									</form>
 								</li>
-							</ul>-->
+							</ul>
 						</li>
-						<!-- Control Sidebar Toggle Button -->
+							
+						<li class="dropdown user user-menu">
+							<a href="{{ route('login') }}">
+								<i class="fa fa-lock" aria-hidden="true"></i>
+								 Iniciar sesión
+							</a>
+						</li>
 					</ul>
 				</div>
 			</nav>
@@ -188,12 +127,12 @@
 				@if(!Auth::user())
 
 					<!-- MODULO DE INTRANET -->	
-					<li class=""><a href=""><i class="fa fa-home"></i> <span>INTRANET</span></a></li>
+					<li class=""><a href=""><i class="fa fa-home"></i> <span>Inicio</span></a></li>
 
 					<li class="treeview">
 						<a href="#">
 							<i class="fa fa-user"></i>
-							<span>NOSOTROS</span>
+							<span>Nosotros</span>
 							<span class="pull-right-container">
 							<i class="fa fa-angle-left pull-right"></i>
 							</span>
@@ -213,7 +152,7 @@
 					<li class="treeview">
 						<a href="#">
 							<i class="fa fa-tags"></i>
-							<span>SERVICIOS</span>
+							<span>Servicios</span>
 							<span class="pull-right-container">
 							<i class="fa fa-angle-left pull-right"></i>
 							</span>
@@ -230,7 +169,7 @@
 					<li class="treeview">
 						<a href="#">
 							<i class="fa fa-link"></i>
-							<span>TRANSPARENCIA</span>
+							<span>Transparencia</span>
 							<span class="pull-right-container">
 							<i class="fa fa-angle-left pull-right"></i>
 							</span>
@@ -241,6 +180,24 @@
 							<li><a href="UI/buttons.html"><i class="fa fa-spinner"></i> Reserva Técnica</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> S.A.R</a></li>
 							<li><a href="UI/timeline.html"><i class="fa fa-spinner"></i> Ley 848</a></li>
+						</ul>
+					</li>
+
+						<!-- MODULO DE TRANSPARENCIA -->	
+						<li class="treeview">
+						<a href="#">
+							<i class="fa fa-download"></i>
+							<span>Descargar Información</span>
+							<span class="pull-right-container">
+							<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="UI/general.html"><i class="fa fa-spinner"></i> Rec. Humanos</a></li>
+							<li><a href="UI/icons.html"><i class="fa fa-spinner"></i> Adquiciones e Inventarios</a></li>
+							<li><a href="UI/buttons.html"><i class="fa fa-spinner"></i> Tecnol. de la Información</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Prestaciones Económicas</a></li>
+							<li><a href="UI/timeline.html"><i class="fa fa-spinner"></i> Contabilidad y Presupuesto</a></li>
 						</ul>
 					</li>
 

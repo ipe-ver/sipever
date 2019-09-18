@@ -6,7 +6,7 @@
 
 <div class="row">
     <div class="col-md-5">
-        <div class="box box-warning">
+        <div class="box box-default">
             <div class="box-header with-border">
       
                 <i class="fa fa-bullhorn"></i>
@@ -59,7 +59,7 @@
   <!-- /.col -->
 
   <div class="col-md-5">
-    <div class="box box-warning">
+    <div class="box box-default">
       <div class="box-header with-border">
         <i class="fa fa-bullhorn"></i>
 
@@ -68,7 +68,7 @@
       <!-- /.box-header -->
       <div class="box-body">
         
-            <div class="small-box bg-aqua">
+            <div class="small-box bg-primary">
                 <div class="inner">
                 <h3>Noticias!</h3>
 
@@ -80,21 +80,7 @@
                 <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
 
-          
-       
-            <div class="small-box bg-green">
-            <div class="inner">
-             <h3>Citas en Linea</h3>
-
-              <p>Bounce Rate</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-stats-bars"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-
-        
+                  
         
       </div>
       <!-- /.box-body -->

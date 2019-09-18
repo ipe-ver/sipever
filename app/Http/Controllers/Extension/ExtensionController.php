@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Directorio;
+namespace App\Http\Controllers\Extension;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -9,21 +9,14 @@ use App\Model\Directorio\Extension;
 
 class ExtensionController extends Controller
 {
-    private $catExtension;  
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
     public function index()
     {
-        //$this->catExtension           = \App\Model\Directorio\Extension::select('id as valor','descripcion')->orderBy('descripcion')->get();
-       
-        //dd($this->catExtension);
-      
-        //return view('adminlte::layouts.landing');
-      
+        return view('expediente.index');
     }
 
     /**
@@ -92,11 +85,15 @@ class ExtensionController extends Controller
         //
     }
 
+    /****************************************************************************************************
+        FUNCION DEL CONTROLADOR QUE MUESTRA LOS ACTIVOS Y PENSIONADOS EN LA PAGINA PRINCIPAL
+    *****************************************************************************************************/
+
     public function getExtensiones()
     {
 
-        $items = Extension::orderBy('id')->get();
-        // dd($items);
-       return response()->json($items);
+        $items = Extension::orderBy('descripcion')->get();
+       
+        return response()->json($items);
     }  // fin de getnotificación
 }

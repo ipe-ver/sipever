@@ -23,11 +23,9 @@ Route::group(['middleware' => 'auth'], function () {
     //Please do not remove this if you want adminlte:route and adminlte:link commands to works correctly.
     #adminlte_routes
 });
+//Route::get('/directorio', function () { return view('directorio.index'); });
 
-Route::get('get_extensiones','Directorio\ExtensionController@getExtensiones');
-
-
-
+//Route::get('/directorio/get_extension','Directorio\ExtensionController@getExtensiones');
 /*Route::group(['middleware' => ['role:admin']], function () {
     
 });*/
@@ -77,7 +75,16 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 	
 });
 
-//$router->get('import', 'ImportController@import');
+	Route::get('/extension', function () {
+		return view('extension.index');
+	});
+
+	
+	Route::get('get_extensiones','Extension\ExtensionController@getExtensiones');
+
+
+
+
  
 
 

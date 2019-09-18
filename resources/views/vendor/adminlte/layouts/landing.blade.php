@@ -44,38 +44,85 @@
 				<span class="logo-lg"><b>IPE</b></span>
 			</a>
 
+			<!-- Header Navbar -->
 			<nav class="navbar navbar-static-top" role="navigation">
-				<a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+				<!-- Sidebar toggle button-->
+				<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
 					<span class="sr-only">Toggle navigation</span>
 				</a>
+				<!-- Navbar Right Menu -->
 				<div class="navbar-custom-menu">
-					<ul class="nav navbar-nav">
+					<ul class="nav navbar-nav">					
+
+						<!-- User Account Menu -->
 						<li class="dropdown user user-menu">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<i class="icon icon-phone-alt"></i>
-								<span class="hidden-xs">Directorio</span>
+	                        @if (Auth::guest())
+	                            <li><a href="{{ route('login') }}">
+									<i class="fa fa-lock" aria-hidden="true"></i>
+									 Iniciar sesión</a>
+								</li>
+	                            {{--<li><a href="{{route('register')}}">Register</a></li>--}}
+	                        @else
+	                            <li class="dropdown">
+	                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+	                                    {{ Auth::user()->name }} <span class="caret"></span>
+	                                </a>
+
+	                                <ul class="dropdown-menu" role="menu">
+	                                    <li>
+	                                        <a href="{{ route('logout') }}"
+	                                            onclick="event.preventDefault();
+	                                                     document.getElementById('logout-form').submit();">
+	                                            Salir
+	                                        </a>
+
+	                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+	                                            {{ csrf_field() }}
+	                                        </form>
+	                                    </li>
+	                                </ul>
+	                            </li>
+	                        @endif							
+
+							
+							<!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								
+								{--{ HTML::image('components/admin-lte/dist/img/user2-160x160.jpg', 'User Image', array('class' => 'user-image')) }--}																
+								<span class="hidden-xs">Alexander Pierce</span>
 							</a>
 							<ul class="dropdown-menu">
-								<!-- Form login -->
+								
+								<li class="user-header">
+									{-- HTML::image('components/admin-lte/dist/img/user2-160x160.jpg', 'User Image', array('class' => 'img-circle')) --}									
+									<p>
+									Alexander Pierce - Web Developer
+									<small>Member since Nov. 2012</small>
+									</p>
+								</li>								
 								<li class="user-body">
-									<form method="post" role="form" action="">
-										<div class="form-group has-feedback">
-											<input id="btn-extensiones" type="text" class="form-control" placeholder="Buscar extensiones..." autocomplete="off">
-											<span class="icon icon-phone-alt form-control-feedback"></span>
+									<div class="row">
+										<div class="col-xs-4 text-center">
+											<a href="#">Followers</a>
 										</div>
-											<a href="{!! url('get_extensiones') !!}" class="btn btn-default btn-block btn-flat">Ver todas las extensiones</a>
-											<a href="" class="btn btn-warning btn-block btn-flat" target="_blank">Descargar Directorio</a>
-									</form>
+										<div class="col-xs-4 text-center">
+											<a href="#">Sales</a>
+										</div>
+										<div class="col-xs-4 text-center">
+											<a href="#">Friends</a>
+										</div>
+									</div>									
+								</li>								
+								<li class="user-footer">
+									<div class="pull-left">
+										<a href="#" class="btn btn-default btn-flat">Profile</a>
+									</div>
+									<div class="pull-right">
+										<a href="#" class="btn btn-default btn-flat">Sign out</a>
+									</div>
 								</li>
-							</ul>
+							</ul>-->
 						</li>
-							
-						<li class="dropdown user user-menu">
-							<a href="{{ route('login') }}">
-								<i class="fa fa-lock" aria-hidden="true"></i>
-								 Iniciar sesión
-							</a>
-						</li>
+						<!-- Control Sidebar Toggle Button -->
 					</ul>
 				</div>
 			</nav>
@@ -183,8 +230,8 @@
 						</ul>
 					</li>
 
-						<!-- MODULO DE TRANSPARENCIA -->	
-						<li class="treeview">
+					<!-- MODULO DE TRANSPARENCIA -->	
+					<li class="treeview">
 						<a href="#">
 							<i class="fa fa-download"></i>
 							<span>Descargar Información</span>
@@ -200,6 +247,10 @@
 							<li><a href="UI/timeline.html"><i class="fa fa-spinner"></i> Contabilidad y Presupuesto</a></li>
 						</ul>
 					</li>
+
+					<!-- MODULO DE Extensiones-->	
+
+					<li class=""><a href="{!! url('extension') !!}"><i class="fas fa-book"></i> <span>Directorio</span></a></li>
 
 					
 
@@ -346,7 +397,11 @@
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 					}
 				});
+
 			});
+
+			
+				
 		</script>
 
 		{!! HTML::script('js/funcionesgral.js') !!}

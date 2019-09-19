@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Extension;
+namespace App\Http\Controllers\Nosotros;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\Model\Directorio\Extension;
-
-class ExtensionController extends Controller
+class MisionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +14,7 @@ class ExtensionController extends Controller
      */
     public function index()
     {
-        return view('extension.index');
+        //
     }
 
     /**
@@ -85,25 +83,8 @@ class ExtensionController extends Controller
         //
     }
 
-    /****************************************************************************************************
-        FUNCION DEL CONTROLADOR QUE MUESTRA LOS ACTIVOS Y PENSIONADOS EN LA PAGINA PRINCIPAL
-    *****************************************************************************************************/
-
-    public function getExtensiones()
+    public function mision()
     {
-
-        $items = Extension::orderBy('descripcion')->get();
-       
-        return response()->json($items);
-    }  // fin de getnotificación
-
-    public function search(Request $request)
-    {
-          $search = $request->get('term');
-      
-          $result = Extension::where('descripcion', 'LIKE', '%'. $search. '%')->get();
- 
-          return response()->json($result);
-            
-    } 
+        return view('nosotros.mision');
+    }
 }

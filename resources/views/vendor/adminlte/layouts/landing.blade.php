@@ -28,24 +28,24 @@
 
 		
 		{!! Html::style('components/bootstrap/less/mixins/image.less') !!} 
-
+		
 		@yield('style')
 
 	</head>
-<body class="skin-yellow sidebar-mini @if (Cookie::get('toggleState') === 'closed') {{ 'sidebar-collapse' }} @endif ">
+<body class="skin-black sidebar-mini @if (Cookie::get('toggleState') === 'closed') {{ 'sidebar-collapse' }} @endif ">
 	<div class="wrapper">
 		<!-- Main Header -->
 		<header class="main-header">
 			<!-- Logo -->
-			<a href="" class="logo">
+			<a href="" class="logo" style="background-color: #aa983f;">
 				<!-- mini logo for sidebar mini 50x50 pixels -->
-				<span class="logo-mini"><b>IPE</b></span>
+				<span class="logo-mini" style="background-color: #aa983f;"><b>IPE</b></span>
 				<!-- logo for regular state and mobile devices -->
-				<span class="logo-lg"><b>IPE</b></span>
+				<span class="logo-lg" style="background-color: #aa983f;"><b>IPE</b></span>
 			</a>
 
 			<!-- Header Navbar -->
-			<nav class="navbar navbar-static-top" role="navigation">
+			<nav class="navbar navbar-static-top" role="navigation"  style="background-color: #aa983f;">
 				<!-- Sidebar toggle button-->
 				<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
 					<span class="sr-only">Toggle navigation</span>
@@ -56,6 +56,25 @@
 
 						<!-- User Account Menu -->
 						<li class="dropdown user user-menu">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="fa fa-book"></i>
+								<span class="hidden-xs">Directorio</span>
+							</a>
+							<ul class="dropdown-menu">
+								<!-- Form login -->
+								<li class="user-body">
+									<form method="post" role="form" action="">
+										<div class="form-group has-feedback">
+											<input id="search" name="search" type="text" class="form-control" placeholder="Search" />
+											<span class="icon icon-phone-alt form-control-feedback"></span>
+										</div>
+										{{--<a href="" class="btn btn-default btn-block btn-flat">Ver todas las extensiones</a>--}}
+										{{--<a href="" class="btn btn-success btn-block btn-flat" target="_blank">Descargar Directorio</a>--}}
+									</form>
+								</li>
+							</ul>
+						
+
 	                        @if (Auth::guest())
 	                            <li><a href="{{ route('login') }}">
 									<i class="fa fa-lock" aria-hidden="true"></i>
@@ -84,49 +103,14 @@
 	                            </li>
 	                        @endif							
 
-							
-							<!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								
-								{--{ HTML::image('components/admin-lte/dist/img/user2-160x160.jpg', 'User Image', array('class' => 'user-image')) }--}																
-								<span class="hidden-xs">Alexander Pierce</span>
-							</a>
-							<ul class="dropdown-menu">
-								
-								<li class="user-header">
-									{-- HTML::image('components/admin-lte/dist/img/user2-160x160.jpg', 'User Image', array('class' => 'img-circle')) --}									
-									<p>
-									Alexander Pierce - Web Developer
-									<small>Member since Nov. 2012</small>
-									</p>
-								</li>								
-								<li class="user-body">
-									<div class="row">
-										<div class="col-xs-4 text-center">
-											<a href="#">Followers</a>
-										</div>
-										<div class="col-xs-4 text-center">
-											<a href="#">Sales</a>
-										</div>
-										<div class="col-xs-4 text-center">
-											<a href="#">Friends</a>
-										</div>
-									</div>									
-								</li>								
-								<li class="user-footer">
-									<div class="pull-left">
-										<a href="#" class="btn btn-default btn-flat">Profile</a>
-									</div>
-									<div class="pull-right">
-										<a href="#" class="btn btn-default btn-flat">Sign out</a>
-									</div>
-								</li>
-							</ul>-->
 						</li>
 						<!-- Control Sidebar Toggle Button -->
 					</ul>
 				</div>
 			</nav>
 		</header>
+
+
 		<!-- Left side column. contains the logo and sidebar -->
 		<aside class="main-sidebar">
 
@@ -174,7 +158,7 @@
 				@if(!Auth::user())
 
 					<!-- MODULO DE INTRANET -->	
-					<li class=""><a href=""><i class="fa fa-home"></i> <span>Inicio</span></a></li>
+					<li class=""><a href="{!! url('') !!}"><i class="fa fa-home"></i> <span>Inicio</span></a></li>
 
 					<li class="treeview">
 						<a href="#">
@@ -186,7 +170,7 @@
 						</a>
 						<ul class="treeview-menu">
 							<li><a href="UI/general.html"><i class="fa fa-spinner"></i> Marco Histórico</a></li>
-							<li><a href="UI/icons.html"><i class="fa fa-spinner"></i> Misión - Visión - Filosofía</a></li>
+							<li><a href="{!! url('/mision') !!}"><i class="fa fa-spinner"></i> Misión - Visión - Filosofía</a></li>
 							<li><a href="UI/buttons.html"><i class="fa fa-spinner"></i> Información Institucional</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Derechos y Obligaciones</a></li>
 							<li><a href="UI/timeline.html"><i class="fa fa-spinner"></i> Organigrama</a></li>
@@ -199,7 +183,7 @@
 					<li class="treeview">
 						<a href="#">
 							<i class="fa fa-tags"></i>
-							<span>Servicios</span>
+							<span>Áreas</span>
 							<span class="pull-right-container">
 							<i class="fa fa-angle-left pull-right"></i>
 							</span>
@@ -212,25 +196,9 @@
 						</ul>
 					</li>
 
-					<!-- MODULO DE TRANSPARENCIA -->	
-					<li class="treeview">
-						<a href="#">
-							<i class="fa fa-link"></i>
-							<span>Transparencia</span>
-							<span class="pull-right-container">
-							<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="UI/general.html"><i class="fa fa-spinner"></i> Ley General</a></li>
-							<li><a href="UI/icons.html"><i class="fa fa-spinner"></i> Ley 875</a></li>
-							<li><a href="UI/buttons.html"><i class="fa fa-spinner"></i> Reserva Técnica</a></li>
-							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> S.A.R</a></li>
-							<li><a href="UI/timeline.html"><i class="fa fa-spinner"></i> Ley 848</a></li>
-						</ul>
-					</li>
+					
 
-					<!-- MODULO DE TRANSPARENCIA -->	
+					<!-- DESCARGAR INFORMACIÓN -->	
 					<li class="treeview">
 						<a href="#">
 							<i class="fa fa-download"></i>
@@ -350,6 +318,7 @@
 
 		<!-- Moment.js -->
 		<script src="{{ asset('components/moment/min/moment.min.js') }}"></script>
+
 		
 		<script type="text/javascript">
 			{{--var routeConsulta 		= '{!! route('consulta.index') !!}';	--}}		
@@ -400,9 +369,11 @@
 
 			});
 
-			
 				
 		</script>
+
+
+		 
 
 		{!! HTML::script('js/funcionesgral.js') !!}
 		{!! HTML::script('js/curp.js') !!}

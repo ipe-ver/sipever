@@ -74,13 +74,14 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 
 	
 });
+	//Módulo de Nosotros
+	Route::get('/mision', function () { return view('nosotros.mision'); });
 
-	Route::get('/extension', function () {
-		return view('extension.index');
-	});
-
-	
+	//Módulo de Extensiones
+	Route::get('/extension', function () { return view('extension.index'); });
 	Route::get('get_extensiones','Extension\ExtensionController@getExtensiones');
+
+	//Route::get('autocomplete', 'Extension\ExtensionController@search');
 
 
 

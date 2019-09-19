@@ -171,7 +171,7 @@
 						<ul class="treeview-menu">
 							<li><a href="UI/general.html"><i class="fa fa-spinner"></i> Marco Histórico</a></li>
 							<li><a href="{!! url('/mision') !!}"><i class="fa fa-spinner"></i> Misión - Visión - Filosofía</a></li>
-							<li><a href="UI/buttons.html"><i class="fa fa-spinner"></i> Información Institucional</a></li>
+							<li><a href="{!! url('/informacion') !!}"><i class="fa fa-spinner"></i> Información Institucional</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Derechos y Obligaciones</a></li>
 							<li><a href="UI/timeline.html"><i class="fa fa-spinner"></i> Organigrama</a></li>
 							<li><a href="UI/modals.html"><i class="fa fa-spinner"></i> Marco Legal</a></li>

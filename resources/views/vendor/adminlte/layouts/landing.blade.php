@@ -39,15 +39,15 @@
 			<!-- Logo -->
 			<a href="" class="logo" style="background-color: #aa983f;">
 				<!-- mini logo for sidebar mini 50x50 pixels -->
-				<span class="logo-mini" style="background-color: #aa983f;"><b>IPE</b></span>
+				<span class="logo-mini" style="background-color: #aa983f; color:#FFFFFF">IPE</span>
 				<!-- logo for regular state and mobile devices -->
-				<span class="logo-lg" style="background-color: #aa983f;"><b>IPE</b></span>
+				<span class="logo-lg" style="background-color: #aa983f; color:#FFFFFF">IPE</span>
 			</a>
 
 			<!-- Header Navbar -->
 			<nav class="navbar navbar-static-top" role="navigation"  style="background-color: #aa983f;">
 				<!-- Sidebar toggle button-->
-				<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+				<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button" style="color:#FFFFFF">
 					<span class="sr-only">Toggle navigation</span>
 				</a>
 				<!-- Navbar Right Menu -->
@@ -56,7 +56,7 @@
 
 						<!-- User Account Menu -->
 						<li class="dropdown user user-menu">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:#FFFFFF">
 								<i class="fa fa-book"></i>
 								<span class="hidden-xs">Directorio</span>
 							</a>
@@ -76,7 +76,7 @@
 						
 
 	                        @if (Auth::guest())
-	                            <li><a href="{{ route('login') }}">
+	                            <li><a href="{{ route('login') }}"  style="color:#FFFFFF">
 									<i class="fa fa-lock" aria-hidden="true"></i>
 									 Iniciar sesión</a>
 								</li>
@@ -172,8 +172,7 @@
 							<li><a href="UI/general.html"><i class="fa fa-spinner"></i> Marco Histórico</a></li>
 							<li><a href="{!! url('/mision') !!}"><i class="fa fa-spinner"></i> Misión - Visión - Filosofía</a></li>
 							<li><a href="{!! url('/informacion') !!}"><i class="fa fa-spinner"></i> Información Institucional</a></li>
-							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Derechos y Obligaciones</a></li>
-							<li><a href="UI/timeline.html"><i class="fa fa-spinner"></i> Organigrama</a></li>
+							<li><a href="{!! url('/organigrama') !!}"><i class="fa fa-spinner"></i> Organigrama</a></li>
 							<li><a href="UI/modals.html"><i class="fa fa-spinner"></i> Marco Legal</a></li>
 							<li><a href="UI/modals.html"><i class="fa fa-spinner"></i> Directorio Teléfonico</a></li>
 						</ul>
@@ -261,7 +260,7 @@
 			</section>
 			<!-- /.sidebar -->
 		</aside>
-		<div class="content-wrapper" style="min-height: 1080.3px;">
+		<div class="content-wrapper" style="min-height: 1080.3px; background-color: #F3EFE0;">
 			<section class="content-header">
 				@yield('content-header')				
 			</section>			
@@ -274,7 +273,7 @@
 			
 		</div>
 	
-		<footer class="main-footer">
+		<footer class="main-footer" style="background-color: #F3EFE0;">
 			<div class="pull-right hidden-xs">
 				<b>Version</b> "1.0"
 			</div>

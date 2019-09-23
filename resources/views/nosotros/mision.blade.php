@@ -10,24 +10,24 @@
 <div class="col-md-1">
 </div>
 
-<!-- TAB DE MISIÓN - VISIÓN  - FILOSOFÍA -->
+
 <div class="row">
     <div class="col-md-10">
-        <h2 style="text-align:right;">MISIÓN - VISIÓN - FILOSOFÍA</h2>
-        <br>
+        <div class="box box-solid">
+        <div class="box-header with-border">
+            <h2 style="text-align:right;">MISIÓN - VISIÓN - FILOSOFÍA</h2>
+
         <!-- Custom Tabs -->
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-                <li class="active" style="font-size:20px;"><a href="#tab_1" data-toggle="tab"><b>Misión</b></a></li>
-                <li style="font-size:20px;"><a href="#tab_2" data-toggle="tab"><b>Visión</b></a></li>
-                <li style="font-size:20px;"><a href="#tab_3" data-toggle="tab"><b>Filosofía</b></a></li>
-                <li style="font-size:20px;"><a href="#tab_4" data-toggle="tab"><b>Ética</b></a></li>
-                
-                <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+              <li class="active" style="font-size:20px;"><a href="#tab_1" data-toggle="tab"><b>Misión</b></a></li>
+              <li style="font-size:20px;"><a href="#tab_2" data-toggle="tab"><b>Visión</b></a></li>
+              <li style="font-size:20px;"><a href="#tab_3" data-toggle="tab"><b>Filosofía</b></a></li>
+              <li style="font-size:20px;"><a href="#tab_4" data-toggle="tab"><b>Ética</b></a></li>
+              
+              <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
             </ul>
             <div class="tab-content">
-
-                <!-- TAB DE MISIÓN  --> 
 
                 <div class="tab-pane active" id="tab_1">
                     <br>  
@@ -73,10 +73,21 @@
                     <br>      
                     <p style="font-size:18px; text-align: justify; font-family: arial; line-height: 200%;">Valores y Principios Éticos que deben observar y bajo los cuales deben conducirse los servidores públicos de la administración pública estatal.</p>           
                 </div>
+          
             </div>
+        </div>    
+
+
+        </div>
         </div>
     </div>
 </div>
+
+
+
+
+
+
 
 
 <div class="col-md-1">

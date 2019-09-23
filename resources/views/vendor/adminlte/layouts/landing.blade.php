@@ -47,7 +47,7 @@
 			<!-- Header Navbar -->
 			<nav class="navbar navbar-static-top" role="navigation"  style="background-color: #aa983f;">
 				<!-- Sidebar toggle button-->
-				<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button" style="color:#FFFFFF">
+				<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button" style="color:#060100">
 					<span class="sr-only">Toggle navigation</span>
 				</a>
 				<!-- Navbar Right Menu -->
@@ -56,13 +56,16 @@
 
 						<!-- User Account Menu -->
 						<li class="dropdown user user-menu">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:#FFFFFF">
+						
+							
+					
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:#060100">
 								<i class="fa fa-book"></i>
 								<span class="hidden-xs">Directorio</span>
 							</a>
 							<ul class="dropdown-menu">
 								<!-- Form login -->
-								<li class="user-body">
+								<li class="user-body" >
 									<form method="post" role="form" action="">
 										<div class="form-group has-feedback">
 											<input id="search" name="search" type="text" class="form-control" placeholder="Search" />
@@ -76,7 +79,7 @@
 						
 
 	                        @if (Auth::guest())
-	                            <li><a href="{{ route('login') }}"  style="color:#FFFFFF">
+	                            <li><a href="{{ route('login') }}"  style="color:#060100">
 									<i class="fa fa-lock" aria-hidden="true"></i>
 									 Iniciar sesión</a>
 								</li>
@@ -173,8 +176,7 @@
 							<li><a href="{!! url('/mision') !!}"><i class="fa fa-spinner"></i> Misión - Visión - Filosofía</a></li>
 							<li><a href="{!! url('/informacion') !!}"><i class="fa fa-spinner"></i> Información Institucional</a></li>
 							<li><a href="{!! url('/organigrama') !!}"><i class="fa fa-spinner"></i> Organigrama</a></li>
-							<li><a href="UI/modals.html"><i class="fa fa-spinner"></i> Marco Legal</a></li>
-							<li><a href="UI/modals.html"><i class="fa fa-spinner"></i> Directorio Teléfonico</a></li>
+							
 						</ul>
 					</li>
 
@@ -188,36 +190,33 @@
 							</span>
 						</a>
 						<ul class="treeview-menu">
-							<li><a href="UI/general.html"><i class="fa fa-spinner"></i> Dirección General</a></li>
-							<li><a href="UI/icons.html"><i class="fa fa-spinner"></i> Bienes Inmuebles</a></li>
-							<li><a href="UI/buttons.html"><i class="fa fa-spinner"></i> Unidad de Género</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Dirección General</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Bienes Inmuebles</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Unidad de Género</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Unidad de Transparencia</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Organo Interno de Control</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Sub. Jurídica</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Contencioso</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Consultivo</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Sub. Administrativa</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Recursos Humanos</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Adquisiciones e Inventarios</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Servicios Generales</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Tecnologías de la Información</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Sub. Prestac. Institucionales</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Prestaciones Económicas</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Banco de Datos</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Vigencia de Derechos</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Sub. de Finanzas</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Recursos Financieros</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Contabilidad y Presupuesto</a></li>
 						</ul>
 					</li>
 
 					
-
 					<!-- DESCARGAR INFORMACIÓN -->	
-					<li class="treeview">
-						<a href="#">
-							<i class="fa fa-download"></i>
-							<span>Descargar Información</span>
-							<span class="pull-right-container">
-							<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="UI/general.html"><i class="fa fa-spinner"></i> Rec. Humanos</a></li>
-							<li><a href="UI/icons.html"><i class="fa fa-spinner"></i> Adquiciones e Inventarios</a></li>
-							<li><a href="UI/buttons.html"><i class="fa fa-spinner"></i> Tecnol. de la Información</a></li>
-							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Prestaciones Económicas</a></li>
-							<li><a href="UI/timeline.html"><i class="fa fa-spinner"></i> Contabilidad y Presupuesto</a></li>
-						</ul>
-					</li>
 
-					<!-- MODULO DE Extensiones-->	
-
-					<li class=""><a href="{!! url('extension') !!}"><i class="fas fa-book"></i> <span>Directorio</span></a></li>
+					<li class=""><a href=""><i class="fa fa-download"></i> <span>Descargar Información</span></a></li>
 
 					
 

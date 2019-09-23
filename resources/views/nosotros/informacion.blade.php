@@ -13,14 +13,14 @@
 <!-- TAB DE MISIÓN - VISIÓN  - FILOSOFÍA -->
 <div class="row">
     <div class="col-md-10">
-        <h2 style="text-align:right;">INFORMACIÓN INSTITUCIONAL</h2>
+        
         <br>
         
         <!-- Custom Tabs -->
         <div class="nav-tabs-custom">
             
             <div class="tab-content">
-
+            <h2 style="text-align:right;">INFORMACIÓN INSTITUCIONAL</h2>
                 <br> 
                 <p style="font-size:18px; text-align: justify; font-family: arial; line-height: 200%;">La Información Institucional es la esencia numérica del Instituto, en ésta se exponen los asuntos más relevantes, de tal modo que
                  encontrará Estadísticas, Finanzas, Prestaciones Institucionales, Estancias que prestan servicios y Población Derecho-habiente, así 

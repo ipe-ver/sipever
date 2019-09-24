@@ -57,8 +57,8 @@ class DatabaseSeeder extends Seeder
         // Seed Articulos
         $this->call(CatArticulosTableSeeder::class);
 
-         // Seed Cuentas Contables
-         $this->call(CatCuentasContablesTableSeeder::class);
+        // Seed Cuentas Contables
+        $this->call(CatCuentasContablesTableSeeder::class);
 
        
     }

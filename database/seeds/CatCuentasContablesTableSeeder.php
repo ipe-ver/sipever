@@ -28,7 +28,7 @@ class CatCuentasContablesTableSeeder extends Seeder
             [ 'cta' => '1113', 'scta' => '2900', 'sscta' => '2991', 'nombre' => 'MATERIALES Y SUMINISTROS VARIOS', 'ctaarmo' => '1.1.5.1.1.4.11', 'nomarmo' => 'MATERIALES Y SUMINISTROS VARIOS', 'grupo' => 'B', 'estatus' => '1'], 
             [ 'cta' => '1113', 'scta' => '3300', 'sscta' => '3361', 'nombre' => 'SERVICIO DE FOTOCOPIADO E IMPRESIÓN DE FORMA', 'ctaarmo' => '1.1.5.1.1.10.1', 'nomarmo' => 'SERVICIO DE FOTOCOPIADO E IMPRESIÓN DE FORMA', 'grupo' => 'B', 'estatus' => '1']
         );
-        
+        //Ciclo
         foreach ($cuentas as $cuenta) {
 			CuentaContable::create($cuenta);
 		}

@@ -24,8 +24,8 @@
 	}
     
   .img{
-		  width:50px;
-  		height:50px;
+		width: 80px;
+  		height: 80px;
 	}
     </style>
 @endsection
@@ -40,31 +40,34 @@
         <div class="box box-solid">
         <div class="box-header with-border">
             <h2 style="text-align:right;">DESCARGAR INFORMACIÓN</h2>
-
+            <br>
             <div class="row">
-                <div class="col-md-3 col-sm-6 col-xs-12" >
-                    <div class="info-box" style="background: #E8DDCB;">
-                        <span class="info-box-icon" style="background: #413E4A;"><i class="ion ion-ios-gear-outline"></i></span>
+                
 
-                        <div class="info-box-content">
-                            <span class="info-box-text" style="font-size: 18px;"><strong>Tipografía</strong></span>
-                            <span class="info-box-text" style="font-size: 18px;"><strong>Original</strong></span>
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-               
-                <div class="col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box" style="background: #E8DDCB;">
-                        <span class="info-box-icon" style="background: #B38184;"><i class="ion ion-ios-gear-outline"></i></span>
+                 <!-- Link para Soporte Técnico -->
+                 <div class="col-md-3" >
+                      <div class="info-box" style="background: #E8DDCB;">
+                          <span class="info-box-icon" style="background: #3FB8AF;"><img class="img" src="{!! url('') !!}/img_download/descargar_informacion/tipografia.png"/></span>
 
-                        <div class="info-box-content">
-                            <span class="info-box-text">Likes</span>
-                            <span class="info-box-number">41,410</span>
-                        </div>
-                    </div>
-                </div>
+                          <div class="info-box-content">
+                             <a href="{!! url('') !!}/files/descargar_informacion/tipografia_oficial.zip" target="_blank" style="color: #000000;"><h5 style="font-size: 24px;"><strong>Tipografía <br> Original</strong></h5></a>
+                              
+                          </div>
+                          
+                      </div>
+                  </div>
+
+                  <div class="col-md-3" >
+                      <div class="info-box" style="background: #E8DDCB;">
+                          <span class="info-box-icon" style="background: #6C5B7B;"><img class="img" src="{!! url('') !!}/img_download/descargar_informacion/capacitacion.png"/></span>
+
+                          <div class="info-box-content">
+                             <a href="{!! url('') !!}/files/descargar_informacion/formato_capacitacion.doc" target="_blank" style="color: #000000;"><h5 style="font-size: 24px;"><strong>Formato de <br>Capacitación</strong></h5></a>
+                              
+                          </div>
+                          
+                      </div>
+                  </div>
                
 
 

@@ -79,6 +79,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 	Route::get('/informacion', function () { return view('nosotros.informacion'); });
 	Route::get('/organigrama', function () { return view('nosotros.organigrama'); });
 	Route::get('/tecnologias', function () { return view('areas.tecnologias'); });
+	Route::get('/tecnologias/infraestructura', function () { return view('areas.soporte'); });
+	Route::get('/tecnologias/desarrollo', function () { return view('areas.desarrollo'); });
 	Route::get('/descargar_informacion', function () { return view('descargar.informacion'); });
 	
 

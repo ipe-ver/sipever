@@ -112,7 +112,7 @@
                 <div class="box-header with-border">
                   <h4 class="box-title">
                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-                      Oficinas
+                      Oficinas de Tecnologías de la Información
                     </a>
                   </h4>
                 </div>
@@ -127,7 +127,7 @@
                           <span class="info-box-icon" style="background: #413E4A;"><img class="img" src="{!! url('') !!}/img_download/TI/soporte_tecnico.png"/></span>
 
                           <div class="info-box-content">
-                             <a href="{!! url('') !!}/files/TI/permisos/ACTIVO_FIJO.pdf" target="_blank"><h5 style="font-size: 18px;"><strong>Infraestructura y <br>Asistencia Técnia</strong></h5></a>
+                             <a href="{!! url('') !!}/tecnologias/infraestructura" target="_blank" style="color: #000000;"><h5 style="font-size: 18px;"><strong>Infraestructura y <br>Asistencia Técnica</strong></h5></a>
                               
                           </div>
                           
@@ -142,7 +142,7 @@
                         <span class="info-box-icon" style="background: #B38184;"><img class="img" src="{!! url('') !!}/img_download/TI/gobierno_electronico.png"/></span>
 
                         <div class="info-box-content">
-                          <a href="{!! url('') !!}/files/TI/permisos/ACTIVO_FIJO.pdf" target="_blank"><h5 style="font-size: 18px;"><strong>Gobierno Electrónico y <br>Desarrollo de Aplicaciones</strong></h5></a>
+                          <a href="{!! url('') !!}/tecnologias/desarrollo" target="_blank"  style="color: #000000;"><h5 style="font-size: 18px;"><strong>Gobierno Electrónico y <br>Desarrollo de Aplicaciones</strong></h5></a>
                         </div>
                     </div>
                   </div>

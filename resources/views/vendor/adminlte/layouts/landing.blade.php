@@ -31,6 +31,8 @@
 		
 		@yield('style')
 
+		
+
 	</head>
 <body class="skin-black sidebar-mini @if (Cookie::get('toggleState') === 'closed') {{ 'sidebar-collapse' }} @endif ">
 	<div class="wrapper">
@@ -174,7 +176,7 @@
 						<ul class="treeview-menu">
 							<li><a href="UI/general.html"><i class="fa fa-spinner"></i> Marco Histórico</a></li>
 							<li><a href="{!! url('/mision') !!}"><i class="fa fa-spinner"></i> Misión - Visión - Filosofía</a></li>
-							<li><a href="{!! url('/informacion') !!}"><i class="fa fa-spinner"></i> Información Institucional</a></li>
+							{{--<li><a href="{!! url('/informacion') !!}"><i class="fa fa-spinner"></i> Información Institucional</a></li>--}}
 							<li><a href="{!! url('/organigrama') !!}"><i class="fa fa-spinner"></i> Organigrama</a></li>
 							
 						</ul>
@@ -190,7 +192,7 @@
 							</span>
 						</a>
 						<ul class="treeview-menu">
-							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Dirección General</a></li>
+							{{--<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Dirección General</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Bienes Inmuebles</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Unidad de Género</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Unidad de Transparencia</a></li>
@@ -201,22 +203,22 @@
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Sub. Administrativa</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Recursos Humanos</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Adquisiciones e Inventarios</a></li>
-							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Servicios Generales</a></li>
-							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Tecnologías de la Información</a></li>
-							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Sub. Prestac. Institucionales</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Servicios Generales</a></li>--}}
+							<li><a href="{!! url('/tecnologias') !!}"><i class="fa fa-spinner"></i> Tecnologías de la Información</a></li>
+							{{--<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Sub. Prestac. Institucionales</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Prestaciones Económicas</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Banco de Datos</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Vigencia de Derechos</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Sub. de Finanzas</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Recursos Financieros</a></li>
-							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Contabilidad y Presupuesto</a></li>
+							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Contabilidad y Presupuesto</a></li>--}}
 						</ul>
 					</li>
 
 					
 					<!-- DESCARGAR INFORMACIÓN -->	
 
-					<li class=""><a href=""><i class="fa fa-download"></i> <span>Descargar Información</span></a></li>
+					<li class=""><a href="{!! url('/descargar_informacion') !!}"><i class="fa fa-download"></i> <span>Descargar Información</span></a></li>
 
 					
 
@@ -271,6 +273,8 @@
 			</section>
 			
 		</div>
+
+		
 	
 		<footer class="main-footer" style="background-color: #F3EFE0;">
 			<div class="pull-right hidden-xs">
@@ -373,8 +377,7 @@
 
 		 
 
-		{!! HTML::script('js/funcionesgral.js') !!}
-		{!! HTML::script('js/curp.js') !!}
+		
 
 		@yield('script')	
 

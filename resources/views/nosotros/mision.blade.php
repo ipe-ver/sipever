@@ -10,8 +10,8 @@
 <div class="col-md-1">
 </div>
 
-
 <div class="row">
+    
     <div class="col-md-10">
         <div class="box box-solid">
         <div class="box-header with-border">
@@ -81,24 +81,23 @@
         </div>
         </div>
     </div>
+
 </div>
-
-
-
-
-
-
 
 
 <div class="col-md-1">
 </div>
 
-@include('adminlte::layouts.partials.modal_gral')
+
+
+
+
+
+
 
 @endsection
 
 @section('script')
-
 
 @endsection
 

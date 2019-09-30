@@ -7,12 +7,13 @@
 
 
 <div class="row">
-    
+
 
     <div class="col-md-12">
+             
         <div class="box box-default">
-            <div class="box-header with-border">
-      
+            <div class="box-header with-border" >
+            {{--<img src="{!! url('') !!}/img_system/banner_principal.png" style="width: 800px; height: 100px; display:block; margin:left;"> --}}
                 {{--<i class="fa fa-bullhorn"></i>--}}
 
                 {{--<h3 class="box-title">Valores del Mes</h3>--}}

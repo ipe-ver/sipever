@@ -37,6 +37,18 @@ body{
   max-width: 13.5%;
 }
 
+.de_baja{
+  color: #FFFFFF;
+  background-color: linear-gradient(0deg, #FE6E6E, #FE6E6E), #5A88FB;
+  border-radius: 2px;
+}
+
+.en_stock{
+  color: #FFFFFF;
+  background-color: #068732;
+  border-radius: 2px;
+}
+
 .nombre_modulo{
   color: #000000;
   font-weight: bold;
@@ -62,11 +74,18 @@ body{
   box-shadow: 7px 6px 7px 0px #777777;
 }
 
+.stock_bajo{
+  color: #000000;
+  background-color: linear-gradient(0deg, #FEC85E, #FEC85E), #5A88FB;
+  border-radius: 2px;
+}
 
 .titulo-panel{
   margin-top: 5px;
   margin-left: 12px;
 }
+
+
 .panel-collapse{
   background-color: #FFFFFA;
 }

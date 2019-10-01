@@ -18,12 +18,12 @@ var paneles = document.getElementsByClassName("panel-collapse");
 if(paneles!=null){
     for (let x = 0; x < paneles.length; x++) {
         const panel = paneles[x];
-        panel.setAttribute("id", "collapseUsuario"+x);
+        panel.setAttribute("id", "collapseArticulo"+x);
     }
     var botones = document.getElementsByClassName("btn-left");
     for (let index = 0; index < botones.length; index++) {
         const boton = botones[index];
-        boton.setAttribute("id", "verUsuario"+index);
-        boton.setAttribute("data-target", "#collapseUsuario"+index);
+        boton.setAttribute("id", "verArticulo"+index);
+        boton.setAttribute("data-target", "#collapseArticulo"+index);
     }
 }

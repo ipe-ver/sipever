@@ -23,7 +23,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             NOT DETERMINISTIC
             CONTAINS SQL
             SQL SECURITY DEFINER
-            COMMENT ''
             BEGIN
                 Select cat_articulos.clave, cat_articulos.descripcion, cat_articulos.estatus, cat_grupos_almacen.descripcion as partida
                 from cat_articulos 
@@ -46,7 +45,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             NOT DETERMINISTIC
             CONTAINS SQL
             SQL SECURITY DEFINER
-            COMMENT ''
             BEGIN
                 insert into cat_articulos (clave, descripcion, estatus, id_grupo, id_unidad) values (clave, descripcion, estatus, id_grupo, id_unidad);
             END
@@ -67,7 +65,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             NOT DETERMINISTIC
             CONTAINS SQL
             SQL SECURITY DEFINER
-            COMMENT ''
             BEGIN
                 update cat_articulos
                 set clave = clave, descripcion = descripcion, estatus = estatus, id_grupo = id_grupo, id_unidad = id_unidad
@@ -84,12 +81,24 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             NOT DETERMINISTIC
             CONTAINS SQL
             SQL SECURITY DEFINER
-            COMMENT ''
             BEGIN
                 Select cat_articulos.clave, cat_articulos.descripcion, cat_articulos.estatus, cat_grupos_almacen.descripcion as partida
                 from cat_articulos 
                 inner join cat_grupos_almacen on cat_grupos_almacen.id = cat_articulos.id_grupo
-                where cat_articulos.descripcion like concat('%',articulo,'%');
+                where cat_articulos.descripcion like concat("%",articulo,"%");
+            END
+        ');
+
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_get_grupos;
+
+            CREATE PROCEDURE `sp_get_grupos`()
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SELECT * FROM cat_grupos_almacen;
             END
         ');
 
@@ -99,6 +108,20 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 IN `anio`
             )
         ');
+
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_get_articulos;
+
+            CREATE PROCEDURE `sp_get_articulos`()
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SELECT * FROM cat_articulos;
+            END
+        ');
+
     }
 
     /**
@@ -112,5 +135,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_almacenar_artículo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_actualizar_articulo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_buscar_articulo_parametro;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_get_grupos;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_get_articulos;');
     }
 }

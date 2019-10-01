@@ -41,16 +41,16 @@
     <div class="row">
         <div class="col-lg-12 margin-tb header">
             <h4 class="pull-left nombre-ventana">Vista general de los artículos registrados</h4>
-            @include('usuarios.create')
+            
             <div class="pull-right">
-                <a class="btn btn-agregar" data-toggle="modal" href="#createUsuario"> Agregar</a>
+                <a class="btn btn-agregar"> Agregar</a>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="container">
             <div class="panel-group" id="accordion">
-                @foreach ($articulos as $articulo)
+                @foreach ($data->articulos as $articulo)
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <div class="panel-title" id="headingOne">
@@ -60,11 +60,11 @@
                             	</div>
                             	<div class="col-md-2"> {{ $articulo->descripcion_u_medida }}</div>
                             	<div class="col-md-2">
-                            		@if($articulo->isStock == 1)
+                            		@if($articulo->existencias > $articulo->stock_minimo)
                             			<div class="container en_stock">
                             				<p>En Stock</p>
                             			</div>
-                            		@elseif($articulo->isStock == 2)
+                            		@elseif($articulo->existencias <= $articulo->stock_minimo)
                             			<div class="container stock_bajo">
                             				<p>Stock bajo</p>
                             			</div>

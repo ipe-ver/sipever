@@ -27,7 +27,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 //Route::get('/directorio/get_extension','Directorio\ExtensionController@getExtensiones');
 /*Route::group(['middleware' => ['role:admin']], function () {
-    
+
 });*/
 
 Route::post('registro', 'Auth\RegisterController@registro')->name('registro');
@@ -35,12 +35,13 @@ Route::post('registro', 'Auth\RegisterController@registro')->name('registro');
 Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], function() {
     Route::get('/', function() { return view('admin.index'); })->name('index');
     Route::get('/users', function () { return view('admin.user.index'); });
- 
-    
+
+
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.'], function() {
     Route::get('/', function() { return view('almacen.index'); })->name('index');
+    Route::resource('periodo','Almacen\PeriodoController');
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'compras', 'as' => 'compras.'], function() {
@@ -48,13 +49,13 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'compras', 'as' => 'compras.
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'expediente.'], function(){
-	
+
 	// MOSTRAR LA PAGINA PRINCIPAL DEL EXPEDIENTE ELECTRONICO
 	Route::get('/', function () { return view('expediente.index'); })->name('index');
 
 	// DIRECCIONA PARA AGREGAR FORMULARIO DEL ACTIVO O PENSIONADO
 	Route::get('add', 'Expediente\ExpedienteController@create');
-	
+
 	// INSERTAR VALORES EN EL FORMULARIO
 	Route::post('/actpen', 'Expediente\ExpedienteController@store');
 
@@ -72,7 +73,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 
 	Route::get('{id}/plaza','Expediente\ExpedienteController@plaza'); //LLeva al formulario
 
-	
+
 });
 	//Módulo de Nosotros
 	Route::get('/mision', function () { return view('nosotros.mision'); });
@@ -82,7 +83,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 	Route::get('/tecnologias/infraestructura', function () { return view('areas.soporte'); });
 	Route::get('/tecnologias/desarrollo', function () { return view('areas.desarrollo'); });
 	Route::get('/descargar_informacion', function () { return view('descargar.informacion'); });
-	
+
 
 	//Módulo de Extensiones
 	Route::get('/extension', function () { return view('extension.index'); });
@@ -93,7 +94,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 
 
 
- 
+
 
 
 

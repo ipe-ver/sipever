@@ -31,6 +31,12 @@ body{
     opacity: 1;
 }
 
+.col-xs-2{
+  margin-top: 1%;
+  display:inline-block;
+  max-width: 13.5%;
+}
+
 .panel{
   display: inline-block;
   width: 100%;
@@ -41,6 +47,16 @@ body{
   -webkit-box-shadow: 7px 6px 7px 0px #777777;
   box-shadow: 7px 6px 7px 0px #777777;
 }
+
+.panel-menu{
+  display: inline-block;
+  width: 100%;
+  min-height: 50px;
+  background-color: #FFFFFA;
+  -webkit-box-shadow: 7px 6px 7px 0px #777777;
+  box-shadow: 7px 6px 7px 0px #777777;
+}
+
 
 .titulo-panel{
   margin-top: 5px;

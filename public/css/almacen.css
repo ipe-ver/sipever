@@ -37,6 +37,11 @@ body{
   max-width: 13.5%;
 }
 
+.nombre_modulo{
+  color: #000000;
+  font-weight: bold;
+}
+
 .panel{
   display: inline-block;
   width: 100%;

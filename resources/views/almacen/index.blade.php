@@ -3,7 +3,7 @@
 @section('content')
 <link href="{{ asset('css/almacen.css') }}" rel="stylesheet" type="text/css" >
 <div class=" panel-menu panel-default pull-top">
-	<div class="col-md-12">
+
 	    <div class="container-fluid">
 		    <div class="row">
 	            @if(Auth::user()->name == 'almacen_admin')
@@ -52,7 +52,7 @@
 	           @endif
 	        </div>
 	    </div>
-	</div>
+
 </div>
 
 @yield('secciones_almacen')

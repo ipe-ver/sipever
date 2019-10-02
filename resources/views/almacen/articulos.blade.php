@@ -5,8 +5,9 @@
         <div class="row">
             <div class="col-sm-12 margin-tb">
                 <div class="row">
-                    <h2 class=" col-sm-1 fas fa-boxes"></h2>
-                    <h2 class="col-sm-1">Artículos</h2>
+                    <h2 class=" col-sm-1 text-center text-nowrap fas fa-boxes">
+                        <span style="font-family: 'Roboto';">Artículos</span>
+                    </h2>
                 </div>
                 <p>Administración y Registro de artículos de Almacén </p>
             </div>
@@ -14,10 +15,22 @@
         <div class="row">
             <div class="col-sm-12 margin-tb header">
                 <h4 class="pull-left nombre-ventana">Vista general de los artículos registrados</h4>
-                
+
                 <div class="pull-right">
                     <a class="btn btn-agregar"> Agregar</a>
                 </div>
+            </div>
+        </div>
+        <p></p>
+        <div class="row">
+            <div class="panel" style="background-color: transparent;">
+                <div class = "pull-left">
+                    <input class="input-busqueda"type="text" name="nombreArticulo" placeholder="Ingrese el nombre de un articulo a buscar">
+                    <span>
+                        <button class = "btn btn-agregar" type="button">Buscar</button>
+                    </span>
+                </div>
+
             </div>
         </div>
     </div>
@@ -52,7 +65,7 @@
         <div class="panel panel-menu">
             <div class="panel-heading">
                 <div class="panel-title titulo-panel" id="headingOne">
-                    
+
                     	<div class=" col-sm-5 desc-cuenta pull-left">
                     		{{ $articulo->descripcion }}
                     	</div>
@@ -77,11 +90,11 @@
                             </button>
                             <button class="btn btn-collapse" id="btn_eliminar" disabled="true">
                                 <i class="fas fa-trash-alt">  </i>
-                            </button>   
+                            </button>
                             <button id="verArticulo" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapseArticulo" aria-expanded="false">
                                 <i id="iconoDesplegar" class="fas fa-chevron-circle-down desplegar"></i>
                             </button>
-                    
+
                     </div>
                 </div>
             </div>
@@ -89,7 +102,7 @@
                 <div class="panel-body">
                     <div class="container-fluid">
                         <div >
-                            
+
                         </div>
                     </div>
                 </div>

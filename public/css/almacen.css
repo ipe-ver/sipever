@@ -48,6 +48,11 @@ section.content{
   max-width: 13.5%;
 }
 
+.col-sm-1{
+  display:inline-block;
+  max-width: 11%;
+}
+
 .col-sm-2{
   display:inline-block;
   max-width: 11%;
@@ -78,7 +83,7 @@ section.content{
   font-weight: bold;
 }
 
-.panel{
+.panel-menu{
   display: inline-block;
   width: 100%;
   height: auto;
@@ -102,6 +107,7 @@ section.content{
   color: #FFFFFA;
   background-color: #FEC85E;
   border-radius: 2px;
+  text-align: center;
 }
 
 .titulo-panel{
@@ -172,6 +178,12 @@ section.content{
   animation-name: fade-in;
   animation-duration: 1s;
   opacity: 1;
+}
+
+.input-busqueda{
+  width: 300px;
+  height: 35px;
+  border-radius: 5px;
 }
 
 @keyframes fadein {

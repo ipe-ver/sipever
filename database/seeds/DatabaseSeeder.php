@@ -51,13 +51,12 @@ class DatabaseSeeder extends Seeder
         // Seed Dependencias
         //$this->call(CatDependenciasTableSeeder::class);
 
-        // Seed Articulos
-        $this->call(CatArticulosTableSeeder::class);
-
         // Seed Cuentas Contables
         $this->call(CatCuentasContablesTableSeeder::class);
 
-       
+        // Seed Articulos
+        $this->call(CatArticulosTableSeeder::class);
+
     }
 }
 

@@ -19,9 +19,13 @@ class CreateTableCatArticulos extends Migration
             $table->string('descripcion');
             $table->boolean('estatus')->default(1);
             $table->date('fecha_baja')->nullable();
+            $table->integer('stock_minimo')->nullable();
+            $table->integer('stock_maximo')->nullable();
+            $table->integer('existencias')->nullable();
+            $table->double('precio_unitario')->nullable();
 
-            $table->integer('id_grupo')->unsigned();
-            $table->foreign('id_grupo')->references('id')->on('cat_grupos_almacen');  
+            $table->integer('id_cuenta')->unsigned();
+            $table->foreign('id_cuenta')->references('id')->on('cat_cuentas_contables');  
             
             $table->integer('id_unidad')->unsigned();
             $table->foreign('id_unidad')->references('id')->on('cat_unidades_almacen'); 

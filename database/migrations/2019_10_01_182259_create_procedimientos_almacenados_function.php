@@ -14,6 +14,9 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
      */
     public function up()
     {
+        /**Procedimiento almacenado para la obtención de todos los artículos de un grupo en específico.    
+         * El grupo (Partida) debe ser un entero.
+         */    
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_obtener_articulos_grupo;
             CREATE PROCEDURE `sp_obtener_articulos_grupo`(

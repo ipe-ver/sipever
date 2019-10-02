@@ -36,9 +36,6 @@ class DatabaseSeeder extends Seeder
         // Seed Tipos Pensiones
         $this->call(CatTiposPensionesTableSeeder::class);
 
-        // Seed Grupos de Almacén
-        $this->call(CatGruposAlmacenTableSeeder::class);
-
         // Seed Unidades de Almacén
         $this->call(CatUnidadesAlmacenTableSeeder::class);
 

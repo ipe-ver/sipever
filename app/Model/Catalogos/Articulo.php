@@ -8,11 +8,12 @@ class Articulo extends Model
 {
     protected $table = 'cat_articulos';    
     protected $primaryKey = 'id';    
-    protected $fillable = ['clave', 'descripcion', 'fecha_baja', 'estatus', 'id_grupo', 'id_unidad'];
+    protected $fillable = ['clave', 'descripcion', 'fecha_baja', 'estatus', 'stock_minimo', 'stock_maximo',
+                            'existencias', 'precio_unitario', 'id_cuenta', 'id_unidad'];
 
-    public function catGrupo()
+    public function catCuenta()
     {
-    	return $this->belongsTo('App\Model\Catalogos\GruposAlmacen', 'id_grupo');
+    	return $this->belongsTo('App\Model\Catalogos\CuentaContable', 'id_cuenta');
     }
     
     public function catUnidad()

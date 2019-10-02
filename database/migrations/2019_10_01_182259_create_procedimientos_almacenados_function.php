@@ -27,15 +27,13 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                Select cat_articulos.id, cat_articulos.clave, cat_articulos.descripcion, cat_articulos.estatus, cat_articulos.stock_minimo, cat_articulos.stock_maximo,
-                        cat_articulos.existencias, cat_articulos.precio_unitario, cat_cuentas_contables.nombre as partida, cat_unidades_almacen.descripcion, 
-                        cat_unidades_almacen.descripcion_larga
-                from cat_articulos 
-                inner join cat_cuentas_contables on cat_cuentas_contables.id = cat_articulos.id_cuenta
-                inner join cat_unidades_almacen on cat_unidades_almacen.id = cat_articulos.id_unidad
-                ORDER BY cat_articulos.id ASC;
+            SELECT a.clave, a.descripcion, a.estatus, a.stock_minimo, a.existencias, a.precio_unitario, b.descripcion AS descripcion_u_medida, c.nombre as descripcion_cuenta
+                FROM cat_articulos a 
+                INNER JOIN cat_unidades_almacen b ON a.id_unidad = b.id
+                INNER JOIN cat_cuentas_contables c ON a.id_cuenta = c.id; 
             END
         ');
+
 
         /**Procedimiento almacenado para la obtención de todos los artículos de un grupo en específico.    
          * El grupo (Partida) debe ser el nombre del grupo, el nombre se selecciona automáticamente mediante un combobox.
@@ -163,6 +161,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         /**Procedimiento almacenado para la obtención de todos los grupos (Partidas)
          * No recibe parametros.
          */
+        
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_get_grupos;
 
@@ -200,6 +199,23 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 INSERT INTO cat_cuentas_contables ()
             END
         ');
+
+        /**
+         * Procedimiento almacenado para obtener todas las unidades de medida de los artículos
+         * de almacén
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_get_unidades;
+
+            CREATE PROCEDURE `sp_get_unidades`()
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SELECT * FROM cat_unidades_almacen;
+            END
+        ');
     }
 
     /**
@@ -216,5 +232,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_actualizar_articulo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_eliminar_articulo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_get_grupos;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_get_unidades;');
     }
 }

@@ -24,7 +24,7 @@ class ArticuloController extends Controller
             'unidades'=>$unidades,
             'articulos'=>$articulos,
         );
-        return view('almacen.articulos',compact($data));
+        return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,'articulos'=>$articulos]);
     }
 
     /**

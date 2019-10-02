@@ -2,6 +2,11 @@ body{
     background-color: #F3EFE0;
 }
 
+section.content{
+  max-width: 95%;
+}
+
+
 .header{
     border-bottom-style: solid;
     border-bottom-color: #A9ADCC;
@@ -9,12 +14,17 @@ body{
 
 }
 
+
 .accordion{
   width: 100%;
 }
 
 .nombre-ventana{
     color: #777777;
+}
+
+.btn-collapse{
+  background-color: transparent;
 }
 
 .btn-agregar{
@@ -34,13 +44,27 @@ body{
 .col-xs-2{
   margin-top: 1%;
   display:inline-block;
+  min-width: 10%;
   max-width: 13.5%;
+}
+
+.col-sm-2{
+  display:inline-block;
+  max-width: 11%;
 }
 
 .de_baja{
   color: #FFFFFF;
   background-color: linear-gradient(0deg, #FE6E6E, #FE6E6E), #5A88FB;
   border-radius: 2px;
+}
+
+.desc-cuenta{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 .en_stock{
@@ -75,20 +99,25 @@ body{
 }
 
 .stock_bajo{
-  color: #000000;
-  background-color: linear-gradient(0deg, #FEC85E, #FEC85E), #5A88FB;
+  color: #FFFFFA;
+  background-color: #FEC85E;
   border-radius: 2px;
 }
 
 .titulo-panel{
   margin-top: 5px;
   margin-left: 12px;
+  overflow: auto;
 }
 
+.text-truncate{
+  max-width: 10px;
+}
 
 .panel-collapse{
   background-color: #FFFFFA;
 }
+
 .alert {
   padding: 20px;
   background-color: #f44336;

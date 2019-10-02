@@ -25,5 +25,6 @@ if(paneles!=null){
         const boton = botones[index];
         boton.setAttribute("id", "verArticulo"+index);
         boton.setAttribute("data-target", "#collapseArticulo"+index);
+        boton.setAttribute("aria-controls", "collapseArticulo"+index);
     }
 }

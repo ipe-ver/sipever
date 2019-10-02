@@ -2,8 +2,6 @@
 
 @section('content')
 <link href="{{ asset('css/almacen.css') }}" rel="stylesheet" type="text/css" >
-<!--<script src="https://kit.fontawesome.com/002f2479d1.js" crossorigin="anonymous"></script>-->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <div class=" panel-menu panel-default pull-top">
 	<div class="col-md-12">
 	    <div class="container-fluid">
@@ -57,6 +55,6 @@
 	</div>
 </div>
 
-@yield('secciones_almacen');
+@yield('secciones_almacen')
 
 @endsection

@@ -110,5 +110,6 @@
         </div>
         @endforeach
     </div>
+    <span>{{ $articulos->render() }}</span>
 <script type="text/javascript" src="{{ asset('js/articulos.js') }}"></script>
 @endsection

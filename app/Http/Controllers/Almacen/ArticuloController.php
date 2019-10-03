@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Almacen;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use \Illuminate\Pagination\LengthAwarePaginator;
 use DB;
 
 class ArticuloController extends Controller
@@ -15,16 +16,18 @@ class ArticuloController extends Controller
      */
     public function index()
     {
-        $partidas = DB::select("call sp_get_grupos"); 
+        $partidas = DB::select("call sp_get_grupos");
         $unidades = DB::select("call sp_get_unidades");
-        $articulos = DB::select("call sp_get_articulos");
 
-        $data = array(
-            'grupos'=>$partidas,
-            'unidades'=>$unidades,
-            'articulos'=>$articulos,
-        );
-        return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,'articulos'=>$articulos]);
+        $page = request('page',1);
+        $pageSize = 10;
+        $articulos = DB::select("call sp_get_articulos");
+        $offset = ($page * $pageSize) - $pageSize;
+        $data = array_slice($articulos, $offset, $pageSize, true);
+        $paginator = new LengthAwarePaginator($data, count($data), $pageSize, $page);
+
+
+        return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,'articulos'=>$paginator]);
     }
 
     /**

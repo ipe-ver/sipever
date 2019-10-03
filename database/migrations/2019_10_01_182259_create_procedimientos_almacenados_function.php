@@ -196,7 +196,60 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                INSERT INTO cat_cuentas_contables ()
+                INSERT INTO cat_cuentas_contables (cta, scta, sscta, nombre, ctarmo, nomarmo, grupo, estatus, created_at) 
+                        VALUES (cta, scta, sscta, nombre, ctarmo, nomarmo, grupo, estatus, NOW());
+            END
+        ');
+
+        /**Procedimiento almacenado para actualizar un grupo (Partida)
+         * Recibe los mismo parametros que almacenar solo que no se podrán editar todos los datos. Verificar que datos son editables.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_actualizar_grupo;
+
+            CREATE PROCEDURE `sp_actualizar_grupo`(
+                IN `id` INT,
+                IN `cta` CHAR(4),
+                IN `scta` CHAR(4),
+                IN `sscta` CHAR(4),
+                IN `nombre` VARCHAR(191),
+                IN `ctaarmo` VARCHAR(191),
+                IN `nomarmo` VARCHAR(191),
+                IN `grupo` CHAR(1),
+                IN `estatus` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                UPDATE cat_cuentas_contables SET cta = cta, scta = scta, sscta = sscta, nombre = nombre, ctarmo = ctarmo,
+                         nomarmo = nomarmo, grupo = grupo, estatus = estatus, updated_at = NOW())
+                        WHERE cat_cuentas_contables.id = id;
+            END
+        ');
+
+        /**Procedimiento almacenado para eliminar un grupo (Partida)
+         * Este procedimiento dejaría a algunos artículos sin grupo, por lo que se reasignarán a un grupo que se introducirá como parametro.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_eliminar_grupo;
+
+            CREATE PROCEDURE `sp_eliminar_grupo`(
+                IN `id` INT,
+                IN `nuevo_grupo` VARCHAR(191)
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                UPDATE cat_articulos SET id_cuenta = 
+                (SELECT cat_cuentas_contables.id FROM cat_cuentas_contables WHERE cat_cuentas_contables.nombre LIKE nuevo_grupo), updated_at = NOW()
+                WHERE cat_articulos.id_cuenta = id;
+
+                DELETE FROM cat_cuentas_contables 
+                WHERE cat_cuentas_contables.id = id;
             END
         ');
 
@@ -216,6 +269,88 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SELECT * FROM cat_unidades_almacen;
             END
         ');
+
+        /**Procedimiento almacenado para abrir un nuevo periodo
+         * No recibe parametros, solo toma la fecha actual
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_abrir_periodo;
+
+            CREATE PROCEDURE `sp_abrir_periodo`()
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                INSERT INTO periodos (no_mes, anio, estatus) VALUES (MONTH(NOW()), YEAR(NOW()), 1);
+            END
+        ');
+
+        /**Procedimiento almacenado para el registro del inventario inicial de cada artículo.
+         * Todo es automático, algunos datos se actualizarán al cerrar un periodo.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_inventario_inicial;
+
+            CREATE PROCEDURE `sp_inventario_inicial`()
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                DECLARE i INT DEFAULT 1;
+                WHILE i <= (SELECT cat_articulos.id FROM cat_articulos ORDER BY id DESC LIMIT 0, 1) DO
+                    INSERT INTO inventario_inicial_final (id_periodo, id_articulo, cant_inicial, existencias, precio_inicial, precio_promedio, estatus, created_at)
+                        VALUES (
+                            (SELECT periodos.id_periodo FROM periodos WHERE estatus = 1),
+                            i,
+                            (SELECT cat_articulos.existencias FROM cat_articulos WHERE id = i),
+                            0,
+                            (SELECT cat_articulos.precio_unitario FROM cat_articulos WHERE id = i),
+                            0.0,
+                            1,
+                            NOW()
+                        );
+                        SET i = i + 1;
+                END WHILE;
+            END
+        ');
+
+        /**Procedimiento almacenado para el loging de las oficinas
+         * Solo recibe como parametro el login.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_oficina_login;
+
+            CREATE PROCEDURE `sp_oficina_login`(
+                IN `login` VARCHAR(191)
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SELECT * FROM cat_oficinas WHERE cat_oficinas.login LIKE login;
+            END
+        ');
+
+        /**Procedimiento almacenado para cerrar un periodo.
+         * El cierre de un periodo conlleva actualizar la información del inventario, abrir un nuevo periodo y crear nuevos datos para el inventario
+         * Referente al nuevo periodo. Se crea una póliza.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_cerrar_periodo;
+
+            CREATE PROCEDURE `sp_cerrar_periodo`()
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                UPDATE periodos SET estatus = 0 WHERE estatus = 1;
+                CALL sp_abrir_periodo;
+            END
+        ');
     }
 
     /**
@@ -232,6 +367,13 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_actualizar_articulo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_eliminar_articulo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_get_grupos;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_almacenar_grupo;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_actualizar_grupo;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_eliminar_grupo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_get_unidades;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_abrir_periodo;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_inventario_inicial;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_oficina_login;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_cerrar_periodo;');
     }
 }

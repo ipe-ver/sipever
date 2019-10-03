@@ -20,6 +20,7 @@ class CreateTableCatOficinas extends Migration
             $table->string('descripcion');
             $table->char('subdir',4);
             $table->boolean('estatus')->default(1);
+            $table->string('login');
             
             $table->timestamps();
         }); 

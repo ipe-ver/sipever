@@ -16,29 +16,33 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
     {
 
         /**Procedimiento almacenado para la obtención de todos los artículos en general.
-         * No recibe parametros. Se obtienen todos los artículos ordenados por su ID 
+         * No recibe parametros. Se obtienen todos los artículos ordenados por su ID
          */
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_get_articulos;
 
-            CREATE PROCEDURE `sp_get_articulos`()
+            CREATE PROCEDURE `sp_get_articulos`(
+                IN id_comienzo INT
+            )
             LANGUAGE SQL
             NOT DETERMINISTIC
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
             SELECT a.clave, a.descripcion, a.estatus, a.stock_minimo, a.existencias, a.precio_unitario, b.descripcion AS descripcion_u_medida, c.nombre as descripcion_cuenta
-                FROM cat_articulos a 
+                FROM cat_articulos a
                 INNER JOIN cat_unidades_almacen b ON a.id_unidad = b.id
-                INNER JOIN cat_cuentas_contables c ON a.id_cuenta = c.id; 
+                INNER JOIN cat_cuentas_contables c ON a.id_cuenta = c.id
+                WHERE a.id > id_comienzo
+                LIMIT 10;
             END
         ');
 
 
-        /**Procedimiento almacenado para la obtención de todos los artículos de un grupo en específico.    
+        /**Procedimiento almacenado para la obtención de todos los artículos de un grupo en específico.
          * El grupo (Partida) debe ser el nombre del grupo, el nombre se selecciona automáticamente mediante un combobox.
          * Por ejemplo se selecciona la partida 'MATERIAL DE PINTURA', como resultado se obtendrán solo los datos de los artículos de la partida de 'MATERIAL DE PINTURA'
-         */    
+         */
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_obtener_articulos_grupo;
             CREATE PROCEDURE `sp_obtener_articulos_grupo`(
@@ -50,9 +54,9 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             SQL SECURITY DEFINER
             BEGIN
                 Select cat_articulos.id, cat_articulos.clave, cat_articulos.descripcion, cat_articulos.estatus, cat_articulos.stock_minimo, cat_articulos.stock_maximo,
-                        cat_articulos.existencias, cat_articulos.precio_unitario, cat_cuentas_contables.nombre as partida, cat_unidades_almacen.descripcion, 
+                        cat_articulos.existencias, cat_articulos.precio_unitario, cat_cuentas_contables.nombre as partida, cat_unidades_almacen.descripcion,
                         cat_unidades_almacen.descripcion_larga
-                from cat_articulos 
+                from cat_articulos
                 inner join cat_cuentas_contables on cat_cuentas_contables.id = cat_articulos.id_cuenta
                 inner join cat_unidades_almacen on cat_unidades_almacen.id = cat_articulos.id_unidad
                 where cat_cuentas_contables.nombre LIKE grupo;
@@ -73,9 +77,9 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             SQL SECURITY DEFINER
             BEGIN
                 Select cat_articulos.id, cat_articulos.clave, cat_articulos.descripcion, cat_articulos.estatus, cat_articulos.stock_minimo, cat_articulos.stock_maximo,
-                        cat_articulos.existencias, cat_articulos.precio_unitario, cat_cuentas_contables.nombre as partida, cat_unidades_almacen.descripcion, 
+                        cat_articulos.existencias, cat_articulos.precio_unitario, cat_cuentas_contables.nombre as partida, cat_unidades_almacen.descripcion,
                         cat_unidades_almacen.descripcion_larga
-                from cat_articulos 
+                from cat_articulos
                 inner join cat_cuentas_contables on cat_cuentas_contables.id = cat_articulos.id_cuenta
                 INNER join cat_unidades_almacen on cat_unidades_almacen.id = cat_articulos.id_unidad
                 WHERE cat_articulos.descripcion like concat("%",articulo,"%");
@@ -104,9 +108,9 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                INSERT INTO cat_articulos (clave, fecha_baja, descripcion, estatus, stock_minimo, stock_maximo, existencias, precio_unitario, id_cuenta, id_unidad, created_at) 
+                INSERT INTO cat_articulos (clave, fecha_baja, descripcion, estatus, stock_minimo, stock_maximo, existencias, precio_unitario, id_cuenta, id_unidad, created_at)
                     values (clave, CURDATE(), descripcion, estatus, stock_minimo, stock_maximo, existencias, precio_unitario,
-                    (SELECT cat_cuentas_contables.id FROM cat_cuentas_contables WHERE cat_cuentas_contables.nombre LIKE grupo), 
+                    (SELECT cat_cuentas_contables.id FROM cat_cuentas_contables WHERE cat_cuentas_contables.nombre LIKE grupo),
                     (SELECT cat_unidades_almacen.id FROM cat_unidades_almacen WHERE cat_unidades_almacen.descripcion_larga LIKE unidad),
                     NOW());
             END
@@ -133,7 +137,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             BEGIN
                 UPDATE cat_articulos
                 SET descripcion = descripcion, estatus = estatus, existencias = existencias, precio_unitario = precio_unitario,
-                id_cuenta = (SELECT cat_cuentas_contables.id FROM cat_cuentas_contables WHERE cat_cuentas_contables.nombre LIKE grupo), 
+                id_cuenta = (SELECT cat_cuentas_contables.id FROM cat_cuentas_contables WHERE cat_cuentas_contables.nombre LIKE grupo),
                 id_unidad = (SELECT cat_unidades_almacen.id FROM cat_unidades_almacen WHERE cat_unidades_almacen.descripcion_larga LIKE unidad),
                 updated_at = NOW()
                 WHERE cat_articulos.clave = clave;
@@ -161,7 +165,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         /**Procedimiento almacenado para la obtención de todos los grupos (Partidas)
          * No recibe parametros.
          */
-        
+
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_get_grupos;
 
@@ -196,7 +200,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                INSERT INTO cat_cuentas_contables (cta, scta, sscta, nombre, ctarmo, nomarmo, grupo, estatus, created_at) 
+                INSERT INTO cat_cuentas_contables (cta, scta, sscta, nombre, ctarmo, nomarmo, grupo, estatus, created_at)
                         VALUES (cta, scta, sscta, nombre, ctarmo, nomarmo, grupo, estatus, NOW());
             END
         ');
@@ -244,11 +248,11 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                UPDATE cat_articulos SET id_cuenta = 
+                UPDATE cat_articulos SET id_cuenta =
                 (SELECT cat_cuentas_contables.id FROM cat_cuentas_contables WHERE cat_cuentas_contables.nombre LIKE nuevo_grupo), updated_at = NOW()
                 WHERE cat_articulos.id_cuenta = id;
 
-                DELETE FROM cat_cuentas_contables 
+                DELETE FROM cat_cuentas_contables
                 WHERE cat_cuentas_contables.id = id;
             END
         ');

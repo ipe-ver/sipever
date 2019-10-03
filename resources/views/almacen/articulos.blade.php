@@ -17,7 +17,10 @@
                 <h4 class="pull-left nombre-ventana">Vista general de los artículos registrados</h4>
 
                 <div class="pull-right">
-                    <a class="btn btn-agregar"> Agregar</a>
+                    <a class ="icon-ref" style="padding-right: 10px;" href="{{route('almacen.index')}}" title="">
+                        <h3 class="fas fa-home"></h3>
+                    </a>
+                    <a style="margin-bottom: 10px;" class="btn btn-agregar"> Agregar</a>
                 </div>
             </div>
         </div>
@@ -60,7 +63,7 @@
             </div>
         </div>
     @endif
-    <div class="panel-group" id="accordion">
+    <div class="panel-group menu-scroll" id="accordion">
         @foreach ($articulos as $articulo)
         <div class="panel panel-menu">
             <div class="panel-heading">
@@ -92,7 +95,7 @@
                                 <i class="fas fa-trash-alt">  </i>
                             </button>
                             <button id="verArticulo" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapseArticulo" aria-expanded="false">
-                                <i id="iconoDesplegar" class="fas fa-chevron-circle-down desplegar"></i>
+                                <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
                             </button>
 
                     </div>
@@ -101,15 +104,30 @@
             <div id="collapseArticulo" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div class="container-fluid">
-                        <div >
-
-                        </div>
+                        <form>
+                          <div class="form-group">
+                            <label for="articuloclave">Clave</label>
+                            <input type="email" class="form-control small-field" id="articuloClave" aria-describedby="emailHelp" placeholder="Clave" value="{{$articulo->clave}}" disabled="true">
+                            <label for="exampleInputPassword1">Descripción</label>
+                            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Descripcion" value="{{$articulo->descripcion}}">
+                          </div>
+                          <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
         @endforeach
     </div>
-    <span>{{ $articulos->render() }}</span>
+    <div class="pull-right">
+        @if($index > 0)
+        <a class = "icon-ref" href="{{ route('almacen.articulos.next_page', $index-1) }}" title="">
+            <h3 class="fas fa-chevron-circle-left"></h3>
+        </a>
+        @endif
+        <a class="icon-ref" href="{{ route('almacen.articulos.next_page', $index+1) }}" title="">
+            <h3 class="fas fa-chevron-circle-right"></h3>
+        </a>
+    </div>
 <script type="text/javascript" src="{{ asset('js/articulos.js') }}"></script>
 @endsection

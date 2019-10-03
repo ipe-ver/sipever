@@ -2,7 +2,7 @@
 
 @section('content')
 <link href="{{ asset('css/almacen.css') }}" rel="stylesheet" type="text/css" >
-<div class=" panel-menu panel-default pull-top">
+<div class=" menu-almacen panel-default pull-top">
 
 	    <div class="container-fluid">
 		    <div class="row">

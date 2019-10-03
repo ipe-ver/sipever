@@ -41,8 +41,10 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.'], function() {
     Route::get('/', function() { return view('almacen.index'); })->name('index');
+    Route::get('/articulos/page/{no_index}','Almacen\ArticuloController@page')->name('articulos.next_page');
     Route::resource('periodo','Almacen\PeriodoController');
     Route::resource('articulos', 'Almacen\ArticuloController');
+
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'compras', 'as' => 'compras.'], function() {

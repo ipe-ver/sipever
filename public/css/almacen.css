@@ -6,6 +6,18 @@ section.content{
   max-width: 95%;
 }
 
+.small-field{
+  max-width: 100px;
+}
+
+.icon-ref{
+  padding-top: 0;
+  color: #000000;
+}
+
+.icon-ref:hover{
+  color: #A9ADCC;
+}
 
 .header{
     border-bottom-style: solid;
@@ -87,14 +99,20 @@ section.content{
   display: inline-block;
   width: 100%;
   height: auto;
-  margin-top: 10px;
   background-color: #FFFFFA;
   border-radius: 5px;
   -webkit-box-shadow: 7px 6px 7px 0px #777777;
   box-shadow: 7px 6px 7px 0px #777777;
 }
 
-.panel-menu{
+.menu-scroll{
+  margin-top: 10px;
+  padding-bottom: 0;
+  height: 24.3em;
+  overflow-y: scroll;
+}
+
+.menu-almacen{
   display: inline-block;
   width: 100%;
   min-height: 50px;

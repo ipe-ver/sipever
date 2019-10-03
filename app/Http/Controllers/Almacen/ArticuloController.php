@@ -16,18 +16,27 @@ class ArticuloController extends Controller
      */
     public function index()
     {
+        $no_index = 0;
         $partidas = DB::select("call sp_get_grupos");
         $unidades = DB::select("call sp_get_unidades");
-
-        $page = request('page',1);
-        $pageSize = 10;
-        $articulos = DB::select("call sp_get_articulos");
-        $offset = ($page * $pageSize) - $pageSize;
-        $data = array_slice($articulos, $offset, $pageSize, true);
-        $paginator = new LengthAwarePaginator($data, count($data), $pageSize, $page);
+        $articulos = DB::select("call sp_get_articulos(?)", array($no_index));
 
 
-        return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,'articulos'=>$paginator]);
+        return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
+            'articulos'=>$articulos, 'index' => $no_index]);
+    }
+
+    public function page($no_index){
+        $partidas = DB::select("call sp_get_grupos");
+        $unidades = DB::select("call sp_get_unidades");
+        $articulos = DB::select("call sp_get_articulos(?)", array($no_index*10));
+
+        if($no_index == 0){
+            return $this->index();
+        }else{
+            return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
+            'articulos'=>$articulos, 'index' => $no_index]);
+        }
     }
 
     /**

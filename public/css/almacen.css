@@ -6,8 +6,12 @@ section.content{
   max-width: 95%;
 }
 
-.small-field{
+.sm-field{
   max-width: 100px;
+}
+
+.lg-field{
+  max-width: 500px;
 }
 
 .icon-ref{

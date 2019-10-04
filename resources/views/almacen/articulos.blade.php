@@ -106,10 +106,40 @@
                     <div class="container-fluid">
                         <form>
                           <div class="form-group">
-                            <label for="articuloclave">Clave</label>
-                            <input type="email" class="form-control small-field" id="articuloClave" aria-describedby="emailHelp" placeholder="Clave" value="{{$articulo->clave}}" disabled="true">
-                            <label for="exampleInputPassword1">Descripción</label>
-                            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Descripcion" value="{{$articulo->descripcion}}">
+                            <div class="row">
+                                <label class="col-md-1" for="articuloclave">Clave</label>
+                                <label class="col-md-2" for="articuloDescripcion">Descripción</label>
+                            </div>
+                            <div class="row">
+                                <input type="text" class="col-sm-1" id="articuloClave" aria-describedby="emailHelp" placeholder="Clave" value="{{$articulo->clave}}" disabled="true">
+                                <input type="text" class="col-md-6" id="articuloDescripcion" placeholder="Descripcion" value="{{$articulo->descripcion}}" disabled="true">
+                            </div>
+                            <div class="row">
+                                <label class="col-md-1 text-nowrap" for="articuloStock">Stock Minimo</label>
+                                <label class="col-md-1" for="articuloExistencias">Existencias</label>
+                            </div>
+                            <div class="row">
+                                <input type="text" class="col-sm-1" id="articuloStock" placeholder="Descripcion" value="{{$articulo->stock_minimo}}" disabled="true">
+                                <input type="text" class="col-sm-1" id="articuloExistencias" placeholder="Descripcion" value="{{$articulo->existencias}}" disabled="true">
+                            </div>
+                            <div class="row">
+                                <label class="col-sm-1" for="articuloPrecio">Precio</label>
+                                <label class="col-sm-1" for="articuloEstatus">Estatus</label>
+                            </div>
+                            <div class="row">
+                                <input type="text" class="col-sm-1" id="articuloPrecio" placeholder="Descripcion" value="$ {{$articulo->precio_unitario}}" disabled="true">
+                                @if($articulo->existencias > $articulo->stock_minimo)
+                                    <input type="text" class="col-sm-2" name="" id="articuloEstatus" value="En stock" placeholder="Existencias" disabled="true">
+                                @elseif($articulo->existencias <= $articulo->stock_minimo)
+                                    <input type="text" class="col-sm-2" name="" id="articuloEstatus" value="Stock bajo" placeholder="Existencias" disabled="true">
+                                @elseif($articulo->estatus == 0)
+                                    <input type="text" name="" class="col-sm-2" id="articuloEstatus" value="De baja" placeholder="Existencias">
+                                @endif
+                            </div>
+                            <label for="articuloUnidad">Unidad de medida</label>
+                            <input type="text" class="form-control lg-field" id="articuloUnidad" placeholder="Descripcion" value="{{$articulo->descripcion_u_medida}}" disabled="true">
+                            <label for="articuloGrupo">Grupo</label>
+                            <input type="text" class="form-control lg-field" id="articuloGrupo" placeholder="Descripcion" value="{{$articulo->descripcion_cuenta}}" disabled="true">
                           </div>
                           <button type="submit" class="btn btn-primary">Submit</button>
                         </form>

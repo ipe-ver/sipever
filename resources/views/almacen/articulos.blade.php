@@ -33,7 +33,14 @@
                         <button class = "btn btn-agregar" type="button">Buscar</button>
                     </span>
                 </div>
-
+                <div class="pull-right">
+                    <select class="select-busqueda">
+                        <option>Buscar articulo por grupo</option>
+                        @foreach($grupos as  $partida)
+                            <option>{{$partida->nombre}}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
         </div>
     </div>
@@ -88,10 +95,10 @@
                 		@endif
                     	<div class="col-sm-3 desc-cuenta text-nowrap text-lowercase">{{$articulo->descripcion_cuenta}}</div>
                     	<div class="pull-right">
-                            <button class = "btn btn-collapse" id="btn_editar" disabled="true">
+                            <button class = "btn btn-collapse btn-edit" id="btn_editar" disabled="true">
                                 <i class="fas fa-pen">  </i>
                             </button>
-                            <button class="btn btn-collapse" id="btn_eliminar" disabled="true">
+                            <button class="btn btn-collapse btn-delete" id="btn_eliminar" disabled="true">
                                 <i class="fas fa-trash-alt">  </i>
                             </button>
                             <button id="verArticulo" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapseArticulo" aria-expanded="false">
@@ -116,10 +123,17 @@
                                 <input type="text" class="col-sm-1 colm-form" id="articuloClave" aria-describedby="emailHelp" placeholder="Clave" value="{{$articulo->clave}}" disabled="true">
                                 <input type="text" class="col-md-6 colm-form" id="articuloDescripcion" placeholder="Descripcion" value="{{$articulo->descripcion}}" disabled="true">
                                 <input type="text" class="col-sm-2 colm-form" id="articuloUnidad" placeholder="Descripcion" value="{{$articulo->descripcion_u_medida}}" disabled="true">
-                                <input type="text" class="col-lg-3 colm-form" id="articuloGrupo" placeholder="Descripcion" value="{{$articulo->descripcion_cuenta}}" disabled="true">
+                                <select class="col-lg-3 colm-form select-form" id="articuloGrupo" disabled>
+                                    <option>{{$articulo->descripcion_cuenta}}</option>
+                                    <option>Grupo</option>
+                                    @foreach($grupos as  $partida)
+                                        <option>{{$partida->nombre}}</option>
+                                    @endforeach
+                                </select>
+                                
                             </div>
                             <div class="row">
-                                <label class="col-md-2" for="articuloStock">Stock Minimo</label>
+                                <label class="col-md-2" for="articuloStock">Stock Min.</label>
                                 <label class="col-md-1 " for="articuloExistencias">Existencias</label>
                                 <label class="col-sm-1 colm-form-md" for="articuloPrecio">Precio</label>
                                 <label class="col-sm-1 colm-form-md" for="articuloEstatus">Estatus</label>
@@ -137,8 +151,8 @@
                                 @endif
                                 <div class="col-md-5 colm-form-btns pull-right">
                                     <div class="pull-right">
-                                        <button type="button" class="btn btn-cancel">Cancelar</button>
-                                        <button type="submit" class="btn btn-submit">Guardar</button>
+                                        <button type="button" class="btn btn-cancel" disabled="true">Cancelar</button>
+                                        <button type="submit" class="btn btn-submit" disabled="true">Guardar</button>
                                     </div>
                                 </div>
                             </div>

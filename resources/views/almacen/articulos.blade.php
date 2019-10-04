@@ -108,40 +108,41 @@
                           <div class="form-group">
                             <div class="row">
                                 <label class="col-md-1" for="articuloclave">Clave</label>
-                                <label class="col-md-2" for="articuloDescripcion">Descripción</label>
+                                <label class="col-md-6 text-left colm-form" for="articuloDescripcion">Descripción</label>
+                                <label class="col-md-2 colm-form" for="articuloUnidad">Unidad</label>
+                                <label class="col-sm-2 colm-form text-left" for="articuloGrupo">Grupo</label>
                             </div>
                             <div class="row">
-                                <input type="text" class="col-sm-1" id="articuloClave" aria-describedby="emailHelp" placeholder="Clave" value="{{$articulo->clave}}" disabled="true">
-                                <input type="text" class="col-md-6" id="articuloDescripcion" placeholder="Descripcion" value="{{$articulo->descripcion}}" disabled="true">
+                                <input type="text" class="col-sm-1 colm-form" id="articuloClave" aria-describedby="emailHelp" placeholder="Clave" value="{{$articulo->clave}}" disabled="true">
+                                <input type="text" class="col-md-6 colm-form" id="articuloDescripcion" placeholder="Descripcion" value="{{$articulo->descripcion}}" disabled="true">
+                                <input type="text" class="col-sm-2 colm-form" id="articuloUnidad" placeholder="Descripcion" value="{{$articulo->descripcion_u_medida}}" disabled="true">
+                                <input type="text" class="col-lg-3 colm-form" id="articuloGrupo" placeholder="Descripcion" value="{{$articulo->descripcion_cuenta}}" disabled="true">
                             </div>
                             <div class="row">
-                                <label class="col-md-1 text-nowrap" for="articuloStock">Stock Minimo</label>
-                                <label class="col-md-1" for="articuloExistencias">Existencias</label>
+                                <label class="col-md-2" for="articuloStock">Stock Minimo</label>
+                                <label class="col-md-1 " for="articuloExistencias">Existencias</label>
+                                <label class="col-sm-1 colm-form-md" for="articuloPrecio">Precio</label>
+                                <label class="col-sm-1 colm-form-md" for="articuloEstatus">Estatus</label>
                             </div>
                             <div class="row">
-                                <input type="text" class="col-sm-1" id="articuloStock" placeholder="Descripcion" value="{{$articulo->stock_minimo}}" disabled="true">
-                                <input type="text" class="col-sm-1" id="articuloExistencias" placeholder="Descripcion" value="{{$articulo->existencias}}" disabled="true">
-                            </div>
-                            <div class="row">
-                                <label class="col-sm-1" for="articuloPrecio">Precio</label>
-                                <label class="col-sm-1" for="articuloEstatus">Estatus</label>
-                            </div>
-                            <div class="row">
-                                <input type="text" class="col-sm-1" id="articuloPrecio" placeholder="Descripcion" value="$ {{$articulo->precio_unitario}}" disabled="true">
+                                <input type="text" class="col-sm-1 colm-form-md" id="articuloStock" placeholder="Descripcion" value="{{$articulo->stock_minimo}}" disabled="true">
+                                <input type="text" class="col-sm-1 colm-form-md" id="articuloExistencias" placeholder="Descripcion" value="{{$articulo->existencias}}" disabled="true">
+                                <input type="text" class="col-sm-1 colm-form-md" id="articuloPrecio" placeholder="Descripcion" value="$ {{$articulo->precio_unitario}}" disabled="true">
                                 @if($articulo->existencias > $articulo->stock_minimo)
-                                    <input type="text" class="col-sm-2" name="" id="articuloEstatus" value="En stock" placeholder="Existencias" disabled="true">
+                                    <input type="text" class="col-sm-2 colm-form-md" name="" id="articuloEstatus" value="En stock" placeholder="Existencias" disabled="true">
                                 @elseif($articulo->existencias <= $articulo->stock_minimo)
-                                    <input type="text" class="col-sm-2" name="" id="articuloEstatus" value="Stock bajo" placeholder="Existencias" disabled="true">
+                                    <input type="text" class="col-sm-2 colm-form-md" name="" id="articuloEstatus" value="Stock bajo" placeholder="Existencias" disabled="true">
                                 @elseif($articulo->estatus == 0)
-                                    <input type="text" name="" class="col-sm-2" id="articuloEstatus" value="De baja" placeholder="Existencias">
+                                    <input type="text" class="col-sm-2 colm-form-md" id="articuloEstatus" value="De baja" placeholder="Existencias">
                                 @endif
+                                <div class="col-md-5 colm-form-btns pull-right">
+                                    <div class="pull-right">
+                                        <button type="button" class="btn btn-cancel">Cancelar</button>
+                                        <button type="submit" class="btn btn-submit">Guardar</button>
+                                    </div>
+                                </div>
                             </div>
-                            <label for="articuloUnidad">Unidad de medida</label>
-                            <input type="text" class="form-control lg-field" id="articuloUnidad" placeholder="Descripcion" value="{{$articulo->descripcion_u_medida}}" disabled="true">
-                            <label for="articuloGrupo">Grupo</label>
-                            <input type="text" class="form-control lg-field" id="articuloGrupo" placeholder="Descripcion" value="{{$articulo->descripcion_cuenta}}" disabled="true">
                           </div>
-                          <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
                     </div>
                 </div>

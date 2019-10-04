@@ -57,6 +57,38 @@ section.content{
     opacity: 1;
 }
 
+.btn-submit{
+    background-color: #7C2E0C;
+    border-radius: 5px;
+    color: #FFFFFA;
+    opacity: 0.8;
+    margin-top: 0;
+}
+
+.btn-submit:hover{
+  background-color: #947E07;
+  color: #000000;
+}
+
+.btn-cancel{
+  background-color: transparent;
+  border-color: #000000;
+  border-radius: 5px;
+  color: #000000;
+  opacity: 0.8;
+  margin-top: 0;
+}
+
+.btn-cancel:hover{
+  background-color: #000000;
+  color: #FFFFFA;
+}
+
+.btn-cancel:active:focus {
+  background-color: #transparent;
+  color: #FFFFFA;
+}
+
 .col-xs-2{
   margin-top: 1%;
   display:inline-block;
@@ -72,6 +104,37 @@ section.content{
 .col-sm-2{
   display:inline-block;
   max-width: 11%;
+}
+
+.col-md-2{
+  display:inline-block;
+  max-width: 11%;
+}
+
+.col-md-3{
+  display:inline-block;
+  max-width: 13.5%;
+}
+
+.col-md-6{
+  display: inline-block;
+  max-width: 50%;
+}
+
+.col-lg-3{
+  min-width: 26%;
+}
+
+.colm-form-md{
+  margin-left: 20px;
+}
+
+.colm-form{
+  margin-left: 10px;
+}
+
+.col-md-7{
+  max-width: 60%;
 }
 
 .de_baja{

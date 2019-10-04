@@ -75,7 +75,6 @@
         <div class="panel panel-menu">
             <div class="panel-heading">
                 <div class="panel-title titulo-panel" id="headingOne">
-
                     	<div class=" col-sm-5 desc-cuenta pull-left">
                     		{{ $articulo->descripcion }}
                     	</div>

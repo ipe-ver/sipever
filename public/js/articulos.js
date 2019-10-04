@@ -18,6 +18,10 @@ for (i = 0; i < close.length; i++) {
 var paneles = document.getElementsByClassName('panel-menu');
 for (var i = paneles.length - 1; i >= 0; i--) {
     paneles[i].setAttribute("id", "Articulo"+i);
+    var campos = paneles[i].getElementsByClassName('panel-body')[0].getElementsByTagName("input");
+    for (var index = campos.length-1; index >= 0; index--) {
+        campos[index].setAttribute("id", campos[index].id+i);
+    }
  }
 
 var btn_editar=document.getElementsByClassName("btn-edit");

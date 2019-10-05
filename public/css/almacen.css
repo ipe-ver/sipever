@@ -7,8 +7,8 @@ input{
   border-radius: 5px;
 }
 
-input[type=text]:disabled {
-  background: #FFFFFA;
+input[type=text]:disabled{
+  background-color: #EFECF5;
 }
 
 section.content{
@@ -288,11 +288,19 @@ section.content{
 .select-busqueda{
   border-radius: 5px;
   height: 35px;
+  background-color: #FFFFFA;
 }
 
 .select-form{
   height: 25px;
   border-radius: 5px;
+  background-color: #FFFFFA;
+}
+
+.select-form:disabled{
+  height: 25px;
+  border-radius: 5px;
+  background-color: #EFECF5;
 }
 
 @keyframes fadein {

@@ -115,31 +115,33 @@
                             <div class="row">
                                 <label class="col-md-1" for="articuloclave">Clave</label>
                                 <label class="col-md-6 text-left colm-form" for="articuloDescripcion">Descripción</label>
+                                <label class="col-md-1 " style="margin-left: 20px;" for="articuloExistencias">Existencias</label>
                                 <label class="col-md-2 colm-form" for="articuloUnidad">Unidad</label>
-                                <label class="col-sm-2 colm-form text-left" for="articuloGrupo">Grupo</label>
+
                             </div>
                             <div class="row">
                                 <input type="text" class="col-sm-1 colm-form" id="articuloClave" aria-describedby="emailHelp" placeholder="Clave" value="{{$articulo->clave}}" disabled="true">
                                 <input type="text" class="col-md-6 colm-form" id="articuloDescripcion" placeholder="Descripcion" value="{{$articulo->descripcion}}" disabled="true">
-                                <input type="text" class="col-sm-2 colm-form" id="articuloUnidad" placeholder="Descripcion" value="{{$articulo->descripcion_u_medida}}" disabled="true">
-                                <select class="col-lg-3 colm-form select-form" id="articuloGrupo" disabled>
-                                    <option>{{$articulo->descripcion_cuenta}}</option>
-                                    <option>Grupo</option>
-                                    @foreach($grupos as  $partida)
-                                        <option>{{$partida->nombre}}</option>
+                                <input type="text" class="col-sm-1 colm-form-md" id="articuloExistencias" placeholder="Descripcion" value="{{$articulo->existencias}}" disabled="true">
+                                <select class="col-sm-2 colm-form select-form" dir="ltr" id="articuloUnidad" disabled>
+                                    <option>{{$articulo->descripcion_u_medida}}</option>
+                                    @foreach($unidades as $unidad)
+                                        @if($unidad->descripcion != $articulo->descripcion_u_medida)
+                                            <option>{{ $unidad->descripcion }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
-                                
+
+
                             </div>
                             <div class="row">
                                 <label class="col-md-2" for="articuloStock">Stock Min.</label>
-                                <label class="col-md-1 " for="articuloExistencias">Existencias</label>
-                                <label class="col-sm-1 colm-form-md" for="articuloPrecio">Precio</label>
+                                <label class="col-sm-1" for="articuloPrecio">Precio</label>
                                 <label class="col-sm-1 colm-form-md" for="articuloEstatus">Estatus</label>
+                                <label class="col-sm-2 colm-form-md text-center" for="articuloGrupo">Grupo</label>
                             </div>
                             <div class="row">
                                 <input type="text" class="col-sm-1 colm-form-md" id="articuloStock" placeholder="Descripcion" value="{{$articulo->stock_minimo}}" disabled="true">
-                                <input type="text" class="col-sm-1 colm-form-md" id="articuloExistencias" placeholder="Descripcion" value="{{$articulo->existencias}}" disabled="true">
                                 <input type="text" class="col-sm-1 colm-form-md" id="articuloPrecio" placeholder="Descripcion" value="$ {{$articulo->precio_unitario}}" disabled="true">
                                 @if($articulo->existencias > $articulo->stock_minimo)
                                     <input type="text" class="col-sm-2 colm-form-md" name="" id="articuloEstatus" value="En stock" placeholder="Existencias" disabled="true">
@@ -148,10 +150,18 @@
                                 @elseif($articulo->estatus == 0)
                                     <input type="text" class="col-sm-2 colm-form-md" id="articuloEstatus" value="De baja" placeholder="Existencias">
                                 @endif
+                                <select class="col-lg-5 colm-form select-form" dir="ltr" id="articuloGrupo" disabled>
+                                    <option>{{$articulo->descripcion_cuenta}}</option>
+                                    @foreach($grupos as  $partida)
+                                        @if($partida->nombre != $articulo->descripcion_cuenta)
+                                            <option>{{$partida->nombre}}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
                                 <div class="col-md-5 colm-form-btns pull-right">
                                     <div class="pull-right">
-                                        <button type="button" class="btn btn-cancel" disabled="true">Cancelar</button>
-                                        <button type="submit" class="btn btn-submit" disabled="true">Guardar</button>
+                                        <button type="button" id="btn-cancelar" class="btn btn-cancel" disabled="true">Cancelar</button>
+                                        <button type="submit" id="btn-guardar" class="btn btn-submit" disabled="true">Guardar</button>
                                     </div>
                                 </div>
                             </div>

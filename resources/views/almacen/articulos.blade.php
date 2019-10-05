@@ -20,7 +20,7 @@
                     <a class ="icon-ref" style="padding-right: 10px;" href="{{route('almacen.index')}}" title="">
                         <h3 class="fas fa-home"></h3>
                     </a>
-                    <a style="margin-bottom: 10px;" class="btn btn-agregar"> Agregar</a>
+                    <a style="margin-bottom: 10px;" type="button" class="btn btn-agregar"> Agregar</a>
                 </div>
             </div>
         </div>
@@ -92,7 +92,7 @@
                 				De baja
                 			</div>
                 		@endif
-                    	<div class="col-sm-3 desc-cuenta text-nowrap text-lowercase">{{$articulo->descripcion_cuenta}}</div>
+                    	<div class="col-sm-3 desc-cuenta text-nowrap">{{$articulo->descripcion_cuenta}}</div>
                     	<div class="pull-right">
                             <button class = "btn btn-collapse btn-edit" id="btn_editar" disabled="true">
                                 <i class="fas fa-pen">  </i>
@@ -111,19 +111,20 @@
                 <div class="panel-body">
                     <div class="container-fluid">
                         <form>
-                          <div class="form-group">
+                            @csrf
+                            @method('PUT')
                             <div class="row">
-                                <label class="col-md-1" for="articuloclave">Clave</label>
+                                <label class="col-md-2" for="articuloclave">Clave</label>
                                 <label class="col-md-6 text-left colm-form" for="articuloDescripcion">Descripción</label>
-                                <label class="col-md-1 " style="margin-left: 20px;" for="articuloExistencias">Existencias</label>
+                                <label class="col-md-2 " style="margin-left: 20px;" for="articuloExistencias">Existencias</label>
                                 <label class="col-md-2 colm-form" for="articuloUnidad">Unidad</label>
 
                             </div>
                             <div class="row">
-                                <input type="text" class="col-sm-1 colm-form" id="articuloClave" aria-describedby="emailHelp" placeholder="Clave" value="{{$articulo->clave}}" disabled="true">
-                                <input type="text" class="col-md-6 colm-form" id="articuloDescripcion" placeholder="Descripcion" value="{{$articulo->descripcion}}" disabled="true">
-                                <input type="text" class="col-sm-1 colm-form-md" id="articuloExistencias" placeholder="Descripcion" value="{{$articulo->existencias}}" disabled="true">
-                                <select class="col-sm-2 colm-form select-form" dir="ltr" id="articuloUnidad" disabled>
+                                <input name="clave" type="text" class="col-sm-1 colm-form form-control" id="articuloClave" placeholder="Clave" value="{{$articulo->clave}}" disabled="true" required>
+                                <input name="descripcion" type="text" class="col-md-6 colm-form form-control" id="articuloDescripcion" placeholder="Descripcion" value="{{$articulo->descripcion}}" disabled="true" required>
+                                <input name="existencias" type="text" class="col-sm-1 colm-form-md form-control" id="articuloExistencias" placeholder="Descripcion" value="{{$articulo->existencias}}" disabled="true" required>
+                                <select name="unidad" class="col-sm-2 colm-form form-control" dir="ltr" id="articuloUnidad" disabled required>
                                     <option>{{$articulo->descripcion_u_medida}}</option>
                                     @foreach($unidades as $unidad)
                                         @if($unidad->descripcion != $articulo->descripcion_u_medida)
@@ -131,30 +132,28 @@
                                         @endif
                                     @endforeach
                                 </select>
-
-
                             </div>
                             <div class="row">
                                 <label class="col-md-2" for="articuloStock">Stock Min.</label>
-                                <label class="col-sm-1" for="articuloPrecio">Precio</label>
+                                <label class="col-sm-2" style="margin-left: 10px;" for="articuloPrecio">Precio</label>
                                 <label class="col-sm-1 colm-form-md" for="articuloEstatus">Estatus</label>
                                 <label class="col-sm-2 colm-form-md text-center" for="articuloGrupo">Grupo</label>
                             </div>
                             <div class="row">
-                                <input type="text" class="col-sm-1 colm-form-md" id="articuloStock" placeholder="Descripcion" value="{{$articulo->stock_minimo}}" disabled="true">
-                                <input type="text" class="col-sm-1 colm-form-md" id="articuloPrecio" placeholder="Descripcion" value="$ {{$articulo->precio_unitario}}" disabled="true">
+                                <input name="stock_minimo" type="text" class="col-md-2 colm-form-md form-control" id="articuloStock" placeholder="Descripcion" value="{{$articulo->stock_minimo}}" disabled="true" required>
+                                <input name="precio_unitario" type="text" class="col-sm-1 colm-form-md form-control" id="articuloPrecio" placeholder="Descripcion" value="$ {{$articulo->precio_unitario}}" disabled="true" required>
                                 @if($articulo->existencias > $articulo->stock_minimo)
-                                    <input type="text" class="col-sm-2 colm-form-md" name="" id="articuloEstatus" value="En stock" placeholder="Existencias" disabled="true">
+                                    <input type="text" class="col-sm-2 colm-form-md form-control" name="" id="articuloEstatus" value="En stock" placeholder="Existencias" disabled="true">
                                 @elseif($articulo->existencias <= $articulo->stock_minimo)
-                                    <input type="text" class="col-sm-2 colm-form-md" name="" id="articuloEstatus" value="Stock bajo" placeholder="Existencias" disabled="true">
+                                    <input type="text" class="col-sm-2 colm-form-md form-control" name="" id="articuloEstatus" value="Stock bajo" placeholder="Existencias" disabled="true">
                                 @elseif($articulo->estatus == 0)
-                                    <input type="text" class="col-sm-2 colm-form-md" id="articuloEstatus" value="De baja" placeholder="Existencias">
+                                    <input type="text" class="col-sm-2 colm-form-md form-control" id="articuloEstatus" value="De baja" placeholder="Existencias">
                                 @endif
-                                <select class="col-lg-5 colm-form select-form" dir="ltr" id="articuloGrupo" disabled>
-                                    <option>{{$articulo->descripcion_cuenta}}</option>
+                                <select name="partida" class="col-sm-6 colm-form form-control" dir="ltr" id="articuloGrupo" required disabled>
+                                    <option value="...">{{$articulo->descripcion_cuenta}}</option>
                                     @foreach($grupos as  $partida)
                                         @if($partida->nombre != $articulo->descripcion_cuenta)
-                                            <option>{{$partida->nombre}}</option>
+                                            <option value="{{$partida->nombre}}">{{$partida->nombre}}</option>
                                         @endif
                                     @endforeach
                                 </select>
@@ -165,7 +164,6 @@
                                     </div>
                                 </div>
                             </div>
-                          </div>
                         </form>
                     </div>
                 </div>

@@ -7,6 +7,16 @@ input{
   border-radius: 5px;
 }
 
+input.form-control{
+  border: 1px solid #BDB5B5;
+  border-radius: 5px;
+}
+
+select.form-control{
+  border: 1px solid #BDB5B5;
+  border-radius: 5px;
+}
+
 input[type=text]:disabled{
   background-color: #EFECF5;
 }
@@ -52,13 +62,22 @@ section.content{
   background-color: transparent;
 }
 
-.btn-agregar{
+.btn-agregar, .btn-agregar:focus{
     background-color: #875A01;
     border-radius: 5px;
     color: #FFFFFA;
     opacity: 0.8;
     margin-top: 0;
 }
+
+.btn-agregar[type="button"]:active{
+  background-color: #000000;
+    border-radius: 5px;
+    color: #FFFFFA;
+    opacity: 1;
+}
+
+
 .btn-agregar:hover{
     background-color: #875A01;
     border-radius: 5px;
@@ -66,20 +85,29 @@ section.content{
     opacity: 1;
 }
 
-.btn-submit{
+.btn-submit, .btn-submit:focus{
     background-color: #7C2E0C;
     border-radius: 5px;
     color: #FFFFFA;
     opacity: 0.8;
     margin-top: 0;
+    cursor: pointer;
+}
+
+.btn-submit[type="button"]:active, .btn-submit[type="submit"]:active{
+  background-color: #b05a35;
+  color: #FFFFFA;
+  box-shadow: 0 0 #666;
+  transform: translateY(4px);
 }
 
 .btn-submit:hover{
-  background-color: #947E07;
-  color: #000000;
+  background-color: #4c0000;
+  color: #FFFFFA;
+  box-shadow: 0 5px #999;
 }
 
-.btn-cancel{
+.btn-cancel, .btn-cancel:focus{
   background-color: transparent;
   border-color: #000000;
   border-radius: 5px;
@@ -88,14 +116,18 @@ section.content{
   margin-top: 0;
 }
 
+.btn-cancel[type="button"]:active{
+  background-color: #26413c;
+  color: #FFFFFA;
+  box-shadow: 0 0 #666;
+  transform: translateY(4px);
+}
+
+
 .btn-cancel:hover{
   background-color: #000000;
   color: #FFFFFA;
-}
-
-.btn-cancel:active:focus {
-  background-color: #transparent;
-  color: #FFFFFA;
+  box-shadow: 0 5px #999;
 }
 
 .col-xs-2{
@@ -130,16 +162,24 @@ section.content{
   max-width: 50%;
 }
 
+.col-sm-6{
+  max-width: 40%;
+}
+
 .col-lg-3{
   min-width: 26%;
 }
 
 .colm-form-md{
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 .colm-form{
   margin-left: 10px;
+}
+
+.colm-form:disabled{
+  background-color: #EFECF5;
 }
 
 .col-md-7{

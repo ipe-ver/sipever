@@ -78,18 +78,18 @@
                     		{{ $articulo->descripcion }}
                     	</div>
                     	<div class="col-xs-1 text-nowrap"> {{ $articulo->descripcion_u_medida }}</div>
-                		@if($articulo->existencias > $articulo->stock_minimo)
-                			<div class="col-sm-2 en_stock text-nowrap text-center">
-                				En Stock
-                			</div>
+                		@if($articulo->estatus == 0)
+                            <div class="col-sm-2 de_baja text-nowrap text-center">
+                                De baja
+                            </div>
                 		@elseif($articulo->existencias <= $articulo->stock_minimo)
                 			<div class="col-sm-2 stock_bajo text-nowrap text-center">
                 				Stock bajo
                 			</div>
-                		@elseif($articulo->estatus == 0)
-                			<div class="col-sm-2 de_baja text-nowrap text-center">
-                				De baja
-                			</div>
+                		@elseif($articulo->existencias > $articulo->stock_minimo)
+                            <div class="col-sm-2 en_stock text-nowrap text-center">
+                                En Stock
+                            </div>
                 		@endif
                     	<div class="col-sm-3 desc-cuenta text-nowrap">{{$articulo->descripcion_cuenta}}</div>
                     	<div class="pull-right">
@@ -141,11 +141,11 @@
                             <div class="row">
                                 <input name="stock_minimo" type="text" class="col-md-2 colm-form-md form-control" id="articuloStock" placeholder="Descripcion" value="{{$articulo->stock_minimo}}" disabled="true" required>
                                 <input name="precio_unitario" type="text" class="col-sm-1 colm-form-md form-control" id="articuloPrecio" placeholder="Descripcion" value="{{$articulo->precio_unitario}}" readonly required>
-                                @if($articulo->existencias == 0)
-                                    <input type="text" class="col-sm-2 colm-form-md form-control" id="articuloEstatus" value="De baja" placeholder="Existencias">
+                                @if($articulo->estatus == 0)
+                                    <input type="text" class="col-sm-2 colm-form-md form-control" id="articuloEstatus" value="De baja" placeholder="Existencias" disabled="true">
                                 @elseif($articulo->existencias > $articulo->stock_minimo)
                                     <input type="text" class="col-sm-2 colm-form-md form-control" name="" id="articuloEstatus" value="En stock" placeholder="Existencias" disabled="true">
-                                @elseif($articulo->existencias <= $articulo->stock_minimo)
+                                @elseif($articulo->existencias == $articulo->stock_minimo)
                                     <input type="text" class="col-sm-2 colm-form-md form-control" name="" id="articuloEstatus" value="Stock bajo" placeholder="Existencias" disabled="true">
                                 @endif
                                 <select name="partida" class="col-sm-6 colm-form form-control" dir="ltr" id="articuloGrupo" required disabled>

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use \Illuminate\Pagination\LengthAwarePaginator;
 use DB;
+use Illuminate\Support\Facades\Input;
 
 class ArticuloController extends Controller
 {
@@ -89,9 +90,12 @@ class ArticuloController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update()
     {
-        //
+        $input = Input::only('clave','descripcion','existencias');
+        $clave = $input['clave'];
+        return redirect()->route('almacen.articulos.index')
+                        ->with('success',$clave);
     }
 
     /**

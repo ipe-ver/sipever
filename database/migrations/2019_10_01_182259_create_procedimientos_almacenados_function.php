@@ -29,7 +29,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-            SELECT a.clave, a.descripcion, a.estatus, a.stock_minimo, a.existencias, a.precio_unitario, b.descripcion AS descripcion_u_medida, c.nombre as descripcion_cuenta
+            SELECT a.id, a.clave, a.descripcion, a.estatus, a.stock_minimo, a.existencias, a.precio_unitario, b.descripcion AS descripcion_u_medida, c.nombre as descripcion_cuenta
                 FROM cat_articulos a
                 INNER JOIN cat_unidades_almacen b ON a.id_unidad = b.id
                 INNER JOIN cat_cuentas_contables c ON a.id_cuenta = c.id
@@ -128,6 +128,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 IN `existencias` INT,
                 IN `precio_unitario` DOUBLE,
                 IN `grupo` VARCHAR(191),
+                IN `stock_minimo` INT,
                 IN `unidad` VARCHAR(191)
             )
             LANGUAGE SQL
@@ -137,6 +138,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             BEGIN
                 UPDATE cat_articulos
                 SET descripcion = descripcion, estatus = estatus, existencias = existencias, precio_unitario = precio_unitario,
+                stock_minimo=stock_minimo,
                 id_cuenta = (SELECT cat_cuentas_contables.id FROM cat_cuentas_contables WHERE cat_cuentas_contables.nombre LIKE grupo),
                 id_unidad = (SELECT cat_unidades_almacen.id FROM cat_unidades_almacen WHERE cat_unidades_almacen.descripcion_larga LIKE unidad),
                 updated_at = NOW()

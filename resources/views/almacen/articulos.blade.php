@@ -37,7 +37,7 @@
                     <select class="select-busqueda">
                         <option>Buscar articulo por grupo</option>
                         @foreach($grupos as  $partida)
-                            <option>{{$partida->nombre}}</option>
+                            <option value="{{$partida->nombre}}">{{$partida->nombre}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -110,9 +110,9 @@
             <div id="collapseArticulo" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div class="container-fluid">
-                        <form>
+                        <form action="{{route('almacen.articulos.actualizar')}}">
                             @csrf
-                            @method('PUT')
+                            @method('POST')
                             <div class="row">
                                 <label class="col-md-2" for="articuloclave">Clave</label>
                                 <label class="col-md-6 text-left colm-form" for="articuloDescripcion">Descripción</label>
@@ -122,13 +122,13 @@
                             </div>
                             <div class="row">
                                 <input name="clave" type="text" class="col-sm-1 colm-form form-control" id="articuloClave" placeholder="Clave" value="{{$articulo->clave}}" disabled="true" required>
-                                <input name="descripcion" type="text" class="col-md-6 colm-form form-control" id="articuloDescripcion" placeholder="Descripcion" value="{{$articulo->descripcion}}" disabled="true" required>
+                                <input name="descripcion" type="text" class="col-md-6 colm-form form-control" id="articuloDescripcion" placeholder="Descripcion" value="{{$articulo->descripcion}}" disabled="true">
                                 <input name="existencias" type="text" class="col-sm-1 colm-form-md form-control" id="articuloExistencias" placeholder="Descripcion" value="{{$articulo->existencias}}" disabled="true" required>
                                 <select name="unidad" class="col-sm-2 colm-form form-control" dir="ltr" id="articuloUnidad" disabled required>
                                     <option>{{$articulo->descripcion_u_medida}}</option>
                                     @foreach($unidades as $unidad)
                                         @if($unidad->descripcion != $articulo->descripcion_u_medida)
-                                            <option>{{ $unidad->descripcion }}</option>
+                                            <option value="{{$unidad->descripcion}}">{{ $unidad->descripcion }}</option>
                                         @endif
                                     @endforeach
                                 </select>
@@ -150,7 +150,7 @@
                                     <input type="text" class="col-sm-2 colm-form-md form-control" id="articuloEstatus" value="De baja" placeholder="Existencias">
                                 @endif
                                 <select name="partida" class="col-sm-6 colm-form form-control" dir="ltr" id="articuloGrupo" required disabled>
-                                    <option value="...">{{$articulo->descripcion_cuenta}}</option>
+                                    <option value="{{$articulo->descripcion_cuenta}}">{{$articulo->descripcion_cuenta}}</option>
                                     @foreach($grupos as  $partida)
                                         @if($partida->nombre != $articulo->descripcion_cuenta)
                                             <option value="{{$partida->nombre}}">{{$partida->nombre}}</option>

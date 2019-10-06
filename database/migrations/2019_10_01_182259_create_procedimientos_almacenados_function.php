@@ -140,7 +140,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET descripcion = descripcion, estatus = estatus, existencias = existencias, precio_unitario = precio_unitario,
                 stock_minimo=stock_minimo,
                 id_cuenta = (SELECT cat_cuentas_contables.id FROM cat_cuentas_contables WHERE cat_cuentas_contables.nombre LIKE grupo),
-                id_unidad = (SELECT cat_unidades_almacen.id FROM cat_unidades_almacen WHERE cat_unidades_almacen.descripcion_larga LIKE unidad),
+                id_unidad = (SELECT cat_unidades_almacen.id FROM cat_unidades_almacen WHERE cat_unidades_almacen.descripcion LIKE unidad),
                 updated_at = NOW()
                 WHERE cat_articulos.clave = clave;
             END

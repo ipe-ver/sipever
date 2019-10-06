@@ -17,9 +17,6 @@ select.form-control{
   border-radius: 5px;
 }
 
-input[type=text]:disabled{
-  background-color: #EFECF5;
-}
 
 section.content{
   max-width: 95%;
@@ -178,9 +175,6 @@ section.content{
   margin-left: 10px;
 }
 
-.colm-form:disabled{
-  background-color: #EFECF5;
-}
 
 .col-md-7{
   max-width: 60%;
@@ -340,7 +334,6 @@ section.content{
 .select-form:disabled{
   height: 25px;
   border-radius: 5px;
-  background-color: #EFECF5;
 }
 
 @keyframes fadein {

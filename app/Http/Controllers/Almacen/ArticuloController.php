@@ -92,10 +92,25 @@ class ArticuloController extends Controller
      */
     public function update()
     {
-        $input = Input::only('clave','descripcion','existencias');
+        $input = Input::only('clave','descripcion','existencias', 'unidad', 'stock_minimo','precio_unitario', 'partida');
         $clave = $input['clave'];
-        return redirect()->route('almacen.articulos.index')
-                        ->with('success',$clave);
+        $descripcion = $input['descripcion'];
+        $existencias = $input['existencias'];
+        $unidad = $input['unidad'];
+        $precio_unitario=$input['precio_unitario'];
+        $stock_minimo = $input['stock_minimo'];
+        $partida = $input['partida'];
+
+        try {
+            DB::select("call sp_actualizar_articulo(?,?,?,?,?,?,?,?)", array($clave, $descripcion, 1, $existencias,$precio_unitario, $partida, $stock_minimo, $unidad));
+            return redirect()->route('almacen.articulos.index')
+                        ->with('success','Articulo actualizado exitosamente');
+        } catch (Exception $e) {
+            return redirect()->route('almacen.articulos.index')
+                        ->withErrors(['msg','Error en alguna parte']);
+        }
+
+
     }
 
     /**

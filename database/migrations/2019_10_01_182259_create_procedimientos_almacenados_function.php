@@ -53,13 +53,12 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                Select cat_articulos.id, cat_articulos.clave, cat_articulos.descripcion, cat_articulos.estatus, cat_articulos.stock_minimo, cat_articulos.stock_maximo,
-                        cat_articulos.existencias, cat_articulos.precio_unitario, cat_cuentas_contables.nombre as partida, cat_unidades_almacen.descripcion,
-                        cat_unidades_almacen.descripcion_larga
-                from cat_articulos
-                inner join cat_cuentas_contables on cat_cuentas_contables.id = cat_articulos.id_cuenta
-                inner join cat_unidades_almacen on cat_unidades_almacen.id = cat_articulos.id_unidad
-                where cat_cuentas_contables.nombre LIKE grupo;
+                Select a.id, a.clave, a.descripcion, a.estatus, a.stock_minimo, a.stock_maximo,
+                        a.existencias, a.precio_unitario, b.nombre as descripcion_cuenta, c.descripcion AS descripcion_u_medida
+                from cat_articulos a
+                inner join cat_cuentas_contables b on b.id = a.id_cuenta
+                inner join cat_unidades_almacen c on c.id = a.id_unidad
+                where b.nombre = grupo;
             END
         ');
 

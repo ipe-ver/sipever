@@ -1,6 +1,31 @@
 @extends('almacen.index')
 
 @section('secciones_almacen')
+@if ($message = Session::get('success'))
+    <div class="alert-container" id="contenedor-alert">
+        <div class="alert success">
+            <span class="closebtn">&times;</span>
+            <p id="test">{{ $message }}</p>
+        </div>
+    </div>
+@elseif ($errors->any())
+    <div class="alert-container" id="contenedor-alert">
+        <div class="alert alert-danger">
+            <span class="closebtn">&times;</span>
+            <strong>Error</strong>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </div>
+    </div>
+@elseif ($message = Session::get('warning'))
+    <div class="alert-container" id="contenedor-alert">
+        <div class="alert warning">
+            <span class="closebtn">&times;</span>
+            <p id="test">{{ $message }}</p>
+        </div>
+    </div>
+@endif
 	<div class="container-fluid">
         <div class="row">
             <div class="col-sm-12 margin-tb">
@@ -24,47 +49,29 @@
                 </div>
             </div>
         </div>
-        @if ($message = Session::get('success'))
-            <div class="alert-container" id="contenedor-alert">
-                <div class="alert success">
-                    <span class="closebtn">&times;</span>
-                    <p id="test">{{ $message }}</p>
-                </div>
-            </div>
-        @elseif ($errors->any())
-            <div class="alert-container" id="contenedor-alert">
-                <div class="alert alert-danger">
-                    <span class="closebtn">&times;</span>
-                    <strong>Error</strong>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </div>
-            </div>
-        @elseif ($message = Session::get('warning'))
-            <div class="alert-container" id="contenedor-alert">
-                <div class="alert warning">
-                    <span class="closebtn">&times;</span>
-                    <p id="test">{{ $message }}</p>
-                </div>
-            </div>
-        @endif
         <p></p>
         <div class="row">
             <div class="panel" style="background-color: transparent;">
                 <div class = "pull-left">
                     <input class="input-busqueda"type="text" name="nombreArticulo" placeholder="Ingrese el nombre de un articulo a buscar">
-                    <span>
-                        <button class = "btn btn-agregar" type="button">Buscar</button>
-                    </span>
+                    <a type="button"  class="btn btn-agregar" href="" title="">
+                        <i class="fas fa-search"></i>
+                        <span>Buscar</span>
+                    </a>
                 </div>
                 <div class="pull-right">
-                    <select class="select-busqueda">
-                        <option>Buscar articulo por grupo</option>
-                        @foreach($grupos as  $partida)
-                            <option value="{{$partida->nombre}}">{{$partida->nombre}}</option>
-                        @endforeach
-                    </select>
+                    <form action="{{route('almacen.articulos.buscarPartida')}}">
+                        <select name = "selectLista" id="buscarPorPartida" class="select-busqueda">
+                            <option value="">Buscar articulo por grupo</option>
+                            @foreach($grupos as  $partida)
+                                <option value="{{$partida->nombre}}">{{$partida->nombre}}</option>
+                            @endforeach
+                        </select>
+                        <a  type="submit" class="btn btn-agregar" href="" title="">
+                            <i class="fas fa-search"></i>
+                            <span>Buscar</span>
+                        </a>
+                    </form>
                 </div>
             </div>
         </div>

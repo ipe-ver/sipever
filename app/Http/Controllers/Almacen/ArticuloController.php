@@ -33,11 +33,21 @@ class ArticuloController extends Controller
         $articulos = DB::select("call sp_get_articulos(?)", array($no_index*10));
 
         if($no_index == 0){
-            return $this->index();
+            return redirect()->route('almacen.articulos.index');
         }else{
             return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
             'articulos'=>$articulos, 'index' => $no_index]);
         }
+    }
+
+    public function buscarPorPartida($nombrePartida){
+        $partidas = DB::select("call sp_get_grupos");
+        $unidades = DB::select("call sp_get_unidades");
+        $articulos = DB::select("call sp_obtener_articulos_grupo(?)", array($nombrePartida));
+
+
+        return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
+            'articulos'=>$articulos, 'index' => $no_index]);
     }
 
     /**
@@ -119,7 +129,7 @@ class ArticuloController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy()
     {
         //
     }

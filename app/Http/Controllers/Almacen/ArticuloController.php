@@ -97,7 +97,14 @@ class ArticuloController extends Controller
      */
     public function create()
     {
-        //
+        $input = Input::only('clave','descripcion','existencias', 'unidad', 'stock_minimo','precio_unitario', 'partida');
+        $clave = $input['clave'];
+        $descripcion = $input['descripcion'];
+        $existencias = $input['existencias'];
+        $unidad = $input['unidad'];
+        $precio_unitario=$input['precio_unitario'];
+        $stock_minimo = $input['stock_minimo'];
+        $partida = $input['partida'];
     }
 
     /**

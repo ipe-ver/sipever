@@ -45,7 +45,8 @@
                     <a class ="icon-ref" style="padding-right: 10px;" href="{{route('almacen.index')}}" title="">
                         <h3 class="fas fa-home"></h3>
                     </a>
-                    <a style="margin-bottom: 10px;" type="button" class="btn btn-agregar"> Agregar</a>
+                    @include('almacen.crear_articulo')
+                    <a style="margin-bottom: 10px;" type="button" class="btn btn-agregar" data-toggle="modal" href="#createArticulo"> Agregar</a>
                 </div>
             </div>
         </div>

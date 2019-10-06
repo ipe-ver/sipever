@@ -163,6 +163,26 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             END
         ');
 
+        /**Procedimiento almacenado para dar de baja algún artículo.
+         * Recibe como parametro la clave del artículo que será dado de baja.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_baja_articulo;
+
+            CREATE PROCEDURE `sp_baja_articulo`(
+                IN `clave` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+               UPDATE cat_articulos
+               SET estatus = 0, existencias = 0
+               WHERE cat_articulos.clave = clave;
+            END
+        ');
+
         /**Procedimiento almacenado para la obtención de todos los grupos (Partidas)
          * No recibe parametros.
          */
@@ -371,6 +391,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_almacenar_artículo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_actualizar_articulo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_eliminar_articulo;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_baja_articulo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_get_grupos;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_almacenar_grupo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_actualizar_grupo;');

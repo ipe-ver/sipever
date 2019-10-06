@@ -22,6 +22,10 @@ section.content{
   max-width: 95%;
 }
 
+a.btn-delete{
+  color: #000000;
+}
+
 .sm-field{
   max-width: 100px;
 }

@@ -21,33 +21,44 @@ class ArticuloController extends Controller
         $partidas = DB::select("call sp_get_grupos");
         $unidades = DB::select("call sp_get_unidades");
         $articulos = DB::select("call sp_get_articulos(?)", array($no_index));
-
+        $no_partida = 0;
 
         return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
-            'articulos'=>$articulos, 'index' => $no_index]);
+            'articulos'=>$articulos, 'index' => $no_index, 'no_partida' => $no_partida]);
     }
 
     public function page($no_index){
         $partidas = DB::select("call sp_get_grupos");
         $unidades = DB::select("call sp_get_unidades");
         $articulos = DB::select("call sp_get_articulos(?)", array($no_index*10));
-
+        $no_partida = 0;
         if($no_index == 0){
             return redirect()->route('almacen.articulos.index');
         }else{
             return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
-            'articulos'=>$articulos, 'index' => $no_index]);
+            'articulos'=>$articulos, 'index' => $no_index, 'no_partida' => $no_partida]);
         }
     }
 
-    public function buscarPorPartida($nombrePartida){
-        $partidas = DB::select("call sp_get_grupos");
-        $unidades = DB::select("call sp_get_unidades");
-        $articulos = DB::select("call sp_obtener_articulos_grupo(?)", array($nombrePartida));
+    public function buscarPorPartida(){
+        $input = Input::only('selectLista');
+        $nombrePartida = trim($input['selectLista']);
+        $no_index = 0;
+        $no_partida = 1;
+        if(empty($nombrePartida)){
+            return redirect()->route('almacen.articulos.index')
+                        ->with('warning','Porfavor seleccione una partida');
+        }elseif($nombrePartida != "Todos"){
+            $partidas = DB::select("call sp_get_grupos");
+            $unidades = DB::select("call sp_get_unidades");
+            $articulos = DB::select("call sp_obtener_articulos_grupo(?)", array($nombrePartida));
 
 
-        return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
-            'articulos'=>$articulos, 'index' => $no_index]);
+            return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
+                'articulos'=>$articulos, 'index' => $no_index,'no_partida' => $no_partida ]);
+        }else{
+            return redirect()->route('almacen.articulos.index');
+        }
     }
 
     /**
@@ -129,8 +140,15 @@ class ArticuloController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy()
+    public function destroy($clave)
     {
-        //
+        try {
+            DB::select("call sp_baja_articulo(?)", array($clave));
+            return redirect()->route('almacen.articulos.index')
+                        ->with('success','Articulo dado de baja exitosamente');
+        } catch (Exception $e) {
+            return redirect()->route('almacen.articulos.index')
+                        ->withErrors(['msg','Error en alguna parte']);
+        }
     }
 }

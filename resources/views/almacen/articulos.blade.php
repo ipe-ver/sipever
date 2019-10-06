@@ -62,15 +62,17 @@
                 <div class="pull-right">
                     <form action="{{route('almacen.articulos.buscarPartida')}}">
                         <select name = "selectLista" id="buscarPorPartida" class="select-busqueda">
-                            <option value="">Buscar articulo por grupo</option>
+                            <option value="">Buscar articulo por grupo...</option>
+                            <option value="Todos">TODOS LOS ARTICULOS</option>}
+                            option
                             @foreach($grupos as  $partida)
                                 <option value="{{$partida->nombre}}">{{$partida->nombre}}</option>
                             @endforeach
                         </select>
-                        <a  type="submit" class="btn btn-agregar" href="" title="">
+                        <button  type="submit" class="btn btn-agregar" href="" title="">
                             <i class="fas fa-search"></i>
                             <span>Buscar</span>
-                        </a>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -103,7 +105,7 @@
                             <button class = "btn btn-collapse btn-edit" id="btn_editar" disabled="true">
                                 <i class="fas fa-pen">  </i>
                             </button>
-                            <button class="btn btn-collapse btn-delete" id="btn_eliminar" disabled="true">
+                            <button onclick="location.href='{{route('almacen.articulos.darBaja', $articulo->clave)}}'" class="btn btn-collapse btn-delete" id="btn_eliminar" disabled >
                                 <i class="fas fa-trash-alt">  </i>
                             </button>
                             <button id="verArticulo" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapseArticulo" aria-expanded="false">
@@ -179,13 +181,15 @@
     </div>
     <div class="pull-right">
         @if($index > 0)
-        <a class = "icon-ref" href="{{ route('almacen.articulos.next_page', $index-1) }}" title="">
-            <h3 class="fas fa-chevron-circle-left"></h3>
-        </a>
+            <a class = "icon-ref" href="{{ route('almacen.articulos.next_page', $index-1) }}" title="">
+                <h3 class="fas fa-chevron-circle-left"></h3>
+            </a>
         @endif
-        <a class="icon-ref" href="{{ route('almacen.articulos.next_page', $index+1) }}" title="">
-            <h3 class="fas fa-chevron-circle-right"></h3>
-        </a>
+        @if($no_partida == 0)
+            <a class="icon-ref" href="{{ route('almacen.articulos.next_page', $index+1) }}" title="">
+                <h3 class="fas fa-chevron-circle-right"></h3>
+            </a>
+        @endif
     </div>
 <script type="text/javascript" src="{{ asset('js/articulos.js') }}"></script>
 @endsection

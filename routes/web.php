@@ -44,7 +44,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.
     Route::get('/articulos/page/{no_index}','Almacen\ArticuloController@page')->name('articulos.next_page');
     Route::get('/articulos/actualizar','Almacen\ArticuloController@update')->name('articulos.actualizar');
     Route::get('/articulos/buscar','Almacen\ArticuloController@buscarPorPartida')->name('articulos.buscarPartida');
-     Route::get('/articulos/baja/{clave}','Almacen\ArticuloController@destroy')->name('articulos.darBaja');
+    Route::get('/articulos/buscarNombre','Almacen\ArticuloController@buscarPorNombre')->name('articulos.buscarArticulo');
+    Route::get('/articulos/baja/{clave}','Almacen\ArticuloController@destroy')->name('articulos.darBaja');
     Route::resource('periodo','Almacen\PeriodoController');
     Route::resource('articulos', 'Almacen\ArticuloController');
 

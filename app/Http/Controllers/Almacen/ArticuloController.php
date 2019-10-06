@@ -27,6 +27,12 @@ class ArticuloController extends Controller
             'articulos'=>$articulos, 'index' => $no_index, 'no_partida' => $no_partida]);
     }
 
+    /**
+     * Método para paginar los resultados que arroje la búsqueda de artículo
+     * @param int $no_index
+     * @return \Illuminate\Http\Response
+    */
+
     public function page($no_index){
         $partidas = DB::select("call sp_get_grupos");
         $unidades = DB::select("call sp_get_unidades");
@@ -39,6 +45,11 @@ class ArticuloController extends Controller
             'articulos'=>$articulos, 'index' => $no_index, 'no_partida' => $no_partida]);
         }
     }
+
+    /**
+     *Método para buscar artículos por partida.
+     *@return \Illuminate\Http\Response
+    */
 
     public function buscarPorPartida(){
         $input = Input::only('selectLista');
@@ -58,6 +69,24 @@ class ArticuloController extends Controller
                 'articulos'=>$articulos, 'index' => $no_index,'no_partida' => $no_partida ]);
         }else{
             return redirect()->route('almacen.articulos.index');
+        }
+    }
+
+    public function buscarPorNombre(){
+        $input = Input::only('nombreArticulo');
+        $nombreArticulo = trim($input['nombreArticulo']);
+        $no_index = 0;
+        $no_partida = 1;
+        if(empty($nombreArticulo)){
+            return redirect()->route('almacen.articulos.index')
+                        ->with('warning','Porfavor ingrese el nombre de un articulo');
+        }else{
+            $partidas = DB::select("call sp_get_grupos");
+            $unidades = DB::select("call sp_get_unidades");
+            $articulos = DB::select("call sp_buscar_articulo_parametro(?)", array(strtoupper($nombreArticulo)));
+
+            return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
+                'articulos'=>$articulos, 'index' => $no_index,'no_partida' => $no_partida ]);
         }
     }
 
@@ -123,7 +152,8 @@ class ArticuloController extends Controller
         $partida = $input['partida'];
 
         try {
-            DB::select("call sp_actualizar_articulo(?,?,?,?,?,?,?,?)", array($clave, $descripcion, 1, $existencias,$precio_unitario, $partida, $stock_minimo, $unidad));
+            DB::select("call sp_actualizar_articulo(?,?,?,?,?,?,?,?)", array($clave, $descripcion, 1,
+                $existencias,$precio_unitario, $partida, $stock_minimo, $unidad));
             return redirect()->route('almacen.articulos.index')
                         ->with('success','Articulo actualizado exitosamente');
         } catch (Exception $e) {

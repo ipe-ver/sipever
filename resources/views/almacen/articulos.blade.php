@@ -53,11 +53,13 @@
         <div class="row">
             <div class="panel" style="background-color: transparent;">
                 <div class = "pull-left">
-                    <input class="input-busqueda"type="text" name="nombreArticulo" placeholder="Ingrese el nombre de un articulo a buscar">
-                    <a type="button"  class="btn btn-agregar" href="" title="">
-                        <i class="fas fa-search"></i>
-                        <span>Buscar</span>
-                    </a>
+                    <form action="{{route('almacen.articulos.buscarArticulo')}}">
+                        <input name="nombreArticulo" class="input-busqueda"type="text" name="nombreArticulo" placeholder="Ingrese el nombre de un articulo a buscar">
+                        <button type="submit"  class="btn btn-agregar">
+                            <i class="fas fa-search"></i>
+                            <span>Buscar</span>
+                        </button>
+                    </form>
                 </div>
                 <div class="pull-right">
                     <form action="{{route('almacen.articulos.buscarPartida')}}">
@@ -69,7 +71,7 @@
                                 <option value="{{$partida->nombre}}">{{$partida->nombre}}</option>
                             @endforeach
                         </select>
-                        <button  type="submit" class="btn btn-agregar" href="" title="">
+                        <button  type="submit" class="btn btn-agregar">
                             <i class="fas fa-search"></i>
                             <span>Buscar</span>
                         </button>

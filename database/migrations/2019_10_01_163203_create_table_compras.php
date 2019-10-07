@@ -22,7 +22,7 @@ class CreateTableCompras extends Migration
             $table->integer('id_proveedor')->unsigned();
             $table->foreign('id_proveedor')->references('id')->on('cat_proveedores');
 
-            $table->integer('id_poliza')->unsigned();
+            $table->integer('id_poliza')->unsigned()->nullable();
             $table->foreign('id_poliza')->references('id_poliza')->on('polizas');
 
             $table->string('folio');

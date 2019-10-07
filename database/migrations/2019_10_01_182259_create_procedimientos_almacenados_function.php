@@ -247,10 +247,9 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                UPDATE cat_cuentas_contables 
-                SET cta = cta, scta = scta, sscta = sscta, nombre = nombre, ctaarmo = ctaarmo,
+                UPDATE cat_cuentas_contables SET cta = cta, scta = scta, sscta = sscta, nombre = nombre, ctaarmo = ctaarmo,
                          nomarmo = nomarmo, grupo = grupo, estatus = estatus, updated_at = NOW()
-                WHERE cat_cuentas_contables.id = id;
+                        WHERE cat_cuentas_contables.id = id;
             END
         ');
 
@@ -359,19 +358,15 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 DECLARE i INT DEFAULT 1;
                 
                 WHILE i <= (SELECT COUNT(id_periodo) FROM inventario_inicial_final WHERE inventario_inicial_final.id_periodo = id_referencia) DO
-                    UPDATE inventario_inicial_final SET inventario_inicial_final.updated_at = NOW(), 
-                        inventario_inicial_final.existencias = (SELECT cat_articulos.existencias FROM cat_articulos WHERE cat_articulos.id = 
-                            (SELECT inventario_inicial_final.id_articulo FROM inventario_inicial_final WHERE inventario_inicial_final.id_articulo = i 
-                            AND inventario_inicial_final.id_periodo = id_referencia)),
-                        inventario_inicial_final.estatus = (SELECT cat_articulos.estatus FROM cat_articulos WHERE cat_articulos.id = 
-                            (SELECT inventario_inicial_final.id_articulo FROM inventario_inicial_final WHERE inventario_inicial_final.id_articulo = i 
-                            AND inventario_inicial_final.id_periodo = id_referencia)),
-                        inventario_inicial_final.precio_promedio = (SELECT cat_articulos.precio_unitario FROM cat_articulos WHERE cat_articulos.id = 
-                            (SELECT inventario_inicial_final.id_articulo FROM inventario_inicial_final WHERE inventario_inicial_final.id_articulo = i 
-                            AND inventario_inicial_final.id_periodo = id_referencia))
-                    WHERE inventario_inicial_final.id_articulo = i AND inventario_inicial_final.id_periodo = id_referencia;
+                    UPDATE inventario_inicial_final as t1 INNER JOIN cat_articulos ON t1.id_articulo = cat_articulos.id SET t1.updated_at = NOW(), 
+                        t1.existencias = cat_articulos.existencias, 
+                        t1.estatus = cat_articulos.estatus,
+                        t1.precio_promedio = cat_articulos.precio_unitario
+                    WHERE t1.id_periodo = id_referencia AND cat_articulos.id = i;
                     SET i = i + 1;
                 END WHILE;
+
+                UPDATE periodos SET periodos.estatus = 0;
             END
         ');
 
@@ -393,6 +388,60 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             END
         ');
 
+        /**Procedimiento almacenado para la población de una poliza y edición de las compras y consumos del mismo periodo.
+         * Aun no se sabe que parametros podría recibir.
+         * Está incompleto.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_generar_poliza;
+
+            CREATE PROCEDURE `sp_generar_poliza`()
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                INSERT INTO polizas (id_periodo, poliza, numero_poliza, estatus, created_at)
+                    VALUES ((SELECT periodos.id_periodo WHERE periodos.estatus = 1), poliza , numero_poliza , estatus ,NOW());
+
+                UPDATE consumos SET consumos.id_poliza = 
+                    (SELECT polizas.id_poliza FROM polizas WHERE polizas.id_periodo = 
+                    (SELECT periodos.id_periodo WHERE periodos.estatus = 1))
+                WHERE consumos.id_periodo = (SELECT periodos.id_periodo WHERE periodos.estatus = 1);
+
+                UPDATE compras SET compras.id_poliza = 
+                    (SELECT polizas.id_poliza FROM polizas WHERE polizas.id_periodo = 
+                    (SELECT periodos.id_periodo WHERE periodos.estatus = 1))
+                WHERE compras.id_periodo = (SELECT periodos.id_periodo WHERE periodos.estatus = 1);
+            END
+        ');
+
+        /**Procedimiento almacenado para obtener datos de los artículos de cierto grupo.
+         * Recibe como parametro el periodo en mes y año y el nombre del grupo.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_inventario_grupo;
+
+            CREATE PROCEDURE `sp_inventario_grupo`(
+                IN `anio` INT,
+                IN `mes` INT,
+                IN `grupo` VARCHAR(191)
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SELECT cuenta.nombre as grupo, articulo.descripcion as descripcion, inventario.cant_inicial as cantidad_nicial,
+                    inventario.existencias as existencias, periodo.no_mes as mes, periodo.anio as anio 
+                FROM inventario_inicial_final inventario 
+                INNER JOIN cat_articulos articulo ON inventario.id_articulo = articulo.id
+                INNER JOIN cat_cuentas_contables cuenta ON articulo.id_cuenta = cuenta.id
+                INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
+                WHERE periodo.no_mes = mes AND periodo.anio = anio AND cuenta.nombre = grupo;
+            END
+        ');
+
         /**Procedimiento almacenado para cerrar un periodo.
          * El cierre de un periodo conlleva actualizar la información del inventario, abrir un nuevo periodo y crear nuevos datos para el inventario
          * Referente al nuevo periodo. Se crea una póliza.
@@ -406,13 +455,17 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                #Aquí debo poner la actualización del inventario, de preferencia debe ser un sp aparte.
-                #Aquí debe estar todo el proceso de la póliza, de preferencia lo haré en un sp aparte.
-                UPDATE periodos SET estatus = 0 WHERE estatus = 1;
+                CALL sp_inventario_final;
+                CALL sp_generar_poliza;
                 CALL sp_abrir_periodo;
                 CALL sp_inventario_inicial;
             END
         ');
+
+        /**Procedimiento almacenado para el registro de una compra.
+         * La compra afecta directamente a detalles quien a su ves cambia las existencias de un artículo.
+         * Los detalles solo pueden tener compra o consumo, no los dos
+         */
     }
 
     /**
@@ -438,6 +491,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_inventario_inicial;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_inventario_final;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_oficina_login;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_generar_poliza;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_inventario_grupo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_cerrar_periodo;');
     }
 }

@@ -19,7 +19,7 @@ class CreateTableConsumos extends Migration
             $table->integer('id_oficina')->unsigned();
             $table->foreign('id_oficina')->references('id')->on('cat_oficinas');
 
-            $table->integer('id_poliza')->unsigned();
+            $table->integer('id_poliza')->unsigned()->nullable();
             $table->foreign('id_poliza')->references('id_poliza')->on('polizas');
 
             $table->integer('id_periodo')->unsigned();

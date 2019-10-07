@@ -89,7 +89,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
          * Parametros como el grupo y la unidad de medida se proporcionarán con cadenas de caracteres por la selección de los combobox.
          */
         DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_almacenar_artículo
+            DROP PROCEDURE IF EXISTS sp_almacenar_artículo;
             CREATE PROCEDURE `sp_almacenar_artículo`(
                 IN `clave` INT,
                 IN `descripcion` VARCHAR(191),
@@ -220,8 +220,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                INSERT INTO cat_cuentas_contables (cta, scta, sscta, nombre, ctarmo, nomarmo, grupo, estatus, created_at)
-                        VALUES (cta, scta, sscta, nombre, ctarmo, nomarmo, grupo, estatus, NOW());
+                INSERT INTO cat_cuentas_contables (cta, scta, sscta, nombre, ctaarmo, nomarmo, grupo, estatus, created_at)
+                        VALUES (cta, scta, sscta, nombre, ctaarmo, nomarmo, grupo, estatus, NOW());
             END
         ');
 
@@ -247,9 +247,10 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                UPDATE cat_cuentas_contables SET cta = cta, scta = scta, sscta = sscta, nombre = nombre, ctarmo = ctarmo,
-                         nomarmo = nomarmo, grupo = grupo, estatus = estatus, updated_at = NOW())
-                        WHERE cat_cuentas_contables.id = id;
+                UPDATE cat_cuentas_contables 
+                SET cta = cta, scta = scta, sscta = sscta, nombre = nombre, ctaarmo = ctaarmo,
+                         nomarmo = nomarmo, grupo = grupo, estatus = estatus, updated_at = NOW()
+                WHERE cat_cuentas_contables.id = id;
             END
         ');
 

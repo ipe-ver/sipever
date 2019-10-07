@@ -8,7 +8,7 @@ use \Illuminate\Pagination\LengthAwarePaginator;
 use DB;
 use Illuminate\Support\Facades\Input;
 
-class ArticuloController extends Controller
+class PartidaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,7 +23,7 @@ class ArticuloController extends Controller
         $articulos = DB::select("call sp_get_articulos(?)", array($no_index));
         $no_partida = 0;
 
-        return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
+        return view('almacen.partidas',['grupos'=>$partidas, 'unidades'=>$unidades,
             'articulos'=>$articulos, 'index' => $no_index, 'no_partida' => $no_partida]);
     }
 

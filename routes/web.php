@@ -49,6 +49,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.
     Route::get('/articulos/crear','Almacen\ArticuloController@create')->name('articulos.nuevoArticulo');
     Route::resource('periodo','Almacen\PeriodoController');
     Route::resource('articulos', 'Almacen\ArticuloController');
+    Route::resource('partidas', 'Almacen\PartidaController');
 
 });
 

@@ -29,7 +29,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-            SELECT a.id, a.clave, a.descripcion, a.estatus, a.stock_minimo, a.existencias, a.precio_unitario, b.descripcion AS descripcion_u_medida, c.nombre as descripcion_cuenta
+            SELECT a.id, a.clave, a.descripcion, a.estatus, a.stock_minimo, a.existencias, FORMAT(a.precio_unitario,2) AS precio_unitario, b.descripcion AS descripcion_u_medida, c.nombre as descripcion_cuenta
                 FROM cat_articulos a
                 INNER JOIN cat_unidades_almacen b ON a.id_unidad = b.id
                 INNER JOIN cat_cuentas_contables c ON a.id_cuenta = c.id
@@ -54,7 +54,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             SQL SECURITY DEFINER
             BEGIN
                 Select a.id, a.clave, a.descripcion, a.estatus, a.stock_minimo, a.stock_maximo,
-                        a.existencias, a.precio_unitario, b.nombre as descripcion_cuenta, c.descripcion AS descripcion_u_medida
+                        a.existencias, FORMAT(a.precio_unitario,2) AS precio_unitario, b.nombre as descripcion_cuenta, c.descripcion AS descripcion_u_medida
                 from cat_articulos a
                 inner join cat_cuentas_contables b on b.id = a.id_cuenta
                 inner join cat_unidades_almacen c on c.id = a.id_unidad
@@ -66,7 +66,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
          * El artículo es una cadena de caractéres que servirán para localizar a todos los artículos que tengan dicha cadena.
          */
         DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_buscar_articulo_parametro
+            DROP PROCEDURE IF EXISTS sp_buscar_articulo_parametro;
             CREATE PROCEDURE `sp_buscar_articulo_parametro`(
                 IN `articulo` VARCHAR(191)
             )
@@ -76,7 +76,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             SQL SECURITY DEFINER
             BEGIN
                 Select a.id, a.clave, a.descripcion, a.estatus, a.stock_minimo,
-                        a.existencias, a.precio_unitario, b.nombre as descripcion_cuenta, c.descripcion AS descripcion_u_medida
+                        a.existencias, FORMAT(a.precio_unitario,2) AS precio_unitario, b.nombre as descripcion_cuenta, c.descripcion AS descripcion_u_medida
                 from cat_articulos a
                 INNER JOIN cat_cuentas_contables b ON b.id = a.id_cuenta
                 INNER JOIN cat_unidades_almacen c ON c.id = a.id_unidad
@@ -89,7 +89,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
          * Parametros como el grupo y la unidad de medida se proporcionarán con cadenas de caracteres por la selección de los combobox.
          */
         DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_almacenar_artículo;
+            DROP PROCEDURE IF EXISTS sp_almacenar_artículo
             CREATE PROCEDURE `sp_almacenar_artículo`(
                 IN `clave` INT,
                 IN `descripcion` VARCHAR(191),
@@ -109,7 +109,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 INSERT INTO cat_articulos (clave, fecha_baja, descripcion, estatus, stock_minimo, stock_maximo, existencias, precio_unitario, id_cuenta, id_unidad, created_at)
                     values (clave, CURDATE(), descripcion, estatus, stock_minimo, stock_maximo, existencias, precio_unitario,
                     (SELECT cat_cuentas_contables.id FROM cat_cuentas_contables WHERE cat_cuentas_contables.nombre LIKE grupo),
-                    (SELECT cat_unidades_almacen.id FROM cat_unidades_almacen WHERE cat_unidades_almacen.descripcion_larga LIKE unidad),
+                    (SELECT cat_unidades_almacen.id FROM cat_unidades_almacen WHERE cat_unidades_almacen.descripcion LIKE unidad),
                     NOW());
             END
         ');

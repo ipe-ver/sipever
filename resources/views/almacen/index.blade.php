@@ -38,7 +38,7 @@
 					</a>
 		           </div>
 		           <div class="col-xs-2">
-					<a class="nombre_modulo" href="{!! route('almacen.index') !!}">
+					<a class="nombre_modulo" href="{!! route('almacen.partidas.index') !!}">
 						<i class="fas fa-layer-group"></i>
 						<span>Partidas</span>
 					</a>

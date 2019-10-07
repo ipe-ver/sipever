@@ -51,6 +51,10 @@ section.content{
   width: 100%;
 }
 
+.modal-dialog.articulo-dialog{
+  width: 60%;
+}
+
 .nombre-ventana{
     color: #777777;
 }

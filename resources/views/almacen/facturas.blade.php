@@ -31,16 +31,16 @@
     <div class="row">
         <div class="col-sm-12 margin-tb">
             <div class="row">
-                <h2 class=" col-sm-1 text-center text-nowrap far fa-file-alt">
-                    <span style="font-family: 'Roboto';">Reportes</span>
+                <h2 class=" col-sm-1 text-center text-nowrap fas fa-file-invoice-dollar">
+                    <span style="font-family: 'Roboto';">Facturas</span>
                 </h2>
             </div>
-            <p>Administración de reportes de Almacén </p>
+            <b>Administración de facturas por compras de almacén </b>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-12 margin-tb header">
-            <h4 class="pull-left nombre-ventana">Generación de reportes de almacén</h4>
+            <h4 class="pull-left nombre-ventana">Almacenar factura</h4>
 
             <div class="pull-right">
                 <a class ="icon-ref" style="padding-right: 10px;" href="{{route('almacen.index')}}" title="">

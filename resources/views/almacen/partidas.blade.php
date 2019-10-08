@@ -73,7 +73,6 @@
                             <button id="verPartida" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapsePartida" aria-expanded="false">
                                 <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
                             </button>
-
                     </div>
                 </div>
             </div>
@@ -84,14 +83,14 @@
                         <div class="modal-header">
                             <h3 class="modal-title" id="eliminarPartidaLabel">Eliminar Partida</h3>
                         </div>
-                        <form action="#" method="get" accept-charset="utf-8">
+                        <form action="{{route('almacen.partidas.eliminar', $partida->id)}}" method="get" accept-charset="utf-8">
                             <div class="modal-body">
                                 <h5>Para eliminar la partida {{$partida->nombre}} debe reasignar sus artículos a otra partida</h5>
-                                <select name="partida" class="col-sm-6 form-control" dir="ltr" id="articuloGrupo" required >
+                                <select name="nombre" class="col-sm-6 form-control" dir="ltr" id="articuloGrupo" required >
                                     <option value="">Seleccione una partida...</option>
-                                    @foreach($partidas as  $partida_aux_2)
-                                        @if($partida->nombre != $partida_aux_2->nombre)
-                                            <option value="{{$partida_aux_2->nombre}}">{{$partida_aux_2->nombre}}</option>
+                                    @foreach($partidas as  $partida_aux)
+                                        @if($partida_aux->nombre != $partida->nombre)
+                                            <option value="{{$partida_aux->nombre}}">{{$partida_aux->nombre}}</option>
                                         @endif
                                     @endforeach
                                 </select>
@@ -108,7 +107,6 @@
                     </div>
                 </div>
             </div>
-
             <div id="collapsePartida" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div class="container-fluid">

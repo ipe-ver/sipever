@@ -49,6 +49,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.
     Route::get('/articulos/crear','Almacen\ArticuloController@create')->name('articulos.nuevoArticulo');
     Route::get('/partidas/crear','Almacen\PartidaController@create')->name('partidas.nuevaPartida');
     Route::get('/partidas/actualizar/{id}','Almacen\PartidaController@update')->name('partidas.actualizar');
+    Route::get('/partidas/eliminar/{id}','Almacen\PartidaController@destroy')->name('partidas.eliminar');
     Route::resource('periodo','Almacen\PeriodoController');
     Route::resource('articulos', 'Almacen\ArticuloController');
     Route::resource('partidas', 'Almacen\PartidaController');

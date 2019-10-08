@@ -118,14 +118,20 @@ class PartidaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($clave)
+    public function destroy($id)
     {
-        try {
-            DB::select("call sp_baja_articulo(?)", array($clave));
-            return redirect()->route('almacen.articulos.index')
-                        ->with('success','Articulo dado de baja exitosamente');
-        } catch (Exception $e) {
-            return back()->withErrors(['msg','Error en alguna parte']);
-        }
+         $input = Input::only('nombre');
+         $nombre = trim($input['nombre']);
+         if(empty($nombre)){
+            return back()->with('warning','Porfavor seleccione una partida para reasignar los artículos');
+         } else{
+            try {
+                DB::select("call sp_eliminar_grupo(?,?)", array($id,$nombre));
+                return redirect()->route('almacen.partidas.index')
+                            ->with('success','Partida eliminada exitosamente');
+            } catch (Exception $e) {
+                return back()->withErrors(['msg','Error en alguna parte']);
+            }
+         }
     }
 }

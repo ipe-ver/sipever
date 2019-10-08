@@ -4,13 +4,13 @@
 			<div class="modal-header">
 				<h3 class="modal-title" id="eliminarPartidaLabel">Eliminar Partida</h3>
 			</div>
-			<form action="#" method="get" accept-charset="utf-8">
+			<form action="{{route('almacen.partidas.destroy')}}" method="get" accept-charset="utf-8">
 				<div class="modal-body">
-					<h5>Para eliminar la partida {{$partida_aux->nombre}} debe reasignar sus artículos a otra partida</h5>
-					<select name="partida" class="col-sm-6 form-control" dir="ltr" id="articuloGrupo" required >
+					<h5>Para eliminar la partida {{$partida->nombre}} debe reasignar sus artículos a otra partida</h5>
+					<select name="nombre" class="col-sm-6 form-control" dir="ltr" id="articuloGrupo" required >
 	                    <option value="">Seleccione una partida...</option>
-	                    @foreach($partidas as  $partida_aux_2)
-	                        @if($partida_aux_2->nombre != $partida_aux->nombre)
+	                    @foreach($partidas as  $partida_aux)
+	                        @if($partida_aux_2->nombre != $partida->nombre)
 	                        	<option value="{{$partida_aux_2->nombre}}">{{$partida_aux_2->nombre}}</option>
 	                        @endif
 	                    @endforeach

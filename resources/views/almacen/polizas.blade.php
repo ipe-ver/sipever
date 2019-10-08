@@ -53,11 +53,18 @@
     <p></p>
 </div>
 
-<div class="container mes-box">
+<div class="container poliza-box">
     <form action="{{route('almacen.index')}}">
         <div class="row">
             <div class="container" style="display: inline-flex; align-items: center;">
-                <label class="text-nowrap" style="margin-left:11%; padding-right: 15px;">No. Mes</label>
+                        
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                    Póliza de almacén
+                    </label>
+                </div>
+                <label class="text-nowrap" style="margin-left:7%; padding-right: 15px;">No. Mes</label>
                 <div class="input-group spinner">
                     <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required>
                     <div class="input-group-btn-vertical">
@@ -73,7 +80,15 @@
         </div>
         <div class="row" style="align-items: center">
             <div class="container" style="display: inline-flex; align-items: center;">
-                <label class="text-nowrap" style="margin-left:11%; padding-right:43px;">Año</label>
+                <div class="col-md-3" style="display: inline-flex; align-items: center;">
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                    Póliza para contabilidad y presupuesto
+                    </label>
+                </div>
+                </div>
+                <label class="text-nowrap" style="margin-left:7%; padding-right: 43.5px;">Año</label>
                 <select name="year"class="spinner" style="text-align-last: right;" required>
                     <option value="" dir="ltr">Año...</option>
                     <option value="2019" dir="ltr">2019</option>
@@ -84,7 +99,7 @@
         <div class="row" style="align-items: center; margin-bottom: 10px; margin-top: 10px;">
             <div class="container" style="display: inline-flex; align-items: center;">
                 <button style="margin-left:9%; margin-right: 3%;" type="button" id="btn-cancelar" class="btn btn-cancel">Cancelar</button>
-                <button type="submit" id="btn-cerrar" class="btn btn-submit">Cerrar mes</button>
+                <button type="submit" id="btn-cerrar" class="btn btn-submit">Generar poliza</button>
             </div>
         </div>
     </form>

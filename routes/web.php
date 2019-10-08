@@ -53,6 +53,10 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.
     Route::resource('periodo','Almacen\PeriodoController');
     Route::resource('articulos', 'Almacen\ArticuloController');
     Route::resource('partidas', 'Almacen\PartidaController');
+    Route::resource('reportes', 'Almacen\ReporteController');
+    Route::resource('vales','Almacen\ValeController');
+    Route::resource('polizas', 'Almacen\PolizaController');
+    Route::resource('facturas', 'Almacen\FacturaController');
 
 });
 

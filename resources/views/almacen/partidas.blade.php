@@ -67,7 +67,7 @@
                             <button class = "btn btn-collapse btn-edit" id="btn_editar" disabled="true">
                                 <i class="fas fa-pen">  </i>
                             </button>
-                            <button onclick="location.href='{{route('almacen.articulos.darBaja', $partida->id)}}'" class="btn btn-collapse btn-delete" id="btn_eliminar" disabled >
+                            <button class="btn btn-collapse btn-delete" id="btn_eliminar" data-toggle="modal" data-target="#eliminarPartida" disabled >
                                 <i class="fas fa-trash-alt">  </i>
                             </button>
                             <button id="verPartida" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapsePartida" aria-expanded="false">
@@ -77,6 +77,38 @@
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade modal-eliminar" id="eliminarPartida" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="eliminarPartidaLabel" aria-hidden="true">
+                <div class="modal-dialog articulo-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="eliminarPartidaLabel">Eliminar Partida</h3>
+                        </div>
+                        <form action="#" method="get" accept-charset="utf-8">
+                            <div class="modal-body">
+                                <h5>Para eliminar la partida {{$partida->nombre}} debe reasignar sus artículos a otra partida</h5>
+                                <select name="partida" class="col-sm-6 form-control" dir="ltr" id="articuloGrupo" required >
+                                    <option value="">Seleccione una partida...</option>
+                                    @foreach($partidas as  $partida_aux_2)
+                                        @if($partida->nombre != $partida_aux_2->nombre)
+                                            <option value="{{$partida_aux_2->nombre}}">{{$partida_aux_2->nombre}}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="col-md-5 colm-form-btns pull-right">
+                                    <div class="pull-right">
+                                        <button type="button" id="btn-cancelar" data-dismiss="modal" class="btn btn-cancel">Cancelar</button>
+                                        <button type="submit" id="btn-guardar" class="btn btn-submit">Eliminar Partida</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <div id="collapsePartida" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div class="container-fluid">

@@ -46,6 +46,12 @@ var btn_eliminar=document.getElementsByClassName("btn-delete");
 for (var i = 0; i < btn_eliminar.length; i++) {
     btn_eliminar[i].setAttribute("id", btn_eliminar[i].id+i);
     btn_eliminar[i].setAttribute("disabled", "true");
+    btn_eliminar[i].setAttribute("data-target", "#eliminarPartida"+i);
+}
+
+var modales = document.getElementsByClassName("modal-eliminar");
+for (var i = 0; i < modales.length; i++) {
+    modales[i].setAttribute("id", modales[i].id+i);
 }
 
 //Se asignan los ids y métodos para los botones de cada panel que no pertenecen al form de artículo.

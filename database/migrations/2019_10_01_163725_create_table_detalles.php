@@ -19,7 +19,7 @@ class CreateTableDetalles extends Migration
             $table->integer('id_consumo')->unsigned()->nullable();
             $table->foreign('id_consumo')->references('id_consumo')->on('consumos');
 
-            $table->integer('id_articulo')->unsigned();
+            $table->integer('id_articulo')->unsigned()->nullable();
             $table->foreign('id_articulo')->references('id')->on('cat_articulos');
 
             $table->integer('id_compra')->unsigned()->nullable();
@@ -27,8 +27,8 @@ class CreateTableDetalles extends Migration
 
             $table->integer('tipo_movimiento');
             $table->integer('cantidad');
-            $table->double('precio_unitario');
-            $table->double('subtotal');
+            $table->double('precio_unitario')->nullable();
+            $table->double('subtotal')->nullable();
 
             $table->timestamps();
         });

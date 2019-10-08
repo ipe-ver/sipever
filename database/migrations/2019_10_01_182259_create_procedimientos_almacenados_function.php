@@ -306,7 +306,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                UPDATE periodos SET periodos.estatus = 0;
                 INSERT INTO periodos (no_mes, anio, estatus) VALUES (MONTH(NOW()), YEAR(NOW()), 1);
             END
         ');
@@ -454,16 +453,26 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_cerrar_periodo;
 
-            CREATE PROCEDURE `sp_cerrar_periodo`()
+            CREATE PROCEDURE `sp_cerrar_periodo`(
+                IN `mes` INT,
+                IN `anio` INT
+            )
             LANGUAGE SQL
             NOT DETERMINISTIC
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                CALL sp_inventario_final;
-                CALL sp_generar_poliza(1,1234,1);
-                CALL sp_abrir_periodo;
-                CALL sp_inventario_inicial;
+
+                SELECT IF (mes = MONTH(NOW()) AND anio = YEAR(NOW()),1,0);
+
+                    CALL sp_inventario_final;
+                    CALL sp_generar_poliza(1,1234,1);
+
+                    UPDATE periodos SET periodos.estatus = 0 WHERE periodos.no_mes = mes AND periodos.anio = anio;
+
+                    CALL sp_abrir_periodo;
+                    CALL sp_inventario_inicial;
+                
             END
         ');
 
@@ -496,7 +505,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             SQL SECURITY DEFINER
             BEGIN
                 INSERT INTO compras (id_periodo, id_proveedor, descripcion, folio, fecha_movimiento, no_factura, fecha_factura, iva, total, created_at)
-                VALUES ((SELECT periodos.id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio), 
+                VALUES ((SELECT periodos.id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio AND estatus = 1), 
                         (SELECT cat_proveedores.id FROM cat_proveedores WHERE cat_proveedores.nombre = nombre_proveedor),
                         descripcion, folio, fecha_movimiento, no_factura, fecha_facturacion, iva, (((iva/100)*subtotal)+subtotal), NOW());
 
@@ -535,7 +544,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             SQL SECURITY DEFINER
             BEGIN
                 INSERT INTO compras (id_periodo, id_proveedor, descripcion, folio, fecha_movimiento, no_factura, fecha_factura, iva, total, created_at)
-                VALUES ((SELECT periodos.id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio), 
+                VALUES ((SELECT periodos.id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio AND estatus = 1), 
                         (SELECT cat_proveedores.id FROM cat_proveedores WHERE cat_proveedores.nombre = nombre_proveedor),
                         descripcion, folio, fecha_movimiento, no_factura, fecha_facturacion, iva, (((iva/100)*subtotal)+subtotal), NOW());
 

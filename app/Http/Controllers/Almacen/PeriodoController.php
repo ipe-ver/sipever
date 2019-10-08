@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Almacen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Doctrine\DBAL\Driver\PDOConnection;
+use App\Http\Controllers\Controller;
+
 class PeriodoController extends Controller
 {
     /**
@@ -14,7 +16,7 @@ class PeriodoController extends Controller
      */
     public function index()
     {
-        //
+        return view('almacen.cierre_mes');
     }
 
     /**
@@ -24,7 +26,7 @@ class PeriodoController extends Controller
      */
     public function create()
     {
-        return view('almacen.cerrar_mes');
+        
     }
 
     /**

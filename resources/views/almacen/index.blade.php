@@ -15,7 +15,7 @@
 		           </div>
 		           <div class="col-xs-2">
 					<a class="nombre_modulo" href="{!! route('almacen.reportes.index') !!}">
-						<i class="fas fa-file-alt"></i>
+						<i class="fas fa-clipboard"></i>
 						<span>Reportes</span>
 					</a>
 		           </div>
@@ -45,7 +45,7 @@
 		           </div>
 		           <div class="col-xs-2">
 					<a class="nombre_modulo" href="{!! route('almacen.facturas.index') !!}">
-						<i class="fas fa-clipboard"></i>
+						<i class="fas fa-file-invoice-dollar"></i>
 						<span>Facturas</span>
 					</a>
 		           </div>

@@ -34,7 +34,7 @@
                         <span style="font-family: 'Roboto';">Partidas</span>
                     </h2>
                 </div>
-                <p>Administración y Registro de Partidas de Almacén </p>
+                <b>Administración y Registro de Partidas de Almacén </b>
             </div>
         </div>
         <div class="row">

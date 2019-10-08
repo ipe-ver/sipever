@@ -35,7 +35,7 @@
                     <span style="font-family: 'Roboto';">Vales</span>
                 </h2>
             </div>
-            <p>Administración y registro de vales de consumo de Almacén </p>
+            <b>Administración y registro de vales de consumo de Almacén </b>
         </div>
     </div>
     <div class="row">

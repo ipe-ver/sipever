@@ -31,11 +31,11 @@
     <div class="row">
         <div class="col-sm-12 margin-tb">
             <div class="row">
-                <h2 class=" col-sm-1 text-center text-nowrap far fa-file-alt">
+                <h2 class=" col-sm-1 text-center text-nowrap fas fa-clipboard">
                     <span style="font-family: 'Roboto';">Reportes</span>
                 </h2>
             </div>
-            <p>Administración de reportes de Almacén </p>
+            <b>Administración de reportes de Almacén </b>
         </div>
     </div>
     <div class="row">

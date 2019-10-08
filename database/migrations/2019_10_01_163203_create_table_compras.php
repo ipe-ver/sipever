@@ -26,6 +26,7 @@ class CreateTableCompras extends Migration
             $table->foreign('id_poliza')->references('id_poliza')->on('polizas');
 
             $table->string('folio');
+            $table->string('descripcion');
             $table->date('fecha_movimiento')->nullable();
             $table->string('no_factura');
             $table->date('fecha_factura')->nullable();

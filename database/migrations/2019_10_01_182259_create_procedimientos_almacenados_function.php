@@ -306,7 +306,19 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                INSERT INTO periodos (no_mes, anio, estatus) VALUES (MONTH(NOW()), YEAR(NOW()), 1);
+                SET @condicion := (SELECT IF ( MONTH(NOW()) = 12,1,0));
+
+                SET @mes := 0;
+                SET @anio := 0;
+
+                IF @condicion = 1 THEN
+                    SET @mes := 1;
+                    SET @anio := YEAR(NOW()) + 1;
+                ELSE
+                    SET @mes := MONTH(NOW()) + 1;
+                    SET @anio := YEAR(NOW());
+                END IF;
+                INSERT INTO periodos (no_mes, anio, estatus) VALUES (@mes, @anio, 1);
             END
         ');
 
@@ -463,11 +475,11 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             SQL SECURITY DEFINER
             BEGIN
 
-                SET @condicion := (SELECT IF (mes = MONTH(NOW()) AND anio = YEAR(NOW()),0,1));
-                SET @condicion2 := (SELECT IF ((SELECT periodos.estatus FROM periodos WHERE no_mes = mes AND anio = anio) = 0,0,1));
-                SET @condicion3 := (SELECT IF ((SELECT COUNT(no_mes) FROM periodos WHERE no_mes = mes AND anio = anio)=0,0,1));
+                SET @condicion1 := (SELECT IF ((SELECT periodos.estatus FROM periodos WHERE no_mes = mes AND anio = anio) = 0,0,1));
+                SET @condicion2 := (SELECT IF ((SELECT COUNT(no_mes) FROM periodos WHERE no_mes = mes AND anio = anio)=0,0,1));
+                SET @condicion3 := (SELECT IF (mes = (MONTH(NOW()) + 1),0,1));
 
-                IF @condicion = 1 AND @condicion2 = 1 AND @condicion3 = 1 THEN
+                IF @condicion1 = 1 AND @condicion2 = 1 AND @condicion3 = 1 THEN
                     CALL sp_inventario_final;
                     CALL sp_generar_poliza(1,1234,1);
 
@@ -476,9 +488,9 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     CALL sp_abrir_periodo;
                     CALL sp_inventario_inicial;
 
-                    SELECT @condicion + @condicion2 + @condicion3;
+                    SELECT @condicion1 + @condicion2 + @condicion3;
                 ELSE
-                    SELECT @condicion + @condicion2 + @condicion3;
+                    SELECT @condicion1 + @condicion2 + @condicion3;
                 END IF;
                 
             END

@@ -11,12 +11,10 @@
 		{!! Html::style('components/admin-lte/dist/css/AdminLTE.css') !!}
 		{!! Html::style('components/admin-lte/dist/css/skins/_all-skins.css') !!}
 		{!! Html::style('components/font-awesome/css/all.css') !!}
-<<<<<<< HEAD
+
 		{!! Html::style('components/toastr/toastr.css') !!}	
 			
-=======
-		
->>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
+
 
 		<!-- Boostrap Table CSS-->
 		{!! Html::style('components/bootstrap-table/dist/bootstrap-table.css') !!}
@@ -34,7 +32,7 @@
 
 		{!! Html::style('components/bootstrap/less/mixins/image.less') !!}
 
-<<<<<<< HEAD
+
 		
 		
 

@@ -80,15 +80,13 @@
         </div>
         <div class="row" style="align-items: center">
             <div class="container" style="display: inline-flex; align-items: center;">
-                <div class="col-md-3" style="display: inline-flex; align-items: center;">
                     <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    Póliza para contabilidad y presupuesto
-                    </label>
-                </div>
-                </div>
-                <label class="text-nowrap" style="margin-left:7%; padding-right: 43.5px;">Año</label>
+                        <input class="form-check-input" type="checkbox" value="" id="polizaConta">
+                        <label class="form-check-label text-wrap" style="width: 200px; " for="polizaConta">
+                        Póliza para contabilidad y presupuesto
+                        </label>
+                    </div>
+                <label class="text-nowrap" style="padding-right: 43.5px;">Año</label>
                 <select name="year"class="spinner" style="text-align-last: right;" required>
                     <option value="" dir="ltr">Año...</option>
                     <option value="2019" dir="ltr">2019</option>

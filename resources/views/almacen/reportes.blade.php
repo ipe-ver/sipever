@@ -11,7 +11,7 @@
             </div>
             <b>Administración de reportes de Almacén </b>
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-6">
             @if ($message = Session::get('success'))
                 <div class="alert-container" id="contenedor-alert">
                     <div class="alert success">
@@ -51,6 +51,66 @@
         </div>
     </div>
     <p></p>
+</div>
+
+<div class = "container reportes-box">
+    <form action="{{route('almacen.index')}}">
+        <div class ="row justify-content-md-center">
+            <div class="col col-lg-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                    Póliza de almacén
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                    Póliza de almacén
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                    Póliza de almacén
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                    Póliza de almacén
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                    Póliza de almacén
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                    Póliza de almacén
+                    </label>
+                </div>
+            </div>
+            <div class ="col-lg-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                    Botnon
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                    Botnon
+                    </label>
+                </div>
+                <button>Coso</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 

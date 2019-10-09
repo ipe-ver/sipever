@@ -11,7 +11,7 @@
             </div>
             <b>Administración de facturas por compras de almacén </b>
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-6">
             @if ($message = Session::get('success'))
                 <div class="alert-container" id="contenedor-alert">
                     <div class="alert success">

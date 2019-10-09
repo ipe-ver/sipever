@@ -11,7 +11,7 @@
             </div>
             <b>Cierre mensual y cálculo de afectaciones</b>
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-6">
             @if ($message = Session::get('success'))
                 <div class="alert-container" id="contenedor-alert">
                     <div class="alert success">

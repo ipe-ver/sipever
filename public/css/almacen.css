@@ -1,5 +1,5 @@
 .spinner {
-  width: 100px;
+  max-width: 100px;
   border: none;
   border-bottom: 2px solid #C4C4C4;
   margin-bottom: 10px;
@@ -14,7 +14,7 @@ select.spinner {
   text-align: right;
   text-align-last: right;
   background-color: transparent;
-  width: 100px;
+  width: 70px;
   height: 100%;
   border: none;
   border-bottom: 2px solid #C4C4C4;
@@ -124,7 +124,7 @@ section.content{
 .poliza-box{
   margin-top: 5%;
   align-items: center;
-  width: 45%;
+  width: 40%;
   margin-left: 30%;
   height: auto;
   background-color: #FFFFFA;
@@ -138,7 +138,7 @@ section.content{
   margin-top: 5%;
   align-items: center;
   width: 50%;
-  margin-left: 20%;
+  margin-left: 25%;
   height: auto;
   background-color: #FFFFFA;
   border-radius: 5px;

@@ -85,11 +85,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 	Route::get('/descargar_informacion', function () { return view('descargar.informacion'); });
 
 
-	//Módulo de Extensiones
-	Route::get('/extension', function () { return view('extension.index'); });
-	Route::get('get_extensiones','Extension\ExtensionController@getExtensiones');
+	Route::get('search', 'AutoCompleteController@index');
+ 	Route::get('autocomplete', 'AutoCompleteController@search');
+	
 
-	//Route::get('autocomplete', 'Extension\ExtensionController@search');
+	
 
 
 

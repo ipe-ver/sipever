@@ -42,9 +42,22 @@
             <h2 style="text-align:right;">DESCARGAR INFORMACIÓN</h2>
             <br>
             <div class="row">
-                
 
-                 <!-- Link para Soporte Técnico -->
+                <!-- DIRECTORIO IPE 2019-->    
+                <div class="col-md-3" >
+                      <div class="info-box" style="background: #E8DDCB;">
+                          <span class="info-box-icon" style="background: #FE4365;"><img class="img" src="{!! url('') !!}/img_download/descargar_informacion/directorio.png"/></span>
+
+                          <div class="info-box-content">
+                             <a href="{!! url('') !!}/files/descargar_informacion/directorio_ipe2019.pdf" target="_blank" style="color: #000000;"><h5 style="font-size: 24px;"><strong>Directorio <br>Telefónico</strong></h5></a>
+                              
+                          </div>
+                          
+                      </div>
+                  </div>
+              
+
+                 <!-- TIPOGRAFIA -->
                  <div class="col-md-3" >
                       <div class="info-box" style="background: #E8DDCB;">
                           <span class="info-box-icon" style="background: #3FB8AF;"><img class="img" src="{!! url('') !!}/img_download/descargar_informacion/tipografia.png"/></span>
@@ -57,9 +70,10 @@
                       </div>
                   </div>
 
+                  <!-- FORMATO DE CAPACITACION -->  
                   <div class="col-md-3" >
                       <div class="info-box" style="background: #E8DDCB;">
-                          <span class="info-box-icon" style="background: #6C5B7B;"><img class="img" src="{!! url('') !!}/img_download/descargar_informacion/capacitacion.png"/></span>
+                          <span class="info-box-icon" style="background: #F8CA00;"><img class="img" src="{!! url('') !!}/img_download/descargar_informacion/capacitacion.png"/></span>
 
                           <div class="info-box-content">
                              <a href="{!! url('') !!}/files/descargar_informacion/formato_capacitacion.doc" target="_blank" style="color: #000000;"><h5 style="font-size: 24px;"><strong>Formato de <br>Capacitación</strong></h5></a>
@@ -71,17 +85,7 @@
                
 
 
-                <div class="col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box" style="background: #E8DDCB;">
-                        <span class="info-box-icon" style="background: #F0B49E;"><i class="ion ion-ios-cart-outline"></i></span>
-
-                        <div class="info-box-content">
-                            <span class="info-box-text">Sales</span>
-                            <span class="info-box-number">760</span>
-                        </div>
-                    </div>
-                </div>
-              
+                 
 
 
                 <div class="col-md-3 col-sm-6 col-xs-12">

@@ -463,8 +463,11 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             SQL SECURITY DEFINER
             BEGIN
 
-                SELECT IF (mes = MONTH(NOW()) AND anio = YEAR(NOW()),1,0);
+                SET @condicion := (SELECT IF (mes = MONTH(NOW()) AND anio = YEAR(NOW()),0,1));
+                SET @condicion2 := (SELECT IF ((SELECT periodos.estatus FROM periodos WHERE no_mes = mes AND anio = anio) = 0,0,1));
+                SET @condicion3 := (SELECT IF ((SELECT COUNT(no_mes) FROM periodos WHERE no_mes = mes AND anio = anio)=0,0,1));
 
+                IF @condicion = 1 AND @condicion2 = 1 AND @condicion3 = 1 THEN
                     CALL sp_inventario_final;
                     CALL sp_generar_poliza(1,1234,1);
 
@@ -472,6 +475,11 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
                     CALL sp_abrir_periodo;
                     CALL sp_inventario_inicial;
+
+                    SELECT @condicion + @condicion2 + @condicion3;
+                ELSE
+                    SELECT @condicion + @condicion2 + @condicion3;
+                END IF;
                 
             END
         ');
@@ -548,13 +556,13 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         (SELECT cat_proveedores.id FROM cat_proveedores WHERE cat_proveedores.nombre = nombre_proveedor),
                         descripcion, folio, fecha_movimiento, no_factura, fecha_facturacion, iva, (((iva/100)*subtotal)+subtotal), NOW());
 
-                SELECT @i := (SELECT cat_articulos.id FROM cat_articulos WHERE cat_articulos.descripcion = descripcion);
+                SET @i := (SELECT cat_articulos.id FROM cat_articulos WHERE cat_articulos.descripcion = descripcion);
                 
                 INSERT INTO detalles (id_compra, id_articulo, tipo_movimiento, cantidad, precio_unitario, subtotal, created_at) 
                 VALUES ((SELECT compras.id_compra FROM compras WHERE compras.folio = folio), @i, 1, cantidad, precio_unitario, subtotal, NOW());
 
-                SELECT @exis := (SELECT cat_articulos.existencias FROM cat_articulos WHERE cat_articulos.id = @i);
-                SELECT @pun := (SELECT cat_articulos.precio_unitario FROM cat_articulos WHERE cat_articulos.id = @i);
+                SET @exis := (SELECT cat_articulos.existencias FROM cat_articulos WHERE cat_articulos.id = @i);
+                SET @pun := (SELECT cat_articulos.precio_unitario FROM cat_articulos WHERE cat_articulos.id = @i);
                 
                 UPDATE cat_articulos SET cat_articulos.precio_unitario = (((@exis*@pun)+(cantidad*precio_unitario))/(@exis+cantidad)),cat_articulos.existencias = (@exis+cantidad) WHERE cat_articulos.id = @i;
             END
@@ -587,7 +595,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_generar_poliza;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_inventario_grupo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_cerrar_periodo;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_factura;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra_unica;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra_almacen;');
     }
 }

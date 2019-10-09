@@ -16,94 +16,20 @@ class ExtensionController extends Controller
      */
     public function index()
     {
-        return view('extension.index');
+        //return view('search');
+        return view('adminlte::layouts.landing');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+   
+    public function autocomplete(Request $request)
     {
-        //
-    }
+        $data = Extension::select("descripcion")
+        ->where("descripcion","LIKE","%{$request->input('query')}%")
+        ->get();
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    /****************************************************************************************************
-        FUNCION DEL CONTROLADOR QUE MUESTRA LOS ACTIVOS Y PENSIONADOS EN LA PAGINA PRINCIPAL
-    *****************************************************************************************************/
-
-    public function getExtensiones()
-    {
-
-        $items = Extension::orderBy('descripcion')->get();
-       
-        return response()->json($items);
-    }  // fin de getnotificación
-
-    public function search(Request $request)
-    {
-          $search = $request->get('term');
-      
-          $result = Extension::where('descripcion', 'LIKE', '%'. $search. '%')->get();
- 
-          return response()->json($result);
+        return response()->json($data);
             
     } 
 }
+
+

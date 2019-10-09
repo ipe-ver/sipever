@@ -11,7 +11,10 @@
 		{!! Html::style('components/admin-lte/dist/css/AdminLTE.css') !!}
 		{!! Html::style('components/admin-lte/dist/css/skins/_all-skins.css') !!}
 		{!! Html::style('components/font-awesome/css/all.css') !!}
-		{!! Html::style('components/toastr/toastr.css') !!}
+
+		{!! Html::style('components/toastr/toastr.css') !!}	
+			
+
 
 		<!-- Boostrap Table CSS-->
 		{!! Html::style('components/bootstrap-table/dist/bootstrap-table.css') !!}
@@ -29,6 +32,33 @@
 
 		{!! Html::style('components/bootstrap/less/mixins/image.less') !!}
 
+
+		
+		
+
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<style>
+			
+
+		.user-body{
+			position:relative;
+ 			z-index:0;
+		
+			 
+		}
+
+		#search{
+			position:relative;
+			display: block;
+			z-index:1;
+			
+			
+		}
+
+	
+		</style>	
+
+		
 		@yield('style')
 
 
@@ -52,32 +82,29 @@
 				<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button" style="color:#060100">
 					<span class="sr-only">Toggle navigation</span>
 				</a>
+
+				
 				<!-- Navbar Right Menu -->
 				<div class="navbar-custom-menu">
-					<ul class="nav navbar-nav">
+					<ul class="nav navbar-nav">		
 
-						<!-- User Account Menu -->
 						<li class="dropdown user user-menu">
-
-
-
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:#060100">
 								<i class="fa fa-book"></i>
 								<span class="hidden-xs">Directorio</span>
 							</a>
-							<ul class="dropdown-menu">
-								<!-- Form login -->
-								<li class="user-body" >
-									<form method="post" role="form" action="">
-										<div class="form-group has-feedback">
-											<input id="search" name="search" type="text" class="form-control" placeholder="Search" />
-											<span class="icon icon-phone-alt form-control-feedback"></span>
-										</div>
-										{{--<a href="" class="btn btn-default btn-block btn-flat">Ver todas las extensiones</a>--}}
-										{{--<a href="" class="btn btn-success btn-block btn-flat" target="_blank">Descargar Directorio</a>--}}
-									</form>
+							<ul class="dropdown-menu">				
+							
+								<li>
+									<div class="input-group">
+										<span class="input-group-addon" style="background-color: #F3EFE0;"><i class="fa fa-phone"></i></span>
+										<input id="search" name="search" type="text" class="form-control" placeholder="Buscar extensiones..." style="background-color: #F3EFE0;">
+									</div>
+							
 								</li>
+							
 							</ul>
+						</li>	
 
 
 	                        @if (Auth::guest())
@@ -107,7 +134,7 @@
 	                            </li>
 	                        @endif
 
-						</li>
+						
 						<!-- Control Sidebar Toggle Button -->
 					</ul>
 				</div>
@@ -161,7 +188,8 @@
 				<ul class="sidebar-menu" data-widget="tree">
 				@if(!Auth::user())
 
-					<!-- MODULO DE INTRANET -->
+
+					<!-- MODULO DE INTRANET -->	
 					<li class=""><a href="{!! url('') !!}"><i class="fa fa-home"></i> <span>Inicio</span></a></li>
 
 					<li class="treeview">
@@ -320,9 +348,15 @@
 		<!-- Moment.js -->
 		<script src="{{ asset('components/moment/min/moment.min.js') }}"></script>
 
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+	
+
+			
 		<script type="text/javascript">
-			{{--var routeConsulta 		= '{!! route('consulta.index') !!}';	--}}
+
+		{{--var routeConsulta 		= '{!! route('consulta.index') !!}';	--}}		
 			var routeBase           = '{!! url("") !!}';
 			var maskFecha 			= new Inputmask("dd/mm/yyyy", {"placeholder": "DD/MM/AAAA"});
 			var permissionUser		= '{!! \Auth::check() !!}';
@@ -368,16 +402,37 @@
 					}
 				});
 
+				$( "#search" ).autocomplete({
+ 
+					source: function(request, response) {
+						$.ajax({
+							url: "{{url('autocomplete')}}",
+							data: {
+									term : request.term
+							},
+							dataType: "json",
+							success: function(data){
+								var resp = $.map(data,function(obj){
+									return obj.extension+'::'+obj.descripcion;
+								}); 
+
+								response(resp);
+							}
+						});
+					},
+					minLength: 3
+				});
+			
+
+			
 			});
 
+			
 
 		</script>
 
 
-
-
-
-
-		@yield('script')
+		
+		@yield('script')	
 
 </html>

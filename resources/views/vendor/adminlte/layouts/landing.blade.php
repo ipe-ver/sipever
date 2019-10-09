@@ -59,8 +59,6 @@
 		</style>	
 
 		
-=======
->>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 		@yield('style')
 
 
@@ -88,19 +86,9 @@
 				
 				<!-- Navbar Right Menu -->
 				<div class="navbar-custom-menu">
-<<<<<<< HEAD
 					<ul class="nav navbar-nav">		
-=======
-					<ul class="nav navbar-nav">
->>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 
 						<li class="dropdown user user-menu">
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:#060100">
 								<i class="fa fa-book"></i>
 								<span class="hidden-xs">Directorio</span>
@@ -116,10 +104,7 @@
 								</li>
 							
 							</ul>
-<<<<<<< HEAD
 						</li>	
-=======
->>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 
 
 	                        @if (Auth::guest())
@@ -203,12 +188,8 @@
 				<ul class="sidebar-menu" data-widget="tree">
 				@if(!Auth::user())
 
-<<<<<<< HEAD
 
 					<!-- MODULO DE INTRANET -->	
-=======
-					<!-- MODULO DE INTRANET -->
->>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 					<li class=""><a href="{!! url('') !!}"><i class="fa fa-home"></i> <span>Inicio</span></a></li>
 
 					<li class="treeview">
@@ -367,7 +348,6 @@
 		<!-- Moment.js -->
 		<script src="{{ asset('components/moment/min/moment.min.js') }}"></script>
 
-<<<<<<< HEAD
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
@@ -376,12 +356,7 @@
 			
 		<script type="text/javascript">
 
-{{--var routeConsulta 		= '{!! route('consulta.index') !!}';	--}}		
-=======
-
-		<script type="text/javascript">
-			{{--var routeConsulta 		= '{!! route('consulta.index') !!}';	--}}
->>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
+		{{--var routeConsulta 		= '{!! route('consulta.index') !!}';	--}}		
 			var routeBase           = '{!! url("") !!}';
 			var maskFecha 			= new Inputmask("dd/mm/yyyy", {"placeholder": "DD/MM/AAAA"});
 			var permissionUser		= '{!! \Auth::check() !!}';
@@ -449,29 +424,15 @@
 				});
 			
 
-<<<<<<< HEAD
 			
 			});
-=======
-
-		</script>
->>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 
 			
 
-<<<<<<< HEAD
 		</script>
-=======
->>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 
 
-<<<<<<< HEAD
 		
 		@yield('script')	
-=======
-
-
-		@yield('script')
->>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 
 </html>

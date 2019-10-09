@@ -496,12 +496,34 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             END
         ');
 
+        /**Procedimiento almacenado para guardar la peticion de una oficina por ciertos articulos
+         * Recibe como parametro el nombre del articulo, el nombre de la oficina, la cantidad solicitada, el folio
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_pedido_consumo_articulo_oficina;
+
+            CREATE PROCEDURE `sp_pedido_consumo_articulo_oficina`(
+                IN `articulo` VARCHAR(191),
+                IN `oficina` VARCHAR(191),
+                IN `cantidad` INT,
+                IN `folio` VARCHAR(191)
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                INSERT INTO c_pedido_consumo (folio, fecha_movimiento, recibido, extemporaneo, id_periodo) 
+                    VALUES (folio, NOW(), 0, 0, (SELECT periodos.id_periodo FROM periodos WHERE periodos.estatus = 1));
+            END
+        ');
+
         /**Procedimiento almacenado para el registro de una compra de un artículo único que no se dispondrá dentro del catálogo de artículos.
          * Recibe como parametros: mes y año para el periodo, nombre del proveedor, descripción del artículo que se se compró,
          * folio único, fecha de movimiento, número de factura, fecha de facturación, iva del producto, subtotal de la compra,
          * la cantidad que se compró del artículo y el precio unitario por el cual se compró el artículo.
          */
-        DB::unprepared('
+        /*DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_compra_unica;
 
             CREATE PROCEDURE `sp_compra_unica`(
@@ -532,7 +554,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 INSERT INTO detalles (id_compra, tipo_movimiento, cantidad, precio_unitario, subtotal, created_at) 
                 VALUES ((SELECT compras.id_compra FROM compras WHERE compras.folio = folio), 2, cantidad, precio_unitario, subtotal, NOW());
             END
-        ');
+        ');*/
 
         /**Procedimiento almacenado para el registro de una compra por artículo que esté dentro del almacén.
          * Este procedimiento afecta directamente a las existencias del artículo en el catálogo de artículos y modifica su precio conforme a la fórmula de precio promedio.
@@ -540,7 +562,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
          * folio único, fecha de movimiento, número de factura, fecha de facturación, iva del producto, subtotal de la compra,
          * la cantidad que se compró del artículo y el precio unitario por el cual se compró el artículo.
          */
-        DB::unprepared('
+        /*DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_compra_almacen;
 
             CREATE PROCEDURE `sp_compra_almacen`(
@@ -578,7 +600,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 
                 UPDATE cat_articulos SET cat_articulos.precio_unitario = (((@exis*@pun)+(cantidad*precio_unitario))/(@exis+cantidad)),cat_articulos.existencias = (@exis+cantidad) WHERE cat_articulos.id = @i;
             END
-        ');
+        ');*/
     }
 
     /**
@@ -607,7 +629,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_generar_poliza;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_inventario_grupo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_cerrar_periodo;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra_unica;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra_almacen;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_pedido_consumo_articulo_oficina;');
+        //DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra_unica;');
+        //DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra_almacen;');
     }
 }

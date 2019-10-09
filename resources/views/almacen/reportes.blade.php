@@ -5,11 +5,11 @@
     <div class="row">
         <div class="col-sm-5 margin-tb">
             <div class="row">
-                <h2 class=" col-sm-1 text-center text-nowrap fas fa-inbox">
-                    <span style="font-family: 'Roboto';">Vales</span>
+                <h2 class=" col-sm-1 text-center text-nowrap fas fa-clipboard">
+                    <span style="font-family: 'Roboto';">Reportes</span>
                 </h2>
             </div>
-            <b>Administración y registro de vales de consumo de Almacén </b>
+            <b>Administración de reportes de Almacén </b>
         </div>
         <div class="col-sm-6">
             @if ($message = Session::get('success'))
@@ -41,7 +41,7 @@
     </div>
     <div class="row">
         <div class="col-sm-12 margin-tb header">
-            <h4 class="pull-left nombre-ventana">Vista de los vales enviados sin validar</h4>
+            <h4 class="pull-left nombre-ventana">Generación de reportes de almacén</h4>
 
             <div class="pull-right">
                 <a class ="icon-ref" style="padding-right: 10px;" href="{{route('almacen.index')}}" title="">

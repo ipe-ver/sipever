@@ -5,30 +5,38 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!-- CSRF Token -->
-		<meta name="csrf-token" content="{{ csrf_token() }}">		
+		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<title>IPE</title>
 		{!! Html::style('components/bootstrap/dist/css/bootstrap.css') !!}
 		{!! Html::style('components/admin-lte/dist/css/AdminLTE.css') !!}
 		{!! Html::style('components/admin-lte/dist/css/skins/_all-skins.css') !!}
 		{!! Html::style('components/font-awesome/css/all.css') !!}
+<<<<<<< HEAD
 		{!! Html::style('components/toastr/toastr.css') !!}	
 			
+=======
+		
+>>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 
 		<!-- Boostrap Table CSS-->
-		{!! Html::style('components/bootstrap-table/dist/bootstrap-table.css') !!} 
-		
+		{!! Html::style('components/bootstrap-table/dist/bootstrap-table.css') !!}
+
 
 		<!-- Boostrap Table Filter Control CSS-->
-		{!! Html::style('components/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.css') !!} 		
+		{!! Html::style('components/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.css') !!}
 		<!-- Boostrap Table Select CSS-->
-		{!! Html::style('components/bootstrap-select/dist/css/bootstrap-select.css') !!} 
-		{!! Html::style('components/ajax-bootstrap-select/dist/css/ajax-bootstrap-select.css') !!} 
+		{!! Html::style('components/bootstrap-select/dist/css/bootstrap-select.css') !!}
+		{!! Html::style('components/ajax-bootstrap-select/dist/css/ajax-bootstrap-select.css') !!}
 
 		<!-- HoldOn.js -->
-		{!! Html::style('components/hold-on/HoldOn.min.css') !!} 
+		{!! Html::style('components/hold-on/HoldOn.min.css') !!}
 
+
+		{!! Html::style('components/bootstrap/less/mixins/image.less') !!}
+
+<<<<<<< HEAD
 		
-		{!! Html::style('components/bootstrap/less/mixins/image.less') !!} 
+		
 
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 		<style>
@@ -53,9 +61,11 @@
 		</style>	
 
 		
+=======
+>>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 		@yield('style')
 
-		
+
 
 	</head>
 <body class="skin-black sidebar-mini @if (Cookie::get('toggleState') === 'closed') {{ 'sidebar-collapse' }} @endif ">
@@ -80,9 +90,19 @@
 				
 				<!-- Navbar Right Menu -->
 				<div class="navbar-custom-menu">
+<<<<<<< HEAD
 					<ul class="nav navbar-nav">		
+=======
+					<ul class="nav navbar-nav">
+>>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 
 						<li class="dropdown user user-menu">
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:#060100">
 								<i class="fa fa-book"></i>
 								<span class="hidden-xs">Directorio</span>
@@ -98,12 +118,15 @@
 								</li>
 							
 							</ul>
+<<<<<<< HEAD
 						</li>	
+=======
+>>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 
 
 	                        @if (Auth::guest())
 	                            <li><a href="{{ route('login') }}"  style="color:#060100">
-									<i class="fa fa-lock" aria-hidden="true"></i>
+									<i class="fas fa-user-tie" aria-hidden="true"></i>
 									 Iniciar sesión</a>
 								</li>
 	                            {{--<li><a href="{{route('register')}}">Register</a></li>--}}
@@ -112,7 +135,6 @@
 	                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
 	                                    {{ Auth::user()->name }} <span class="caret"></span>
 	                                </a>
-
 	                                <ul class="dropdown-menu" role="menu">
 	                                    <li>
 	                                        <a href="{{ route('logout') }}"
@@ -127,7 +149,7 @@
 	                                    </li>
 	                                </ul>
 	                            </li>
-	                        @endif							
+	                        @endif
 
 						
 						<!-- Control Sidebar Toggle Button -->
@@ -145,7 +167,7 @@
 
 				<!-- Sidebar user panel (optional) -->
 				{{--<div class="user-panel">
-					<div class="pull-left image">						
+					<div class="pull-left image">
 						{{ HTML::image('components/admin-lte/dist/img/user2-160x160.jpg', 'User Image', array('class' => 'img-circle')) }}
 					</div>
 					<div class="pull-left info">
@@ -173,18 +195,22 @@
 					@forelse($menus as $key => $item)
 						@if($item['parent'] != 0)
 							@break
-						@endif				
+						@endif
 							@include('layouts.partials.sidebar-menu', ['item' => $item])
 					@empty
 					@endforelse
-				</ul>--}}					
+				</ul>--}}
 				<!-- Sidebar Menu -->
 
 				<ul class="sidebar-menu" data-widget="tree">
 				@if(!Auth::user())
 
+<<<<<<< HEAD
 
 					<!-- MODULO DE INTRANET -->	
+=======
+					<!-- MODULO DE INTRANET -->
+>>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 					<li class=""><a href="{!! url('') !!}"><i class="fa fa-home"></i> <span>Inicio</span></a></li>
 
 					<li class="treeview">
@@ -200,11 +226,11 @@
 							<li><a href="{!! url('/mision') !!}"><i class="fa fa-spinner"></i> Misión - Visión - Filosofía</a></li>
 							{{--<li><a href="{!! url('/informacion') !!}"><i class="fa fa-spinner"></i> Información Institucional</a></li>--}}
 							<li><a href="{!! url('/organigrama') !!}"><i class="fa fa-spinner"></i> Organigrama</a></li>
-							
+
 						</ul>
 					</li>
 
-						<!-- MODULO DE SERVICIOS -->	
+						<!-- MODULO DE SERVICIOS -->
 					<li class="treeview">
 						<a href="#">
 							<i class="fa fa-tags"></i>
@@ -237,45 +263,45 @@
 						</ul>
 					</li>
 
-					
-					<!-- DESCARGAR INFORMACIÓN -->	
+
+					<!-- DESCARGAR INFORMACIÓN -->
 
 					<li class=""><a href="{!! url('/descargar_informacion') !!}"><i class="fa fa-download"></i> <span>Descargar Información</span></a></li>
 
-					
 
-					@endif			
+
+					@endif
 				</ul>
 
 
 				@auth
 					<ul class="sidebar-menu" data-widget="tree">
 
-						
+
 
 						<!-- MODULO DE ADMINISTRADOR-->
 						@if(Auth::user()->name == 'admin')
-							
+
 						<!--	<li class=""><a href="{!! route('admin.index') !!}"><i class="fas fa-cogs"></i> <span>Configuración</span></a></li>-->
 							<li class=""><a href="{!! route('expediente.index') !!}"><i class="fas fa-folder-open"></i> <span>Expediente Electrónico</span></a></li>
-							
+
 						@endif
 
 						<!-- MODULO DE ALMACÉN-->
 
 						@if(Auth::user()->name == 'almacen_admin')
-							
+
 							<li class=""><a href="{!! route('almacen.index') !!}"><i class="fas fa-box-open"></i> <span>Almacén</span></a></li>
-							
+
 						@endif
 
 						<!-- MODULO DE COMPRAS-->
 
 						@if(Auth::user()->name == 'compras_admin')
-							
+
 							<li class=""><a href="{!! route('compras.index') !!}"><i class="fas fa-cart-plus"></i> <span>Compras</span></a></li>
-							
-						@endif	
+
+						@endif
 
 					</ul>
 				@endauth
@@ -285,25 +311,25 @@
 		</aside>
 		<div class="content-wrapper" style="min-height: 1080.3px; background-color: #F3EFE0;">
 			<section class="content-header">
-				@yield('content-header')				
-			</section>			
+				@yield('content-header')
+			</section>
 			<!-- Main content -->
 			<section class="content">
 				<div class="row">
 					@yield('content')
 				</div>
 			</section>
-			
+
 		</div>
 
-		
-	
+
+
 		<footer class="main-footer" style="background-color: #F3EFE0;">
 			<div class="pull-right hidden-xs">
 				<b>Version</b> "1.0"
 			</div>
-			<strong>Instituto de Pensiones del Estado</strong>		
-		</footer>		
+			<strong>Instituto de Pensiones del Estado</strong>
+		</footer>
 	</div>
 	@include('adminlte::layouts.partials.modal_gral')
 </body>
@@ -315,7 +341,7 @@
 		<script src="{{ asset('components/toastr/toastr.js') }}"></script>
 		<script src="{{ asset('components/jquery-mask-plugin/dist/jquery.mask.min.js') }}"></script>
 		<script src="{{ asset('components/inputmask/dist/inputmask/inputmask.js') }}"></script>
-		<script src="{{ asset('components/inputmask/dist/inputmask/inputmask.date.extensions.js') }}"></script>	
+		<script src="{{ asset('components/inputmask/dist/inputmask/inputmask.date.extensions.js') }}"></script>
 		<script src="{{ asset('components/inputmask/dist/inputmask/inputmask.extensions.js') }}"></script>
 
 		<!-- Boostrap Table JS-->
@@ -325,7 +351,7 @@
 		<!-- Boostrap Table Filter Control JS-->
 		<script src="{{ asset('components/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.js') }}"></script>
 
-	
+
 		<!-- Boostrap Table Filter JS-->
 		<script src="{{ asset('components/bootstrap-table/dist/extensions/filter/bootstrap-table-filter.js') }}"></script>
 
@@ -343,6 +369,7 @@
 		<!-- Moment.js -->
 		<script src="{{ asset('components/moment/min/moment.min.js') }}"></script>
 
+<<<<<<< HEAD
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
@@ -352,6 +379,11 @@
 		<script type="text/javascript">
 
 {{--var routeConsulta 		= '{!! route('consulta.index') !!}';	--}}		
+=======
+
+		<script type="text/javascript">
+			{{--var routeConsulta 		= '{!! route('consulta.index') !!}';	--}}
+>>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 			var routeBase           = '{!! url("") !!}';
 			var maskFecha 			= new Inputmask("dd/mm/yyyy", {"placeholder": "DD/MM/AAAA"});
 			var permissionUser		= '{!! \Auth::check() !!}';
@@ -360,8 +392,8 @@
 			var footerModal			= $('.modal-footer');
 			var modal 				= $('#modal');
 			{{--var prueba = ( permissionUser )? @json(\Auth::user()->getPermissionsViaRoles()->pluck('name')) : 'No tiene' ;--}}
-			
-			
+
+
 			$.AdminLTESidebarTweak = {};
 
 			$.AdminLTESidebarTweak.options = {
@@ -419,16 +451,29 @@
 				});
 			
 
+<<<<<<< HEAD
 			
 			});
+=======
+
+		</script>
+>>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 
 			
 
+<<<<<<< HEAD
 		</script>
+=======
+>>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 
-		
 
+<<<<<<< HEAD
 		
 		@yield('script')	
+=======
+
+
+		@yield('script')
+>>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
 
 </html>

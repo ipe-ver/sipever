@@ -36,9 +36,6 @@ class DatabaseSeeder extends Seeder
         // Seed Tipos Pensiones
         $this->call(CatTiposPensionesTableSeeder::class);
 
-        // Seed Grupos de Almacén
-        $this->call(CatGruposAlmacenTableSeeder::class);
-
         // Seed Unidades de Almacén
         $this->call(CatUnidadesAlmacenTableSeeder::class);
 
@@ -54,16 +51,16 @@ class DatabaseSeeder extends Seeder
         // Seed Dependencias
         //$this->call(CatDependenciasTableSeeder::class);
 
-        // Seed Articulos
-        $this->call(CatArticulosTableSeeder::class);
-
         // Seed Cuentas Contables
         $this->call(CatCuentasContablesTableSeeder::class);
 
-        // Seed Dependencias
-        $this->call(CatExtensionesTableSeeder::class);
+<<<<<<< HEAD
+              
+=======
+        // Seed Articulos
+        $this->call(CatArticulosTableSeeder::class);
 
-       
+>>>>>>> 5c4edb2b96684c7239dbd2043d6d8893a5f4af98
     }
 }
 

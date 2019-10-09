@@ -41,7 +41,23 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], 
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.'], function() {
     Route::get('/', function() { return view('almacen.index'); })->name('index');
+    Route::get('/articulos/page/{no_index}','Almacen\ArticuloController@page')->name('articulos.next_page');
+    Route::get('/articulos/actualizar','Almacen\ArticuloController@update')->name('articulos.actualizar');
+    Route::get('/articulos/buscar','Almacen\ArticuloController@buscarPorPartida')->name('articulos.buscarPartida');
+    Route::get('/articulos/buscarNombre','Almacen\ArticuloController@buscarPorNombre')->name('articulos.buscarArticulo');
+    Route::get('/articulos/baja/{clave}','Almacen\ArticuloController@destroy')->name('articulos.darBaja');
+    Route::get('/articulos/crear','Almacen\ArticuloController@create')->name('articulos.nuevoArticulo');
+    Route::get('/partidas/crear','Almacen\PartidaController@create')->name('partidas.nuevaPartida');
+    Route::get('/partidas/actualizar/{id}','Almacen\PartidaController@update')->name('partidas.actualizar');
+    Route::get('/partidas/eliminar/{id}','Almacen\PartidaController@destroy')->name('partidas.eliminar');
     Route::resource('periodo','Almacen\PeriodoController');
+    Route::resource('articulos', 'Almacen\ArticuloController');
+    Route::resource('partidas', 'Almacen\PartidaController');
+    Route::resource('reportes', 'Almacen\ReporteController');
+    Route::resource('vales','Almacen\ValeController');
+    Route::resource('polizas', 'Almacen\PolizaController');
+    Route::resource('facturas', 'Almacen\FacturaController');
+
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'compras', 'as' => 'compras.'], function() {

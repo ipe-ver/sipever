@@ -26,33 +26,31 @@
 		{!! Html::style('components/bootstrap-select/dist/css/bootstrap-select.css') !!}
 		{!! Html::style('components/ajax-bootstrap-select/dist/css/ajax-bootstrap-select.css') !!}
 
-		<!-- HoldOn.js -->
+		<!-- HoldOn.css -->
 		{!! Html::style('components/hold-on/HoldOn.min.css') !!}
 
-
+		<!-- Less.css -->
 		{!! Html::style('components/bootstrap/less/mixins/image.less') !!}
 
+		<!-- Jquery ui css -->
+		{!! Html::style('components/jquery-ui/themes/base/jquery-ui.css') !!}
+		{!! Html::style('components/jquery-ui/themes/base/jquery-ui.min.css') !!}
 
 		
-		
 
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		
 		<style>
 			
 
 		.user-body{
 			position:relative;
- 			z-index:0;
-		
-			 
+ 			z-index:0; 
 		}
 
 		#search{
 			position:relative;
 			display: block;
 			z-index:1;
-			
-			
 		}
 
 	
@@ -348,10 +346,11 @@
 		<!-- Moment.js -->
 		<script src="{{ asset('components/moment/min/moment.min.js') }}"></script>
 
-		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-	
+		
+		<!-- Jquery ui js -->					
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>			
+		<script src="{{ asset('components/jquery-ui/jquery-ui.js') }}"></script>
+		<script src="{{ asset('components/jquery-ui/jquery-ui.min.js') }}"></script>
 
 			
 		<script type="text/javascript">
@@ -403,8 +402,9 @@
 				});
 
 				$( "#search" ).autocomplete({
- 
+					
 					source: function(request, response) {
+						
 						$.ajax({
 							url: "{{url('autocomplete')}}",
 							data: {

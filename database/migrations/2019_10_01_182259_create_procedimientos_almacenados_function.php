@@ -601,7 +601,101 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 UPDATE cat_articulos SET cat_articulos.precio_unitario = (((@exis*@pun)+(cantidad*precio_unitario))/(@exis+cantidad)),cat_articulos.existencias = (@exis+cantidad) WHERE cat_articulos.id = @i;
             END
         ');*/
+
+        /**Procedimiento almacenado para la obtención de datos sobre el reporte "REPORTE FINAL DE EXISTENCIAS CORRESPONDIENTE AL MES DE X DEL X"
+         * Recibe como parametros el mes, el año y la partida a la cual se desee obtener el reporte final de existencias.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_partida;
+
+            CREATE PROCEDURE `sp_reporte_final_existencias_partida`(
+                IN `mes` INT,
+                IN `anio` INT,
+                IN `partida` VARCHAR(191)
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+
+                SELECT cat_cuentas_contables.sscta, cat_cuentas_contables.nombre FROM cat_cuentas_contables WHERE cat_cuentas_contables.nombre = partida;
+                
+                SELECT articulos.clave AS CODIFICACION, articulos.descripcion AS DESCRIPCION, unidades.descripcion AS UNIDAD, inventario.existencias AS CANT,
+                    inventario.precio_promedio AS COSTO, inventario.precio_promedio * inventario.existencias AS IMPORTE
+                FROM cat_articulos articulos 
+                INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
+                INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
+                INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
+                INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
+                WHERE periodo.no_mes = mes AND periodo.anio = anio AND partidas.nombre = partida;
+             
+                SELECT COUNT(*) AS CODIFICACIONES, SUM(inventario.existencias) AS CANTIDAD_DE_ARTICULOS, SUM(inventario.precio_promedio * inventario.existencias) AS SUBTOTAL 
+		        FROM cat_articulos articulos
+                INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
+                INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
+                INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
+		        WHERE periodo.no_mes = mes AND periodo.anio = anio AND partidas.nombre = partida;
+            END
+        ');
+
+        /**Procedimiento almacenado para la obtención de datos sobre el reporte "REPORTE FINAL DE EXISTENCIAS CORRESPONDIENTE AL MES DE X DEL X"
+         * Recibe como parametros el mes y el año.
+         * Similar al anterior solo que este obtiene la información de todas las partidas, con un concentrado final del total
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_todo;
+
+            CREATE PROCEDURE `sp_reporte_final_existencias_todo`(
+                IN `mes` INT,
+                IN `anio` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+
+                SET @limite := (SELECT COUNT(*) FROM cat_cuentas_contables);
+                SET @i := 1;
+
+                WHILE @i <= @limite DO
+                    SELECT cat_cuentas_contables.sscta, cat_cuentas_contables.nombre FROM cat_cuentas_contables WHERE cat_cuentas_contables.id = @i;
+
+                    SELECT articulos.clave AS CODIFICACION, articulos.descripcion AS DESCRIPCION, unidades.descripcion AS UNIDAD, inventario.existencias AS CANT,
+                        inventario.precio_promedio AS COSTO, inventario.precio_promedio * inventario.existencias AS IMPORTE
+                    FROM cat_articulos articulos 
+                    INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
+                    INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
+                    INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
+                    INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
+                    WHERE periodo.no_mes = mes AND periodo.anio = anio AND partidas.id = @i;
+                
+                    SELECT COUNT(*) AS CODIFICACIONES, SUM(inventario.existencias) AS CANTIDAD_DE_ARTICULOS, SUM(inventario.precio_promedio * inventario.existencias) AS SUBTOTAL 
+		            FROM cat_articulos articulos
+                    INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
+                    INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
+                    INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
+                    WHERE periodo.no_mes = mes AND periodo.anio = anio AND partidas.id = @i;
+                    
+                    SET @i = @i + 1;
+                END WHILE;
+                SELECT COUNT(*) AS CODIFICACIONES, SUM(inventario.existencias) AS CANTIDAD_DE_ARTICULOS, SUM(inventario.precio_promedio * inventario.existencias) AS SUBTOTAL
+                FROM inventario_inicial_final inventario
+                WHERE inventario.id_periodo = (SELECT periodos.id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio);
+            END
+        ');
     }
+
+    /**
+     * SELECT cat_articulos.clave AS CODIFICACION, cat_articulos.descripcion AS DESCRIPCION, cat_unidades_almacen.descripcion AS UNIDAD, inventario_inicial_final.existencias AS CANT,
+     *               inventario_inicial_final.precio_promedio AS COSTO, inventario_inicial_final.precio_promedio * inventario_inicial_final.existencias AS IMPORTE
+    *          FROM cat_articulos
+    *            INNER JOIN cat_unidades_almacen ON cat_articulos.id = cat_unidades_almacen.id_unidad
+     *           INNER JOIN inventario_inicial_final ON cat_articulos.id = inventario_inicial_final.id_articulo
+      *          INNER JOIN cat_cuentas_contables ON cat_articulos.id_cuenta = cat_cuentas_contables.id
+       *         WHERE periodos.no_mes = mes AND periodos.anio = anio AND cat_cuentas_contables.nombre = partida;
+     */
 
     /**
      * Reverse the migrations.
@@ -632,5 +726,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_pedido_consumo_articulo_oficina;');
         //DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra_unica;');
         //DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra_almacen;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_partida;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_todo;');
     }
 }

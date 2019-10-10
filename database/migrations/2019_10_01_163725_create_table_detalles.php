@@ -29,6 +29,7 @@ class CreateTableDetalles extends Migration
             $table->integer('cantidad');
             $table->double('precio_unitario')->nullable();
             $table->double('subtotal')->nullable();
+            $table->double('total')->nullable();
 
             $table->timestamps();
         });

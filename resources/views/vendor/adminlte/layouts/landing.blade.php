@@ -32,10 +32,10 @@
 		<!-- Less.css -->
 		{!! Html::style('components/bootstrap/less/mixins/image.less') !!}
 
+		
 		<!-- Jquery ui css -->
 		{!! Html::style('components/jquery-ui/themes/base/jquery-ui.css') !!}
 		{!! Html::style('components/jquery-ui/themes/base/jquery-ui.min.css') !!}
-
 		
 
 		
@@ -351,7 +351,7 @@
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>			
 		<script src="{{ asset('components/jquery-ui/jquery-ui.js') }}"></script>
 		<script src="{{ asset('components/jquery-ui/jquery-ui.min.js') }}"></script>
-
+						
 			
 		<script type="text/javascript">
 

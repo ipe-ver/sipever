@@ -58,6 +58,9 @@ class DatabaseSeeder extends Seeder
         // Seed Articulos
         $this->call(CatArticulosTableSeeder::class);
 
+        // Seed Extensiones
+        $this->call(CatExtensionesTableSeeder::class);
+
 
     }
 }

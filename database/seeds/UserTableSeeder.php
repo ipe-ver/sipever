@@ -21,8 +21,8 @@ class UserTableSeeder extends Seeder
         //Usuario 
         $user = new User();
         $user->name = 'user';
-        $user->email = 'user@ipe.com';
-        $user->password = bcrypt('secret');
+        $user->email = 'user';
+        $user->password = bcrypt('1234567');
         $user->save();
         $user->roles()->attach($role_user);
 
@@ -30,24 +30,24 @@ class UserTableSeeder extends Seeder
         //Administrador
         $user = new User();
         $user->name = 'admin';
-        $user->email = 'admin@ipe.com';
-        $user->password = bcrypt('secret');
+        $user->email = 'admin';
+        $user->password = bcrypt('1234567');
         $user->save();
         $user->roles()->attach($role_admin);
 
         //Administrador de Almacén
         $user = new User();
         $user->name = 'almacen_admin';
-        $user->email = 'almacen_admin@ipe.com';
-        $user->password = bcrypt('secret');
+        $user->email = 'almacen_admin';
+        $user->password = bcrypt('1234567');
         $user->save();
         $user->roles()->attach($role_almacen_admin);
 
          //Administrador de Compras
          $user = new User();
          $user->name = 'compras_admin';
-         $user->email = 'compras_admin@ipe.com';
-         $user->password = bcrypt('secret');
+         $user->email = 'compras_admin';
+         $user->password = bcrypt('1234567');
          $user->save();
          $user->roles()->attach($role_compras_admin);
 

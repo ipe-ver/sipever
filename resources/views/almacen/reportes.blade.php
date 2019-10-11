@@ -56,45 +56,63 @@
 <div class = "container reportes-box">
     <form action="{{route('almacen.index')}}">
         <div class ="row justify-content-md-center">
-            <div class="col col-lg-6">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    Póliza de almacén
+            <div class="col col-lg-4">
+                <div class="form-check" style="display: inline-flex;">
+                    <input class="form-check-input" type="checkbox" value="" id="reporteValidacionConsumo">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteValidacionConsumo">
+                    Reporte para validación de consumo
                     </label>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    Póliza de almacén
+                <div class="form-check" style="display: flex;">
+                    <input class="form-check-input" type="checkbox" value="" id="reporteConsDepto">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    Reporte de consumos por departamento
                     </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check" style="display: flex;">
                     <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    Póliza de almacén
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    Consumo de artículos por área
                     </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check" style="display: flex;">
                     <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    Póliza de almacén
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;"for="defaultCheck1">
+                    Reporte auxiliar de almacén
                     </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check" style="display: flex;">
                     <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    Póliza de almacén
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    Consumos por artículo
                     </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check" style="display: inline-flex;">
                     <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    Póliza de almacén
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    Reporte final de existencias
+                    </label>
+                </div>
+                <div class="form-check" style="display: inline-flex;">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    Compras por artículo
+                    </label>
+                </div>
+                <div class="form-check" style="display: inline-flex;">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    Existencias por artículo
+                    </label>
+                </div>
+                <div class="form-check" style="display: inline-flex;">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    Consumos por área y artículo
                     </label>
                 </div>
             </div>
-            <div class ="col-lg-6">
+            <div class ="col-lg-8">
                 <div id="cosoPrueba">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="checkPorMes">
@@ -104,26 +122,53 @@
                     </div>
                 </div>
                 <div class="row">
-                    <label class="text-nowrap col-xs-4">No. Mes</label>
-                    <div class="input-group spinner col-xs-3">
-                        <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required>
-                        <div class="input-group-btn-vertical">
-                            <button id="mesIncrement" class="btn btn-default" type="button">
-                                <i class="fa fa-caret-up"></i>
-                            </button>
-                            <button id="mesDecrement" class="btn btn-default" type="button">
-                                <i class="fa fa-caret-down"></i>
-                            </button>
+                    <div class="col-md-6">
+                        <label class="col-lg-7 text-left" style="padding-right: 50px;">Mes inicial</label>
+                        <div class="input-group spinner col-md-5">
+                            <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required style="padding-right: 15px;">
+                            <div class="input-group-btn-vertical" style="margin-left: 10px;">
+                                <button id="mesIncrement" class="btn btn-default" type="button">
+                                    <i class="fa fa-caret-up"></i>
+                                </button>
+                                <button id="mesDecrement" class="btn btn-default" type="button">
+                                    <i class="fa fa-caret-down"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label style="width: 45px; padding-right: 50px; padding-left: 30px;" class="col-md-2">Año inicio</label>
+                            <select name="year" class="spinner" style="width: 55px;" required>
+                                <option value="">Año...</option>
+                                <option value="2019">2019</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="col-lg-7 text-left" style="padding-right: 50px;">Mes fin</label>
+                        <div class="input-group spinner col-md-5">
+                            <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required style="padding-right: 15px;">
+                            <div class="input-group-btn-vertical" style="margin-left: 10px;">
+                                <button id="mesIncrement" class="btn btn-default" type="button">
+                                    <i class="fa fa-caret-up"></i>
+                                </button>
+                                <button id="mesDecrement" class="btn btn-default" type="button">
+                                    <i class="fa fa-caret-down"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row" style="align-content: center;">
+                            <label style="width: 45px; padding-right: 50px; padding-left: 30px;" class="col-md-2">Año fin</label>
+                            <select name="year" class="spinner" style="width: 55px;" required>
+                                <option value="">Año...</option>
+                                <option value="2019">2019</option>
+                            </select>
                         </div>
                     </div>
                 </div>
-                <label class="text-nowrap" style="padding-right: 43.5px;">Año</label>
-                <select name="year"class="spinner" style="text-align-last: right;" required>
-                    <option value="" dir="ltr">Año...</option>
-                    <option value="2019" dir="ltr">2019</option>
-                </select>
-                <div class="row">
-                    <button>Coso</button>
+                <div class="row" style="padding-top: 20px;">
+                    <div class="container-fluid">
+                        <button class="btn btn-agregar pull-right">Generar reporte</button>
+                    </div>
                 </div>
             </div>
         </div>

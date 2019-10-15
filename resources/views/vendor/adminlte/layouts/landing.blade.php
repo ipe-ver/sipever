@@ -7,35 +7,27 @@
 		<!-- CSRF Token -->
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<title>IPE</title>
+		
+
 		{!! Html::style('components/bootstrap/dist/css/bootstrap.css') !!}
 		{!! Html::style('components/admin-lte/dist/css/AdminLTE.css') !!}
 		{!! Html::style('components/admin-lte/dist/css/skins/_all-skins.css') !!}
 		{!! Html::style('components/font-awesome/css/all.css') !!}
-
-		{!! Html::style('components/toastr/toastr.css') !!}	
-			
-
+		{!! Html::style('components/toastr/toastr.css') !!}		
 
 		<!-- Boostrap Table CSS-->
-		{!! Html::style('components/bootstrap-table/dist/bootstrap-table.css') !!}
-
+		{!! Html::style('components/bootstrap-table/dist/bootstrap-table.css') !!} 
 
 		<!-- Boostrap Table Filter Control CSS-->
-		{!! Html::style('components/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.css') !!}
+		{!! Html::style('components/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.css') !!} 		
 		<!-- Boostrap Table Select CSS-->
-		{!! Html::style('components/bootstrap-select/dist/css/bootstrap-select.css') !!}
-		{!! Html::style('components/ajax-bootstrap-select/dist/css/ajax-bootstrap-select.css') !!}
+		{!! Html::style('components/bootstrap-select/dist/css/bootstrap-select.css') !!} 
+		{!! Html::style('components/ajax-bootstrap-select/dist/css/ajax-bootstrap-select.css') !!} 
 
-		<!-- HoldOn.css -->
-		{!! Html::style('components/hold-on/HoldOn.min.css') !!}
+		<!-- HoldOn.js -->
+		{!! Html::style('components/hold-on/HoldOn.min.css') !!} 
 
-		<!-- Less.css -->
-		{!! Html::style('components/bootstrap/less/mixins/image.less') !!}
-
-		
-		<!-- Jquery ui css -->
-		{!! Html::style('components/jquery-ui/themes/base/jquery-ui.css') !!}
-		{!! Html::style('components/jquery-ui/themes/base/jquery-ui.min.css') !!}
+	
 		
 
 		
@@ -311,14 +303,14 @@
 	@include('adminlte::layouts.partials.modal_gral')
 </body>
 
-		<script src="{{ asset('components/jquery/dist/jquery.js') }}"></script>
+<script src="{{ asset('components/jquery/dist/jquery.js') }}"></script>
 		<script src="{{ asset('components/jquery/dist/jquery.min.js') }}"></script>
 		<script src="{{ asset('components/bootstrap/dist/js/bootstrap.js') }}"></script>
 		<script src="{{ asset('components/admin-lte/dist/js/adminlte.js') }}"></script>
 		<script src="{{ asset('components/toastr/toastr.js') }}"></script>
 		<script src="{{ asset('components/jquery-mask-plugin/dist/jquery.mask.min.js') }}"></script>
 		<script src="{{ asset('components/inputmask/dist/inputmask/inputmask.js') }}"></script>
-		<script src="{{ asset('components/inputmask/dist/inputmask/inputmask.date.extensions.js') }}"></script>
+		<script src="{{ asset('components/inputmask/dist/inputmask/inputmask.date.extensions.js') }}"></script>	
 		<script src="{{ asset('components/inputmask/dist/inputmask/inputmask.extensions.js') }}"></script>
 
 		<!-- Boostrap Table JS-->
@@ -328,13 +320,13 @@
 		<!-- Boostrap Table Filter Control JS-->
 		<script src="{{ asset('components/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.js') }}"></script>
 
-
+	
 		<!-- Boostrap Table Filter JS-->
 		<script src="{{ asset('components/bootstrap-table/dist/extensions/filter/bootstrap-table-filter.js') }}"></script>
 
 		<!-- Boostrap Table Export JS-->
 		<script src="{{ asset('components/bootstrap-table/dist/extensions/export/bootstrap-table-export.js') }}"></script>
-		<script src="{{ asset('components/bootstrap-table/dist/extensions/tableExport/tableExport.js') }}"></script>
+		
 
 		<!-- Boostrap Table Select JS-->
 		<script src="{{ asset('components/bootstrap-select/dist/js/bootstrap-select.js') }}"></script>
@@ -345,13 +337,9 @@
 
 		<!-- Moment.js -->
 		<script src="{{ asset('components/moment/min/moment.min.js') }}"></script>
+		<script src="{{ asset('components/moment/locale/es.js') }}"></script>	
 
-		
-		<!-- Jquery ui js -->					
-		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>			
-		<script src="{{ asset('components/jquery-ui/jquery-ui.js') }}"></script>
-		<script src="{{ asset('components/jquery-ui/jquery-ui.min.js') }}"></script>
-						
+	
 			
 		<script type="text/javascript">
 
@@ -401,7 +389,7 @@
 					}
 				});
 
-				$( "#search" ).autocomplete({
+				/*$( "#search" ).autocomplete({
 					
 					source: function(request, response) {
 						
@@ -421,7 +409,7 @@
 						});
 					},
 					minLength: 3
-				});
+				});*/
 			
 
 			
@@ -431,7 +419,7 @@
 
 		</script>
 
-
+		{!! HTML::script('js/funcionesgral.js') !!}
 		
 		@yield('script')	
 

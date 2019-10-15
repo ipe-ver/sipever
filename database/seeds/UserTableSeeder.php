@@ -21,6 +21,7 @@ class UserTableSeeder extends Seeder
         //Usuario 
         $user = new User();
         $user->name = 'user';
+        $user->username = 'KJIMENEZ';
         $user->email = 'user@ipe.com';
         $user->password = bcrypt('secret');
         $user->save();
@@ -30,6 +31,7 @@ class UserTableSeeder extends Seeder
         //Administrador
         $user = new User();
         $user->name = 'admin';
+        $user->username = 'CAVILA';
         $user->email = 'admin@ipe.com';
         $user->password = bcrypt('secret');
         $user->save();
@@ -38,6 +40,7 @@ class UserTableSeeder extends Seeder
         //Administrador de Almacén
         $user = new User();
         $user->name = 'almacen_admin';
+        $user->username = 'KLUNA';
         $user->email = 'almacen_admin@ipe.com';
         $user->password = bcrypt('secret');
         $user->save();
@@ -46,6 +49,7 @@ class UserTableSeeder extends Seeder
          //Administrador de Compras
          $user = new User();
          $user->name = 'compras_admin';
+         $user->username = 'AMEDINA';
          $user->email = 'compras_admin@ipe.com';
          $user->password = bcrypt('secret');
          $user->save();

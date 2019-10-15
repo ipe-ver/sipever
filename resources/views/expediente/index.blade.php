@@ -3,6 +3,7 @@
 @section('style')
 	
 	{!! Html::style('components/bootstrap-table/dist/bootstrap-table.css') !!}
+	
 @endsection
 
 @section('content')

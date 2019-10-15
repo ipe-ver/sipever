@@ -137,7 +137,7 @@
                         </div>
                         <div class="row">
                             <label style="width: 45px; padding-right: 50px; padding-left: 30px;" class="col-md-2">Año inicio</label>
-                            <select name="year" class="spinner" style="width: 55px;" required>
+                            <select name="year" class="spinner" style="margin-left: 7px; width: 55px;" required>
                                 <option value="">Año...</option>
                                 <option value="2019">2019</option>
                             </select>
@@ -158,7 +158,7 @@
                         </div>
                         <div class="row" style="align-content: center;">
                             <label style="width: 45px; padding-right: 50px; padding-left: 30px;" class="col-md-2">Año fin</label>
-                            <select name="year" class="spinner" style="width: 55px;" required>
+                            <select name="year" class="spinner" style="margin-left: 7px; width: 55px;" required>
                                 <option value="">Año...</option>
                                 <option value="2019">2019</option>
                             </select>
@@ -167,7 +167,7 @@
                 </div>
                 <div class="row" style="padding-top: 20px;">
                     <div class="container-fluid">
-                        <button class="btn btn-agregar pull-right">Generar reporte</button>
+                        <button class="btn btn-submit pull-right">Generar reporte</button>
                     </div>
                 </div>
             </div>

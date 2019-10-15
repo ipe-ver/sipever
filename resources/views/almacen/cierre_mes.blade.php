@@ -55,41 +55,46 @@
 
 <div class="container mes-box">
     <form action="{{route('almacen.index')}}">
-        <div class="row">
-            <div class="container" style="display: inline-flex; align-items: center;">
-                <label class="text-nowrap" style="margin-left:11%; padding-right: 15px;">No. Mes</label>
-                <div class="input-group spinner">
-                    <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required>
-                    <div class="input-group-btn-vertical">
-                        <button id="mesIncrement" class="btn btn-default" type="button">
-                            <i class="fa fa-caret-up"></i>
-                        </button>
-                        <button id="mesDecrement" class="btn btn-default" type="button">
-                            <i class="fa fa-caret-down"></i>
-                        </button>
+        <div class="col-lg-12" style="text-align-last: center;">
+            <div class="row">
+                <div class="col col-md-12 container-fluid" style="align-items: center;">
+                    <label class="text-nowrap">No. Mes</label>
+                    <div class="container-fluid" style="display: inline-block; text-align-last: center;vertical-align: middle;">
+                        <div class="input-group spinner">
+                            <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required>
+                            <div class="input-group-btn-vertical">
+                                <button id="mesIncrement" class="btn btn-default" type="button">
+                                    <i class="fa fa-caret-up"></i>
+                                </button>
+                                <button id="mesDecrement" class="btn btn-default" type="button">
+                                    <i class="fa fa-caret-down"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>  
-        </div>
-        <div class="row" style="align-items: center">
-            <div class="container" style="display: inline-flex; align-items: center;">
-                <label class="text-nowrap" style="margin-left:11%; padding-right:43px;">Año</label>
-                <select name="year"class="spinner" style="text-align-last: right;" required>
-                    <option value="" dir="ltr">Año...</option>
-                    <option value="2019" dir="ltr">2019</option>
-                </select>
             </div>
-        </div>
-
-        <div class="row" style="align-items: center; margin-bottom: 10px; margin-top: 10px;">
-            <div class="container" style="display: inline-flex; align-items: center;">
-                <button style="margin-left:9%; margin-right: 3%;" type="button" id="btn-cancelar" class="btn btn-cancel">Cancelar</button>
+            <div class="row" style="margin-bottom: 10%;">
+                <div class="col col-md-12 container-fluid"  style="align-items: center;">
+                    <label class="text-nowrap" style="padding: 2.5%;">Año</label>
+                    <div class="container-fluid" style="display: inline-block; text-align-last: center;vertical-align: middle;">
+                        <select name="year"class="spinner" style="text-align-last: right;" required>
+                        <option value="" dir="ltr">Año...</option>
+                        <option value="2019" dir="ltr">2019</option>
+                    </select>
+                    </div>
+                </div>
+            </div> 
+            <div class="row">
+                <div class="col col-md-12 container-fluid">
+                <button style="margin-right: 3%;" type="button" id="btn-cancelar" class="btn btn-cancel">Cancelar</button>
                 <button type="submit" id="btn-cerrar" class="btn btn-submit">Cerrar mes</button>
+            </div> 
             </div>
         </div>
     </form>
 </div>
 
-<script type="text/javascript" src="{{ asset('js/cierre-mes.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/almacen/cierre-mes.js') }}"></script>
 
 @endsection

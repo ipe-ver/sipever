@@ -77,7 +77,7 @@ class ArticuloController extends Controller
         $no_index = 0;
         $no_partida = 1;
         if(empty($nombreArticulo)){
-            return back()->with('warning','Porfavor ingrese el nombre de un articulo');
+            return redirect()->route('almacen.articulos.index')->with('warning','Porfavor ingrese el nombre de un articulo');
         }else{
             $partidas = DB::select("call sp_get_grupos");
             $unidades = DB::select("call sp_get_unidades");

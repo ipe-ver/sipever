@@ -65,49 +65,44 @@
                 </div>
                 <div class="form-check" style="display: flex;">
                     <input class="form-check-input" type="checkbox" value="" id="reporteConsDepto">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteConsDepto">
                     Reporte de consumos por departamento
                     </label>
                 </div>
+                
                 <div class="form-check" style="display: flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
-                    Consumo de artículos por área
-                    </label>
-                </div>
-                <div class="form-check" style="display: flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;"for="defaultCheck1">
+                    <input class="form-check-input" type="checkbox" value="" id="reporteAuxAlmacen">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;"for="reporteAuxAlmacen">
                     Reporte auxiliar de almacén
                     </label>
                 </div>
                 <div class="form-check" style="display: flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    <input class="form-check-input" type="checkbox" value="" id="consumosArticulo">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="consumosArticulo">
                     Consumos por artículo
                     </label>
                 </div>
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    <input class="form-check-input" type="checkbox" value="" id="reporteExistencias">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteExistencias">
                     Reporte final de existencias
                     </label>
                 </div>
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    <input class="form-check-input" type="checkbox" value="" id="comprasArticulo">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="comprasArticulo">
                     Compras por artículo
                     </label>
                 </div>
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    <input class="form-check-input" type="checkbox" value="" id="existenciasArticulo">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="existenciasArticulo">
                     Existencias por artículo
                     </label>
                 </div>
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    <input class="form-check-input" type="checkbox" value="" id="consumosAreaArt">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="consumosAreaArt">
                     Consumos por área y artículo
                     </label>
                 </div>
@@ -124,7 +119,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label class="col-lg-7 text-left" style="padding-right: 50px;">Mes inicial</label>
-                        <div class="input-group spinner col-md-5">
+                        <div class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
                             <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required style="padding-right: 15px;">
                             <div class="input-group-btn-vertical" style="margin-left: 10px;">
                                 <button id="mesIncrement" class="btn btn-default" type="button">
@@ -135,17 +130,17 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="row">
-                            <label style="width: 45px; padding-right: 50px; padding-left: 30px;" class="col-md-2">Año inicio</label>
-                            <select name="year" class="spinner" style="margin-left: 7px; width: 55px;" required>
-                                <option value="">Año...</option>
-                                <option value="2019">2019</option>
-                            </select>
-                        </div>
+
+                        <label class="col-lg-7 text-left" style="padding-right: 50px;">Año inicio</label>
+                        <select name="year" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;" required>
+                            <option value="">Año...</option>
+                            <option value="2019">2019</option>
+                        </select>
+
                     </div>
                     <div class="col-md-6">
                         <label class="col-lg-7 text-left" style="padding-right: 50px;">Mes fin</label>
-                        <div class="input-group spinner col-md-5">
+                        <div class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
                             <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required style="padding-right: 15px;">
                             <div class="input-group-btn-vertical" style="margin-left: 10px;">
                                 <button id="mesIncrement" class="btn btn-default" type="button">
@@ -156,18 +151,19 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="row" style="align-content: center;">
-                            <label style="width: 45px; padding-right: 50px; padding-left: 30px;" class="col-md-2">Año fin</label>
-                            <select name="year" class="spinner" style="margin-left: 7px; width: 55px;" required>
-                                <option value="">Año...</option>
-                                <option value="2019">2019</option>
-                            </select>
-                        </div>
+                        <label class="col-lg-7 text-left" style="padding-right: 50px;">Año fin</label>
+                        <select name="year" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;" required>
+                            <option value="">Año...</option>
+                            <option value="2019">2019</option>
+                        </select>
                     </div>
                 </div>
-                <div class="row" style="padding-top: 20px;">
+                <div class="row" style="padding-top: 50%;">
                     <div class="container-fluid">
-                        <button class="btn btn-submit pull-right">Generar reporte</button>
+                        <div class="pull-right">
+                            <button class="btn btn-cancel">Cancelar</button>
+                            <button class="btn btn-submit">Generar reporte</button>
+                        </div>
                     </div>
                 </div>
             </div>

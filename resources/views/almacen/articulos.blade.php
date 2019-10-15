@@ -56,7 +56,9 @@
     <div class="row">
         <div class="panel" style="background-color: transparent;">
             <div class = "pull-left">
-                <form action="{{route('almacen.articulos.buscarArticulo')}}">
+                <form action="{{route('almacen.articulos.buscarArticulo')}}" method="POST">
+                    
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
                     <input name="nombreArticulo" class="input-busqueda"type="text" name="nombreArticulo" placeholder="Ingrese el nombre de un articulo a buscar">
                     <button type="submit"  class="btn btn-agregar">
                         <i class="fas fa-search"></i>
@@ -196,5 +198,5 @@
         </a>
     @endif
 </div>
-<script type="text/javascript" src="{{ asset('js/articulos.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/almacen/articulos.js') }}"></script>
 @endsection

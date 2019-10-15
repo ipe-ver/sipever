@@ -150,5 +150,5 @@
     </div>
     @endforeach
 </div>
-<script type="text/javascript" src="{{ asset('js/partidas.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/almacen/partidas.js') }}"></script>
 @endsection

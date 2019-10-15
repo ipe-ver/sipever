@@ -65,7 +65,7 @@
                     </label>
                 </div>
                 <label class="text-nowrap" style="margin-left:7%; padding-right: 15px;">No. Mes</label>
-                <div class="input-group spinner">
+                <div class="input-group spinner" style="max-width: 70px;">
                     <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required>
                     <div class="input-group-btn-vertical">
                         <button id="mesIncrement" class="btn btn-default" type="button">

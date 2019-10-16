@@ -907,13 +907,18 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_obtener_oficinas;
 
-            CREATE PROCEDURE `sp_obtener_oficinas`()
+            CREATE PROCEDURE `sp_obtener_oficinas`(
+                IN `ubpp_oficina` INT
+            )
             LANGUAGE SQL
             NOT DETERMINISTIC
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SELECT cat_oficinas.ubpp, cat_oficinas.oficina, cat_oficinas.descripcion, cat_oficinas.subdir FROM cat_oficinas WHERE oficina > 0;
+                SELECT cat_oficinas.ubpp, cat_oficinas.oficina, cat_oficinas.descripcion, cat_oficinas.subdir 
+                FROM cat_oficinas 
+                WHERE oficina > 0
+                AND ubpp = ubpp_oficina;
             END
         ');
 

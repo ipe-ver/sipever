@@ -74,7 +74,7 @@
                     <div class="container-fluid" style="align-items: center;">
                     <label class="text-nowrap col-sm-6" style=" padding-right: 15px;">No. Mes</label>
                     <div class="input-group spinner col-sm-6" style="width: 50%;">
-                        <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required>
+                        <input name="numMes" id="no_mes" type="text" class="form-control" value="1" readonly>
                         <div class="input-group-btn-vertical">
                             <button id="mesIncrement" class="btn btn-default" type="button">
                                 <i class="fa fa-caret-up"></i>
@@ -87,9 +87,9 @@
                 </div>
                 <div class="container-fluid" style="align-items: center;">
                     <label class="text-nowrap col-sm-6">Año</label>
-                    <select name="year" class="input-group spinner col-sm-6" style="width: 50%;" required>
-                        <option value="" dir="ltr">Año...</option>
-                        <option value="2019" dir="ltr">2019</option>
+                    <select name="year" class="input-group spinner col-sm-6" style="width: 50%; text-align-last: right;" required>
+                        <option value="" dir="rtl">Año...</option>
+                        <option value="2019" dir="rtl">2019</option>
                     </select>
                 </div>
             </div>

@@ -108,7 +108,22 @@
                 </div>
             </div>
             <div class ="col-lg-8">
-                <div id="cosoPrueba">
+                <div class="row">
+                    <div class ="container-fluid" style="margin-top: 5%;">
+                        <select id="selectDepto" class="form-control" name="depto" required method="post">
+                            <option value ="">Seleccione un departamento</option>
+                            @foreach($departamentos as $departamento)
+                                <option value="{{$departamento->ubpp}}">{{$departamento->descripcion}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class ="container-fluid" style="margin-top: 5%;">
+                        <select id="selectOficina" class="form-control" name="oficina" required>
+                            <option value ="">Seleccione una oficina</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="reporteSingleton" style="margin-bottom: 5%;">
                     <div class="form-check">
                         <input id ="chckMes" class="form-check-input" type="checkbox" value="" id="checkPorMes">
                         <label class="form-check-label" for="chckMes">
@@ -120,7 +135,7 @@
                     <div class="col-md-6">
                         <label id="lblMesInicio" class="col-lg-7 text-left" style="padding-right: 50px;">Mes inicial</label>
                         <div id="groupMesInicio" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
-                            <input id="inptMesInicio" name="numMesInicio" id="no_mes" type="text" class="form-control" value="1" required style="padding-right: 15px;" readonly>
+                            <input id="inptMesInicio" name="numMesInicio" type="text" class="form-control" value="1" required style="padding-right: 15px;" readonly>
                             <div class="input-group-btn-vertical" style="margin-left: 10px;">
                                 <button id="mesIniIncrement" class="btn btn-default" type="button">
                                     <i class="fa fa-caret-up"></i>
@@ -132,16 +147,16 @@
                         </div>
 
                         <label id="lblYearInicio" class="col-lg-7 text-left" style="padding-right: 50px;">Año inicio</label>
-                        <select id="selectYearInicio" name="yearInicio" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;" required>
-                            <option value="">Año...</option>
-                            <option value="2019">2019</option>
+                        <select id="selectYearInicio" name="yearInicio" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%; text-align-last: right;" required>
+                            <option value="" dir="ltr">Año...</option>
+                            <option value="2019" dir="rtl">2019</option>
                         </select>
 
                     </div>
                     <div class="col-md-6">
                         <label id="lblMesFin" class="col-lg-7 text-left" style="padding-right: 50px;">Mes fin</label>
                         <div id="groupMesFin" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
-                            <input id="inptMesFin" name="numMes" id="no_mes" type="text" class="form-control" value="1" required style="padding-right: 15px;" readonly>
+                            <input id="inptMesFin" name="numMes" type="text" class="form-control" value="1" required style="padding-right: 15px;" readonly>
                             <div class="input-group-btn-vertical" style="margin-left: 10px;">
                                 <button id="mesFinIncrement" class="btn btn-default" type="button">
                                     <i class="fa fa-caret-up"></i>
@@ -152,17 +167,17 @@
                             </div>
                         </div>
                         <label id="lblYearFin" class="col-lg-7 text-left" style="padding-right: 50px;">Año fin</label>
-                        <select id="selectYearFin"  name="year" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;" required>
-                            <option value="">Año...</option>
-                            <option value="2019">2019</option>
+                        <select id="selectYearFin"  name="year" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%; text-align-last: right;" required>
+                            <option value="" dir="ltr">Año...</option>
+                            <option value="2019" dir="rtl">2019</option>
                         </select>
                     </div>
                 </div>
-                <div class="row" style="padding-top: 50%;">
+                <div class="row" style="padding-top: 25%;">
                     <div class="container-fluid">
                         <div class="pull-right">
-                            <button class="btn btn-cancel">Cancelar</button>
-                            <button class="btn btn-submit">Generar reporte</button>
+                            <button type="button" class="btn btn-cancel">Cancelar</button>
+                            <button type = "submit" class="btn btn-submit">Generar reporte</button>
                         </div>
                     </div>
                 </div>
@@ -172,6 +187,6 @@
 </div>
 
 <script type="text/javascript" src="{{ asset('js/almacen/reportes.js') }}"></script>
-
+<script type="text/javascript" src="{{ asset('js/almacen/oficinas-depto.js') }}"></script>
 
 @endsection

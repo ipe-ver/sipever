@@ -570,11 +570,11 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             BEGIN
 
                 SET @periodo := (SELECT periodos.id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio AND estatus = 1);
-                SET @folio := (SELECT folios.folio FROM folios WHERE folios.id_perido = @periodo);
+                SET @folio := (SELECT folios.folio FROM folios WHERE folios.id_periodo = @periodo);
                 SET @proveedor := (SELECT cat_proveedores.id FROM cat_proveedores WHERE cat_proveedores.nombre = nombre_proveedor);
 
-                INSERT INTO compras (id_periodo, id_proveedor, descripcion, folio, fecha_movimiento, no_factura, fecha_factura, iva, total, created_at)
-                VALUES (@periodo, @proveedor, descripcion, @folio, fecha_movimiento, no_factura, fecha_facturacion, iva, 
+                INSERT INTO compras (id_periodo, id_proveedor, folio, fecha_movimiento, no_factura, fecha_factura, iva, total, created_at)
+                VALUES (@periodo, @proveedor, @folio, fecha_movimiento, no_factura, fecha_facturacion, iva, 
                     (((iva/100)*subtotal)+subtotal), NOW());
                         
                 UPDATE folios SET folio = folio + 1, updated_at = NOW() WHERE folios.id_periodo = @periodo;
@@ -603,14 +603,14 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @i := (SELECT cat_articulos.id FROM cat_articulos WHERE cat_articulos.descripcion = descripcion);
                 SET @iva := (SELECT iva FROM compras WHERE compras.id_compra = clave);
                     
-                INSERT INTO detalles (id_compra, id_articulo, tipo_movimiento, cantidad, precio_unitario, subtotal, total, created_at) 
-                VALUES (clave, @i, 3, cantidad, precio_unitario, cantidad * precio_unitario, 
-                ((@iva * (cantidad * precio_unitario)) + (cantidad * precio_unitario)), NOW());
+                INSERT INTO detalles (id_compra, id_articulo, tipo_movimiento, descripcion, cantidad, precio_unitario, subtotal, total, created_at) 
+                VALUES (clave, @i, 3, descripcion, cantidad, precio_unitario, cantidad * precio_unitario, 
+                (((@iva / 100) * (cantidad * precio_unitario)) + (cantidad * precio_unitario)), NOW());
 
                 SET @existencias := (SELECT cat_articulos.existencias FROM cat_articulos WHERE cat_articulos.id = @i);
                 SET @precio_unitario := (SELECT cat_articulos.precio_unitario FROM cat_articulos WHERE cat_articulos.id = @i);
                 
-                UPDATE cat_articulos SET cat_articulos.precio_unitario = (((@existencias*@precio_unitario)+(cantidad*precio_unitario))/(@exis+cantidad)),
+                UPDATE cat_articulos SET cat_articulos.precio_unitario = (((@existencias*@precio_unitario)+(cantidad*precio_unitario))/(@existencias+cantidad)),
                     cat_articulos.existencias = (@existencias+cantidad) WHERE cat_articulos.id = @i;
             END
         ');
@@ -810,7 +810,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         ');
 
         /**Procedimiento almacenado para obtener el reporte "REPORTE DE CONSUMOS POR DEPARTAMENTO CORRESPONDIENTE AL MES DE X DEL X"
-         * Recibe como parametro la ubpp y el nombre de la oficina.
+         * Solo obtiene los consumos de una oficina
+         * Recibe como parametro la ubpp, el nombre de la oficina, el mes y el año.
          */
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_reporte_consumos_oficina;
@@ -858,10 +859,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                             INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
                             WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo;
                         END IF;
-
                     END WHILE;
                 END IF;
-                
             END
         ');
 

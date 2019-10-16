@@ -111,7 +111,7 @@
                 <div id="cosoPrueba">
                     <div class="form-check">
                         <input id ="chckMes" class="form-check-input" type="checkbox" value="" id="checkPorMes">
-                        <label class="form-check-label" for="checkPorMes">
+                        <label class="form-check-label" for="chckMes">
                         Generar reporte de un solo mes
                         </label>
                     </div>
@@ -119,20 +119,20 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label id="lblMesInicio" class="col-lg-7 text-left" style="padding-right: 50px;">Mes inicial</label>
-                        <div id="inptMesInicio" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
-                            <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required style="padding-right: 15px;">
+                        <div id="groupMesInicio" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
+                            <input id="inptMesInicio" name="numMesInicio" id="no_mes" type="text" class="form-control" value="1" required style="padding-right: 15px;" readonly>
                             <div class="input-group-btn-vertical" style="margin-left: 10px;">
-                                <button id="mesIncrement" class="btn btn-default" type="button">
+                                <button id="mesIniIncrement" class="btn btn-default" type="button">
                                     <i class="fa fa-caret-up"></i>
                                 </button>
-                                <button id="mesDecrement" class="btn btn-default" type="button">
+                                <button id="mesIniDecrement" class="btn btn-default" type="button">
                                     <i class="fa fa-caret-down"></i>
                                 </button>
                             </div>
                         </div>
 
                         <label id="lblYearInicio" class="col-lg-7 text-left" style="padding-right: 50px;">Año inicio</label>
-                        <select id="selectYearInicio" name="year" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;" required>
+                        <select id="selectYearInicio" name="yearInicio" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;" required>
                             <option value="">Año...</option>
                             <option value="2019">2019</option>
                         </select>
@@ -140,13 +140,13 @@
                     </div>
                     <div class="col-md-6">
                         <label id="lblMesFin" class="col-lg-7 text-left" style="padding-right: 50px;">Mes fin</label>
-                        <div id="inptMesFin" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
-                            <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required style="padding-right: 15px;">
+                        <div id="groupMesFin" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
+                            <input id="inptMesFin" name="numMes" id="no_mes" type="text" class="form-control" value="1" required style="padding-right: 15px;" readonly>
                             <div class="input-group-btn-vertical" style="margin-left: 10px;">
-                                <button id="mesIncrement" class="btn btn-default" type="button">
+                                <button id="mesFinIncrement" class="btn btn-default" type="button">
                                     <i class="fa fa-caret-up"></i>
                                 </button>
-                                <button id="mesDecrement" class="btn btn-default" type="button">
+                                <button id="mesFinDecrement" class="btn btn-default" type="button">
                                     <i class="fa fa-caret-down"></i>
                                 </button>
                             </div>

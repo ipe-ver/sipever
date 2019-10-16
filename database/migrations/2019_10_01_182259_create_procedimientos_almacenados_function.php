@@ -802,6 +802,62 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         ');
 
         /**Procedimiento almacenado para obtener el reporte "REPORTE DE CONSUMOS POR DEPARTAMENTO CORRESPONDIENTE AL MES DE X DEL X"
+         * Recibe como parametro la ubpp y el nombre de la oficina.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_reporte_consumos_oficina;
+
+            CREATE PROCEDURE `sp_reporte_consumos_oficina`(
+                IN `ubpp` INT,
+                IN `oficina` VARCHAR(191),
+                IN `mes` INT,
+                IN `anio` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio);
+                SET @id_oficina := (SELECT id FROM cat_oficinas WHERE cat_oficinas.ubpp = ubpp AND cat_oficinas.descripcion = oficina);
+                SET @num_cuentas := (SELECT COUNT(sscta) FROM cat_cuentas_contables);
+                SET @aux := 1;
+                SET @condicion1 := 
+                    (SELECT IF ((SELECT COUNT(id_consumo) FROM consumos WHERE consumos.id_oficina = @id_oficina AND consumos.id_periodo = @periodo) = 1, 1, 0));
+                SET @condicion2 := 
+                    (SELECT IF ((SELECT COUNT(id_consumo) FROM consumos WHERE consumos.id_oficina = @id_oficina AND consumos.id_periodo = @periodo) > 1, 1, 0));
+                
+                IF @condicion1 = 1 THEN
+                    WHILE @aux <= @num_cuentas DO
+                        SET @id_consumo := (SELECT id_consumo FROM consumos WHERE consumos.id_oficina = @id_oficina AND consumos.id_periodo = @periodo);
+
+                        SET @condicion3 := (SELECT IF ((SELECT COUNT(final.clave) 
+                        FROM (SELECT articulo.clave
+                        FROM cat_articulos articulo
+                        INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                        WHERE articulo.id_cuenta = @aux AND detalle.id_consumo = @id_consumo) final) > 0, 1, 0));
+
+                        IF @condicion3 = 1 THEN
+
+                            SELECT cat_cuentas_contables.sscta, cat_cuentas_contables.nombre FROM cat_cuentas_contables WHERE cat_cuentas_contables.id = @aux;
+
+                            SELECT articulo.clave AS codificacion, articulo.descripcion AS descripcion, consumo.folio AS folio, 
+                                unidad.descripcion AS unidad, detalle.cantidad AS cantidad, articulo.precio_unitario AS costo,
+                                SUM(detalle.cantidad * articulo.precio_unitario) AS importe
+                            FROM consumos consumo
+                            INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
+                            INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
+                            INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
+                            WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo;
+                        END IF;
+
+                    END WHILE;
+                END IF;
+                
+            END
+        ');
+
+        /**Procedimiento almacenado para obtener el reporte "REPORTE DE CONSUMOS POR DEPARTAMENTO CORRESPONDIENTE AL MES DE X DEL X"
          * Recibe como parametros el año y el mes.
          */
         DB::unprepared('
@@ -834,6 +890,22 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
                     END WHILE;
                 END WHILE;
+            END
+        ');
+
+        /**Prodedimiento almacenado para obtener todas las oficinas
+         * 
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_obtener_oficinas;
+
+            CREATE PROCEDURE `sp_obtener_oficinas`()
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SELECT cat_oficinas.ubpp, cat_oficinas.oficina, cat_oficinas.descripcion, cat_oficinas.subdir FROM cat_oficinas;
             END
         ');
     }
@@ -873,6 +945,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_pedido_articulos;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_consumo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_detalles_consumo;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_oficina;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_departamento;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_obtener_oficinas;');
     }
 }

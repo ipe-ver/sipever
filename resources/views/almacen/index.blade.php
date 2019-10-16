@@ -49,6 +49,20 @@
 						<span>Facturas</span>
 					</a>
 		           </div>
+
+		       @else
+		       		<div class="col-xs-2">
+						<a class="nombre_modulo" href="{!! route('almacen.vales.index') !!}">
+							<i class="fas fa-inbox"></i>
+							<span>Vales</span>
+						</a>
+		           </div>
+		           <div class="col-xs-2">
+					<a class="nombre_modulo" href="{!! route('almacen.reportes.index') !!}">
+						<i class="fas fa-clipboard"></i>
+						<span>Reportes</span>
+					</a>
+		           </div>
 	           @endif
 	        </div>
 	    </div>

@@ -85,7 +85,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="container-fluid" style="align-items: center;">    
+                <div class="container-fluid" style="align-items: center;">
                     <label class="text-nowrap col-sm-6">Año</label>
                     <select name="year" class="input-group spinner col-sm-6" style="width: 50%;" required>
                         <option value="" dir="ltr">Año...</option>

@@ -22,11 +22,20 @@ for (i = 0; i < close.length; i++) {
 window.addEventListener("load", function(){
     checks = document.getElementsByClassName("checkPoliza");
     for (var i = 0; i < checks.length; i++) {
-        checks[i].addEventListener("click",function(){
-            for(var x = 0; x < checks.length; x++){
-                checks[x].setAttribute("checked", "false");
-            }
-            checks[i].setAttribute("checked", "true");
+        checks[i].addEventListener("click",function(event){
+            seleccionarBox(event.srcElement);
         });
     }
 });
+
+function seleccionarBox(checkBox){
+    var boxes = document.getElementsByClassName("checkPoliza");
+    for (var i = 0; i < boxes.length; i++) {
+        if(boxes[i].id != checkBox.id){
+            if(boxes[i].checked){
+                boxes[i].checked =  !boxes[i].checked;
+            }
+        }
+    }
+
+}

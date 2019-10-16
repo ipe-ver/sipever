@@ -61,7 +61,7 @@
                     <label class="text-nowrap">No. Mes</label>
                     <div class="container-fluid" style="display: inline-block; text-align-last: center;vertical-align: middle;">
                         <div class="input-group spinner">
-                            <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required>
+                            <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required readonly>
                             <div class="input-group-btn-vertical">
                                 <button id="mesIncrement" class="btn btn-default" type="button">
                                     <i class="fa fa-caret-up"></i>

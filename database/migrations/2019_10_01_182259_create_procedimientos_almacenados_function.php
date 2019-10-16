@@ -322,7 +322,11 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         (SELECT id_periodo FROM periodos WHERE periodos.no_mes = MONTH(NOW()) AND periodos.anio = YEAR(NOW())));
                 END IF;
                 INSERT INTO periodos (no_mes, anio, estatus) VALUES (@mes, @anio, 1);
-                INSERT INTO folios (id_periodo, folio, created_at) VALUES ((SELECT LAST_INSERT_ID()), @folio, NOW());
+                IF @folio >= 1 THEN
+                    INSERT INTO folios (id_periodo, folio, created_at) VALUES ((SELECT LAST_INSERT_ID()), @folio, NOW());
+                ELSE
+                    INSERT INTO folios (id_periodo, folio, created_at) VALUES ((SELECT LAST_INSERT_ID()), 1, NOW());
+                END IF;
             END
         ');
 
@@ -798,6 +802,10 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
                 INSERT INTO detalles (id_consumo, id_articulo, tipo_movimiento, descripcion, cantidad, precio_unitario, subtotal, created_at) 
                 VALUES (id_consumo, @id_articulo, 1, cantidad, @precio, @nombre_articulo, cantidad * @precio, NOW());
+
+                SET @existencias := (SELECT cat_articulos.existencias FROM cat_articulos WHERE cat_articulos.id = @id_articulo);
+
+                UPDATE cat_articulos SET cat_articulos.existencias = (@existencias-cantidad) WHERE cat_articulos.id = @id_articulo;
             END
         ');
 
@@ -905,7 +913,23 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SELECT cat_oficinas.ubpp, cat_oficinas.oficina, cat_oficinas.descripcion, cat_oficinas.subdir FROM cat_oficinas;
+                SELECT cat_oficinas.ubpp, cat_oficinas.oficina, cat_oficinas.descripcion, cat_oficinas.subdir FROM cat_oficinas WHERE oficina > 0;
+            END
+        ');
+
+        /**Prodedimiento almacenado para obtener todos los departamentos
+         * 
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_obtener_departamentos;
+
+            CREATE PROCEDURE `sp_obtener_departamentos`()
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SELECT cat_oficinas.ubpp, cat_oficinas.oficina, cat_oficinas.descripcion, cat_oficinas.subdir FROM cat_oficinas WHERE oficina = 0;
             END
         ');
     }
@@ -948,5 +972,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_oficina;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_departamento;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_obtener_oficinas;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_obtener_departamentos;');
     }
 }

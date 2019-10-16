@@ -20,16 +20,16 @@ for (i = 0; i < close.length; i++) {
 }
 
 window.addEventListener("load", function(){
-    checks = document.getElementsByClassName("checkPoliza");
+    checks = document.getElementsByClassName("checkReporte");
     for (var i = 0; i < checks.length; i++) {
         checks[i].addEventListener("click",function(event){
-            seleccionarBox(event.srcElement);
+            seleccionarReporte(event.srcElement);
         });
     }
 });
 
-function seleccionarBox(checkBox){
-    var boxes = document.getElementsByClassName("checkPoliza");
+function seleccionarReporte(checkBox){
+    var boxes = document.getElementsByClassName("checkReporte");
     for (var i = 0; i < boxes.length; i++) {
         if(boxes[i].id != checkBox.id){
             if(boxes[i].checked){

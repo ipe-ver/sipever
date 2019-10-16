@@ -58,50 +58,50 @@
         <div class ="row justify-content-md-center">
             <div class="col col-lg-4">
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="reporteValidacionConsumo">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="reporteValidacionConsumo">
                     <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteValidacionConsumo">
                     Reporte para validación de consumo
                     </label>
                 </div>
                 <div class="form-check" style="display: flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="reporteConsDepto">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="reporteConsDepto">
                     <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteConsDepto">
                     Reporte de consumos por departamento
                     </label>
                 </div>
-                
+
                 <div class="form-check" style="display: flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="reporteAuxAlmacen">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="reporteAuxAlmacen">
                     <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;"for="reporteAuxAlmacen">
                     Reporte auxiliar de almacén
                     </label>
                 </div>
                 <div class="form-check" style="display: flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="consumosArticulo">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="consumosArticulo">
                     <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="consumosArticulo">
                     Consumos por artículo
                     </label>
                 </div>
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="reporteExistencias">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="reporteExistencias">
                     <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteExistencias">
                     Reporte final de existencias
                     </label>
                 </div>
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="comprasArticulo">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="comprasArticulo">
                     <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="comprasArticulo">
                     Compras por artículo
                     </label>
                 </div>
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="existenciasArticulo">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="existenciasArticulo">
                     <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="existenciasArticulo">
                     Existencias por artículo
                     </label>
                 </div>
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="consumosAreaArt">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="consumosAreaArt">
                     <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="consumosAreaArt">
                     Consumos por área y artículo
                     </label>
@@ -171,6 +171,7 @@
     </form>
 </div>
 
+<script type="text/javascript" src="{{ asset('js/almacen/reportes.js') }}"></script>
 
 
 @endsection

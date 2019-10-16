@@ -110,7 +110,7 @@
             <div class ="col-lg-8">
                 <div id="cosoPrueba">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="checkPorMes">
+                        <input id ="chckMes" class="form-check-input" type="checkbox" value="" id="checkPorMes">
                         <label class="form-check-label" for="checkPorMes">
                         Generar reporte de un solo mes
                         </label>
@@ -118,8 +118,8 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <label class="col-lg-7 text-left" style="padding-right: 50px;">Mes inicial</label>
-                        <div class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
+                        <label id="lblMesInicio" class="col-lg-7 text-left" style="padding-right: 50px;">Mes inicial</label>
+                        <div id="inptMesInicio" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
                             <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required style="padding-right: 15px;">
                             <div class="input-group-btn-vertical" style="margin-left: 10px;">
                                 <button id="mesIncrement" class="btn btn-default" type="button">
@@ -131,16 +131,16 @@
                             </div>
                         </div>
 
-                        <label class="col-lg-7 text-left" style="padding-right: 50px;">Año inicio</label>
-                        <select name="year" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;" required>
+                        <label id="lblYearInicio" class="col-lg-7 text-left" style="padding-right: 50px;">Año inicio</label>
+                        <select id="selectYearInicio" name="year" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;" required>
                             <option value="">Año...</option>
                             <option value="2019">2019</option>
                         </select>
 
                     </div>
                     <div class="col-md-6">
-                        <label class="col-lg-7 text-left" style="padding-right: 50px;">Mes fin</label>
-                        <div class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
+                        <label id="lblMesFin" class="col-lg-7 text-left" style="padding-right: 50px;">Mes fin</label>
+                        <div id="inptMesFin" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
                             <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required style="padding-right: 15px;">
                             <div class="input-group-btn-vertical" style="margin-left: 10px;">
                                 <button id="mesIncrement" class="btn btn-default" type="button">
@@ -151,8 +151,8 @@
                                 </button>
                             </div>
                         </div>
-                        <label class="col-lg-7 text-left" style="padding-right: 50px;">Año fin</label>
-                        <select name="year" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;" required>
+                        <label id="lblYearFin" class="col-lg-7 text-left" style="padding-right: 50px;">Año fin</label>
+                        <select id="selectYearFin"  name="year" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;" required>
                             <option value="">Año...</option>
                             <option value="2019">2019</option>
                         </select>

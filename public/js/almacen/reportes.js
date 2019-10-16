@@ -108,3 +108,15 @@ function unSoloMes(checkBox){
     }
 
 }
+
+function changePartida(checkbox){
+    var selectDepto = document.getElementById("selectDepto");
+    var selectOficina = document.getElementById("selectOficina");
+    if(checkBox.checked){
+        selectOficina.display = 'block';
+        selectDepto.style.display = 'block';
+    }else{
+        selectDepto.style.display = 'none';
+        selectOficina.style.display = 'none';
+    }
+}

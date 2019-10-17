@@ -456,13 +456,26 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SELECT cuenta.nombre as grupo, articulo.descripcion as descripcion, inventario.cant_inicial as cantidad_inicial,
-                    inventario.existencias as existencias_actuales, periodo.no_mes as mes, periodo.anio as anio 
-                FROM inventario_inicial_final inventario 
-                INNER JOIN cat_articulos articulo ON inventario.id_articulo = articulo.id
-                INNER JOIN cat_cuentas_contables cuenta ON articulo.id_cuenta = cuenta.id
-                INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
-                WHERE periodo.no_mes = mes AND periodo.anio = anio AND cuenta.nombre = grupo;
+
+	            SET @condicion1 := (SELECT IF((SELECT periodos.estatus FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio) = 1,1,0));
+
+                IF @condicion1 = 1 THEN
+                    SELECT cuenta.nombre as grupo, articulo.descripcion as descripcion, inventario.cant_inicial as cantidad_inicial,
+                        articulo.existencias as existencias_actuales, periodo.no_mes as mes, periodo.anio as anio 
+                    FROM inventario_inicial_final inventario 
+                    INNER JOIN cat_articulos articulo ON inventario.id_articulo = articulo.id
+                    INNER JOIN cat_cuentas_contables cuenta ON articulo.id_cuenta = cuenta.id
+                    INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
+                    WHERE periodo.no_mes = mes AND periodo.anio = anio AND cuenta.nombre = grupo;
+                ELSE 
+                    SELECT cuenta.nombre as grupo, articulo.descripcion as descripcion, inventario.cant_inicial as cantidad_inicial,
+                        inventario.existencias as existencias_actuales, periodo.no_mes as mes, periodo.anio as anio 
+                    FROM inventario_inicial_final inventario 
+                    INNER JOIN cat_articulos articulo ON inventario.id_articulo = articulo.id
+                    INNER JOIN cat_cuentas_contables cuenta ON articulo.id_cuenta = cuenta.id
+                    INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
+                    WHERE periodo.no_mes = mes AND periodo.anio = anio AND cuenta.nombre = grupo;
+                END IF;
             END
         ');
 
@@ -632,23 +645,43 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             SQL SECURITY DEFINER
             BEGIN
 
-                SELECT cat_cuentas_contables.sscta, cat_cuentas_contables.nombre FROM cat_cuentas_contables WHERE cat_cuentas_contables.nombre = partida;
+                SET @condicion1 := (SELECT IF((SELECT periodos.estatus FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio) = 1,1,0));
+
+                IF @condicion1 = 1 THEN
+
+                    SELECT cat_cuentas_contables.sscta, cat_cuentas_contables.nombre FROM cat_cuentas_contables WHERE cat_cuentas_contables.nombre = partida;
+                    
+                    SELECT articulos.clave AS CODIFICACION, articulos.descripcion AS DESCRIPCION, unidades.descripcion AS UNIDAD, articulos.existencias AS CANT,
+                        articulos.precio_unitario AS COSTO, articulos.precio_unitario * articulos.existencias AS IMPORTE
+                    FROM cat_articulos articulos 
+                    INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
+                    INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
+                    WHERE partidas.nombre = partida;
                 
-                SELECT articulos.clave AS CODIFICACION, articulos.descripcion AS DESCRIPCION, unidades.descripcion AS UNIDAD, inventario.existencias AS CANT,
-                    inventario.precio_promedio AS COSTO, inventario.precio_promedio * inventario.existencias AS IMPORTE
-                FROM cat_articulos articulos 
-                INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
-                INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
-                INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
-                INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
-                WHERE periodo.no_mes = mes AND periodo.anio = anio AND partidas.nombre = partida;
-             
-                SELECT COUNT(*) AS CODIFICACIONES, SUM(inventario.existencias) AS CANTIDAD_DE_ARTICULOS, SUM(inventario.precio_promedio * inventario.existencias) AS SUBTOTAL 
-		        FROM cat_articulos articulos
-                INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
-                INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
-                INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
-		        WHERE periodo.no_mes = mes AND periodo.anio = anio AND partidas.nombre = partida;
+                    SELECT COUNT(*) AS CODIFICACIONES, SUM(articulos.existencias) AS CANTIDAD_DE_ARTICULOS, SUM(articulos.precio_unitario * articulos.existencias) AS SUBTOTAL 
+                    FROM cat_articulos articulos
+                    INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
+                    WHERE partidas.nombre = partida;
+
+                ELSE 
+                    SELECT cat_cuentas_contables.sscta, cat_cuentas_contables.nombre FROM cat_cuentas_contables WHERE cat_cuentas_contables.nombre = partida;
+                    
+                    SELECT articulos.clave AS CODIFICACION, articulos.descripcion AS DESCRIPCION, unidades.descripcion AS UNIDAD, inventario.existencias AS CANT,
+                        inventario.precio_promedio AS COSTO, inventario.precio_promedio * inventario.existencias AS IMPORTE
+                    FROM cat_articulos articulos 
+                    INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
+                    INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
+                    INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
+                    INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
+                    WHERE periodo.no_mes = mes AND periodo.anio = anio AND partidas.nombre = partida;
+                
+                    SELECT COUNT(*) AS CODIFICACIONES, SUM(inventario.existencias) AS CANTIDAD_DE_ARTICULOS, SUM(inventario.precio_promedio * inventario.existencias) AS SUBTOTAL 
+                    FROM cat_articulos articulos
+                    INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
+                    INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
+                    INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
+                    WHERE periodo.no_mes = mes AND periodo.anio = anio AND partidas.nombre = partida;
+                END IF;
             END
         ');
 
@@ -672,30 +705,57 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @limite := (SELECT COUNT(*) FROM cat_cuentas_contables);
                 SET @i := 1;
 
-                WHILE @i <= @limite DO
-                    SELECT cat_cuentas_contables.sscta, cat_cuentas_contables.nombre FROM cat_cuentas_contables WHERE cat_cuentas_contables.id = @i;
+                SET @condicion1 := (SELECT IF((SELECT periodos.estatus FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio) = 1,1,0));
 
-                    SELECT articulos.clave AS CODIFICACION, articulos.descripcion AS DESCRIPCION, unidades.descripcion AS UNIDAD, inventario.existencias AS CANT,
-                        inventario.precio_promedio AS COSTO, inventario.precio_promedio * inventario.existencias AS IMPORTE
-                    FROM cat_articulos articulos 
-                    INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
-                    INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
-                    INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
-                    INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
-                    WHERE periodo.no_mes = mes AND periodo.anio = anio AND partidas.id = @i;
-                
-                    SELECT COUNT(*) AS CODIFICACIONES, SUM(inventario.existencias) AS CANTIDAD_DE_ARTICULOS, SUM(inventario.precio_promedio * inventario.existencias) AS SUBTOTAL 
-		            FROM cat_articulos articulos
-                    INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
-                    INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
-                    INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
-                    WHERE periodo.no_mes = mes AND periodo.anio = anio AND partidas.id = @i;
+                IF @condicion1 = 1 THEN
+
+                    WHILE @i <= @limite DO
+                        SELECT cat_cuentas_contables.sscta, cat_cuentas_contables.nombre FROM cat_cuentas_contables WHERE cat_cuentas_contables.id = @i;
+
+                        SELECT articulos.clave AS CODIFICACION, articulos.descripcion AS DESCRIPCION, unidades.descripcion AS UNIDAD, articulos.existencias AS CANT,
+                            articulos.precio_unitario AS COSTO, articulos.precio_unitario * articulos.existencias AS IMPORTE
+                        FROM cat_articulos articulos 
+                        INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
+                        INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
+                        WHERE partidas.id = @i;
                     
-                    SET @i = @i + 1;
-                END WHILE;
-                SELECT COUNT(*) AS CODIFICACIONES, SUM(inventario.existencias) AS CANTIDAD_DE_ARTICULOS, SUM(inventario.precio_promedio * inventario.existencias) AS SUBTOTAL
-                FROM inventario_inicial_final inventario
-                WHERE inventario.id_periodo = (SELECT periodos.id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio);
+                        SELECT COUNT(*) AS CODIFICACIONES, SUM(articulos.existencias) AS CANTIDAD_DE_ARTICULOS, SUM(articulos.precio_unitario * articulos.existencias) AS SUBTOTAL 
+                        FROM cat_articulos articulos
+                        INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
+                        WHERE partidas.id = @i;
+                        
+                        SET @i = @i + 1;
+                    END WHILE;
+                    SELECT COUNT(*) AS CODIFICACIONES, SUM(articulos.existencias) AS CANTIDAD_DE_ARTICULOS, SUM(articulos.precio_unitario * articulos.existencias) AS SUBTOTAL
+                    FROM cat_articulos articulos;
+
+                ELSE
+
+                    WHILE @i <= @limite DO
+                        SELECT cat_cuentas_contables.sscta, cat_cuentas_contables.nombre FROM cat_cuentas_contables WHERE cat_cuentas_contables.id = @i;
+
+                        SELECT articulos.clave AS CODIFICACION, articulos.descripcion AS DESCRIPCION, unidades.descripcion AS UNIDAD, inventario.existencias AS CANT,
+                            inventario.precio_promedio AS COSTO, inventario.precio_promedio * inventario.existencias AS IMPORTE
+                        FROM cat_articulos articulos 
+                        INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
+                        INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
+                        INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
+                        INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
+                        WHERE periodo.no_mes = mes AND periodo.anio = anio AND partidas.id = @i;
+                    
+                        SELECT COUNT(*) AS CODIFICACIONES, SUM(inventario.existencias) AS CANTIDAD_DE_ARTICULOS, SUM(inventario.precio_promedio * inventario.existencias) AS SUBTOTAL 
+                        FROM cat_articulos articulos
+                        INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
+                        INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
+                        INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
+                        WHERE periodo.no_mes = mes AND periodo.anio = anio AND partidas.id = @i;
+                        
+                        SET @i = @i + 1;
+                    END WHILE;
+                    SELECT COUNT(*) AS CODIFICACIONES, SUM(inventario.existencias) AS CANTIDAD_DE_ARTICULOS, SUM(inventario.precio_promedio * inventario.existencias) AS SUBTOTAL
+                    FROM inventario_inicial_final inventario
+                    WHERE inventario.id_periodo = (SELECT periodos.id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio);
+                END IF;
             END
         ');
         
@@ -718,8 +778,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.estatus = 1);
 
                 INSERT INTO c_pedido_consumo (id_oficina, id_periodo, folio, fecha_movimiento, created_at) VALUES
-                    ((SELECT id FROM cat_oficinas WHERE car_oficinas.descripcion = descripcion_oficina), 
-                    @periodo, (SELECT folio FROM folios WHERE folios.id_perido = @periodo), NOW(), NOW());
+                    ((SELECT id FROM cat_oficinas WHERE cat_oficinas.descripcion = descripcion_oficina), 
+                    @periodo, (SELECT folio FROM folios WHERE folios.id_periodo = @periodo), NOW(), NOW());
 
                 UPDATE folios SET folio = folio + 1, updated_at = NOW() WHERE folios.id_periodo = @periodo;
 
@@ -770,12 +830,12 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.estatus = 1);
                 SET @oficina := (SELECT id_oficina FROM c_pedido_consumo WHERE id_pedido_consumo = id_pedido);
                 SET @poliza := (SELECT id_poliza FROM polizas WHERE id_periodo = @periodo);
-                SET @folio := (SELECT folio FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido)
+                SET @folio := (SELECT folio FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido);
 
                 INSERT INTO consumos (id_oficina, id_poliza, id_periodo, id_pedido_consumo, folio, fecha_movimiento, created_at) 
                 VALUES (@oficina, @poliza, @periodo, id_pedido, @folio, NOW(), NOW());
 
-                SET clave := (SELECT id_consumo FROM consumos WHERE consumos.id_pedido_consumo = id_pedido);
+                SET @clave := (SELECT id_consumo FROM consumos WHERE consumos.id_pedido_consumo = id_pedido);
             END
         ');
 
@@ -801,7 +861,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @precio := (SELECT precio_unitario FROM cat_articulos WHERE cat_articulos.id = @id_articulo);
 
                 INSERT INTO detalles (id_consumo, id_articulo, tipo_movimiento, descripcion, cantidad, precio_unitario, subtotal, created_at) 
-                VALUES (id_consumo, @id_articulo, 1, cantidad, @precio, @nombre_articulo, cantidad * @precio, NOW());
+                VALUES (id_consumo, @id_articulo, 1, @nombre_articulo, cantidad, @precio, cantidad * @precio, NOW());
 
                 SET @existencias := (SELECT cat_articulos.existencias FROM cat_articulos WHERE cat_articulos.id = @id_articulo);
 
@@ -840,11 +900,10 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     WHILE @aux <= @num_cuentas DO
                         SET @id_consumo := (SELECT id_consumo FROM consumos WHERE consumos.id_oficina = @id_oficina AND consumos.id_periodo = @periodo);
 
-                        SET @condicion3 := (SELECT IF ((SELECT COUNT(final.clave) 
-                        FROM (SELECT articulo.clave
+                        SET @condicion3 := (SELECT IF ((SELECT COUNT(articulo.clave) 
                         FROM cat_articulos articulo
                         INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
-                        WHERE articulo.id_cuenta = @aux AND detalle.id_consumo = @id_consumo) final) > 0, 1, 0));
+                        WHERE articulo.id_cuenta = @aux AND detalle.id_consumo = @id_consumo) > 0, 1, 0));
 
                         IF @condicion3 = 1 THEN
 

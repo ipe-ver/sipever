@@ -2,7 +2,8 @@
 
 @section('style')
 	
-	{!! Html::style('components/bootstrap-table/dist/bootstrap-table.css') !!}
+	
+
 	
 @endsection
 
@@ -19,6 +20,9 @@
 			</div>	 
 			 			
 			<h3 class="box-title pull-right">Listado de Personal Activo o Pensionado</h3>
+
+		
+		
 			
 		</div>
 		<div class="box-body">
@@ -33,12 +37,9 @@
 
 @section('script')
 
-		
-		{!! HTML::script('components/select2/dist/js/select2.js') !!}	
-		{!! HTML::script('components/select2/dist/js/select2.min.js') !!}
-		{!! HTML::script('components/inputmask/dist/inputmask/inputmask.js') !!}
-		{!! HTML::script('components/inputmask/dist/inputmask/inputmask.date.extensions.js') !!}	
-		{!! HTML::script('components/inputmask/dist/inputmask/inputmask.extensions.js') !!}		
+			
+
+	
 
 <script type="text/javascript">
 
@@ -148,6 +149,8 @@
 						events: operateEvents
 					}]				
 				})
+
+				
 	
 		}); // FIN DE LA FUNCION JAVASCRIPT
 	</script>	

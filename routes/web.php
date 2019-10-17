@@ -97,11 +97,17 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 	Route::get('/mision', function () { return view('nosotros.mision'); });
 	Route::get('/informacion', function () { return view('nosotros.informacion'); });
 	Route::get('/organigrama', function () { return view('nosotros.organigrama'); });
+
+	//Departamento de tecnologías
 	Route::get('/tecnologias', function () { return view('areas.tecnologias'); });
 	Route::get('/tecnologias/infraestructura', function () { return view('areas.soporte'); });
 	Route::get('/tecnologias/desarrollo', function () { return view('areas.desarrollo'); });
 	Route::get('/descargar_informacion', function () { return view('descargar.informacion'); });
 
+	//Departamento de recursos humanos
+	Route::get('/recursos_humanos', function () { return view('areas.recursos_humanos'); });
+	Route::get('/recursos_humanos/nomina', function () { return view('areas.nomina'); });
+	Route::get('/recursos_humanos/personal', function () { return view('areas.personal'); });
 
 	Route::get('search', 'AutoCompleteController@index');
  	Route::get('autocomplete', 'AutoCompleteController@search');

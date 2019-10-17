@@ -19,7 +19,7 @@ class CreateTablePolizas extends Migration
             $table->integer('id_periodo')->unsigned();
             $table->foreign('id_periodo')->references('id_periodo')->on('periodos'); 
 
-            $table->boolean('poliza')->default(1);
+            $table->char('poliza',1)->default('A');
             $table->integer('numero_poliza');
             $table->boolean('estatus')->default(1);
 

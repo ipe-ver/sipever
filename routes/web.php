@@ -92,6 +92,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 
 
 });
+
 	//Módulo de Nosotros
 	Route::get('/mision', function () { return view('nosotros.mision'); });
 	Route::get('/informacion', function () { return view('nosotros.informacion'); });

@@ -9,6 +9,7 @@
 .spinner {
   width: 100px;
   border: none;
+  background-color: transparent;
   border-bottom: 2px solid #C4C4C4;
   margin-bottom: 10px;
 }
@@ -16,17 +17,6 @@
   text-align: right;
   background-color: transparent;
   border: none;
-}
-
-select.spinner {
-  text-align: right;
-  text-align-last: right;
-  background-color: transparent;
-  width: 70px;
-  height: 100%;
-  border: none;
-  border-bottom: 2px solid #C4C4C4;
-  margin-bottom: 10px;
 }
 
 .input-group-btn-vertical {

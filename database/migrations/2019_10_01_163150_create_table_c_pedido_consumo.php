@@ -22,7 +22,7 @@ class CreateTableCPedidoConsumo extends Migration
             $table->integer('id_periodo')->unsigned();
             $table->foreign('id_periodo')->references('id_periodo')->on('periodos');
 
-            $table->string('folio');
+            $table->integer('folio');
             $table->date('fecha_movimiento')->nullable();
             $table->date('fecha_recepcion')->nullable();
             $table->boolean('recibido')->default(0);

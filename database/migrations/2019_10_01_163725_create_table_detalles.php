@@ -26,6 +26,7 @@ class CreateTableDetalles extends Migration
             $table->foreign('id_compra')->references('id_compra')->on('compras');
 
             $table->integer('tipo_movimiento');
+            $table->string('descripcion')->nullable();
             $table->integer('cantidad');
             $table->double('precio_unitario')->nullable();
             $table->double('subtotal')->nullable();

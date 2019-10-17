@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Almacen;
 
 use Illuminate\Http\Request;
+
+
 use App\Http\Controllers\Controller;
+use DB;
 
 class ReporteController extends Controller
 {
@@ -14,7 +17,14 @@ class ReporteController extends Controller
      */
     public function index()
     {
-        return view('almacen.reportes');
+        $departamentos = DB::select("call sp_obtener_departamentos");
+        return view('almacen.reportes', compact('departamentos'));
+    }
+
+    public function getOficinas(Request $request){
+        $ubpp = $request->input('ubpp');
+        $oficinas = DB::select("call sp_obtener_oficinas(?)", array($ubpp));
+        return json_encode($oficinas);
     }
 
     /**

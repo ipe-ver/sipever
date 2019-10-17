@@ -2,6 +2,9 @@
 
 @section('content')
 <link href="{{ asset('css/almacen.css') }}" rel="stylesheet" type="text/css" >
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script type="text/javascript" src="{{asset('/js/app.js')}}"></script>
+<script type="text/javascript" src="{{asset('/js/app-landing.js')}}"></script>
 <div class=" menu-almacen panel-default pull-top">
 
 	    <div class="container-fluid">
@@ -47,6 +50,20 @@
 					<a class="nombre_modulo" href="{!! route('almacen.facturas.index') !!}">
 						<i class="fas fa-file-invoice-dollar"></i>
 						<span>Facturas</span>
+					</a>
+		           </div>
+
+		       @else
+		       		<div class="col-xs-2">
+						<a class="nombre_modulo" href="{!! route('almacen.vales.index') !!}">
+							<i class="fas fa-inbox"></i>
+							<span>Vales</span>
+						</a>
+		           </div>
+		           <div class="col-xs-2">
+					<a class="nombre_modulo" href="{!! route('almacen.reportes.index') !!}">
+						<i class="fas fa-clipboard"></i>
+						<span>Reportes</span>
 					</a>
 		           </div>
 	           @endif

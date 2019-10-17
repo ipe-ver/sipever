@@ -55,54 +55,54 @@
 
 <div class="container poliza-box">
     <form action="{{route('almacen.index')}}">
-        <div class="row">
-            <div class="container" style="display: inline-flex; align-items: center;">
-                        
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-6">
+                 <div class="form-check">
+                    <input class="form-check-input checkPoliza" type="checkbox" id="polizaAlmacen">
+                    <label class="form-check-label" for="polizaAlmacen">
                     Póliza de almacén
                     </label>
                 </div>
-                <label class="text-nowrap" style="margin-left:7%; padding-right: 15px;">No. Mes</label>
-                <div class="input-group spinner" style="max-width: 70px;">
-                    <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required>
-                    <div class="input-group-btn-vertical">
-                        <button id="mesIncrement" class="btn btn-default" type="button">
-                            <i class="fa fa-caret-up"></i>
-                        </button>
-                        <button id="mesDecrement" class="btn btn-default" type="button">
-                            <i class="fa fa-caret-down"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>  
-        </div>
-        <div class="row" style="align-items: center">
-            <div class="container" style="display: inline-flex; align-items: center;">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="polizaConta">
+                <div class="form-check">
+                        <input class="form-check-input checkPoliza" type="checkbox" id="polizaConta">
                         <label class="form-check-label text-wrap" style="width: 200px; " for="polizaConta">
                         Póliza para contabilidad y presupuesto
                         </label>
                     </div>
-                <label class="text-nowrap" style="padding-right: 43.5px;">Año</label>
-                <select name="year"class="spinner" style="text-align-last: right;" required>
-                    <option value="" dir="ltr">Año...</option>
-                    <option value="2019" dir="ltr">2019</option>
-                </select>
+                </div>
+            <div class="col col-lg-6">
+                    <div class="container-fluid" style="align-items: center;">
+                    <label class="text-nowrap col-sm-6" style=" padding-right: 15px;">No. Mes</label>
+                    <div class="input-group spinner col-sm-6" style="width: 50%;">
+                        <input name="numMes" id="no_mes" type="text" class="form-control" value="1" readonly>
+                        <div class="input-group-btn-vertical">
+                            <button id="mesIncrement" class="btn btn-default" type="button">
+                                <i class="fa fa-caret-up"></i>
+                            </button>
+                            <button id="mesDecrement" class="btn btn-default" type="button">
+                                <i class="fa fa-caret-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid" style="align-items: center;">
+                    <label class="text-nowrap col-sm-6">Año</label>
+                    <select name="year" class="input-group spinner col-sm-6" style="width: 50%; text-align-last: right;" required>
+                        <option value="" dir="rtl">Año...</option>
+                        <option value="2019" dir="rtl">2019</option>
+                    </select>
+                </div>
             </div>
         </div>
-
         <div class="row" style="align-items: center; margin-bottom: 10px; margin-top: 10px;">
-            <div class="container" style="display: inline-flex; align-items: center;">
-                <button style="margin-left:9%; margin-right: 3%;" type="button" id="btn-cancelar" class="btn btn-cancel">Cancelar</button>
+            <div class="container-fluid pull-right" style="display: inline-flex; align-items: center; padding-right: 5%">
+                <button style="margin-right: 3%;" type="button" id="btn-cancelar" class="btn btn-cancel">Cancelar</button>
                 <button type="submit" id="btn-cerrar" class="btn btn-submit">Generar poliza</button>
             </div>
         </div>
     </form>
 </div>
 
-<script type="text/javascript" src="{{ asset('js/cierre-mes.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/almacen/polizas.js') }}"></script>
 
 @endsection

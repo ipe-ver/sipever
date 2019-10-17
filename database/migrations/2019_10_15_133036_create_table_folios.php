@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTablePolizas extends Migration
+class CreateTableFolios extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,13 @@ class CreateTablePolizas extends Migration
      */
     public function up()
     {
-        Schema::create('polizas', function (Blueprint $table) {
-            $table->increments('id_poliza');
+        Schema::create('folios', function (Blueprint $table) {
+            $table->increments('id_folio');
 
             $table->integer('id_periodo')->unsigned();
-            $table->foreign('id_periodo')->references('id_periodo')->on('periodos'); 
+            $table->foreign('id_periodo')->references('id_periodo')->on('periodos');
 
-            $table->char('poliza',1)->default('A');
-            $table->integer('numero_poliza');
-            $table->boolean('estatus')->default(1);
+            $table->integer('folio')->default(1);
 
             $table->timestamps();
         });
@@ -34,6 +32,6 @@ class CreateTablePolizas extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('polizas');
+        Schema::dropIfExists('folios');
     }
 }

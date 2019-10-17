@@ -58,116 +58,127 @@
         <div class ="row justify-content-md-center">
             <div class="col col-lg-4">
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="reporteValidacionConsumo">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="reporteValidacionConsumo">
                     <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteValidacionConsumo">
                     Reporte para validación de consumo
                     </label>
                 </div>
                 <div class="form-check" style="display: flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="reporteConsDepto">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="reporteConsDepto">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteConsDepto">
                     Reporte de consumos por departamento
                     </label>
                 </div>
+
                 <div class="form-check" style="display: flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
-                    Consumo de artículos por área
-                    </label>
-                </div>
-                <div class="form-check" style="display: flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;"for="defaultCheck1">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="reporteAuxAlmacen">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;"for="reporteAuxAlmacen">
                     Reporte auxiliar de almacén
                     </label>
                 </div>
                 <div class="form-check" style="display: flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="consumosArticulo">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="consumosArticulo">
                     Consumos por artículo
                     </label>
                 </div>
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="reporteExistencias">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteExistencias">
                     Reporte final de existencias
                     </label>
                 </div>
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="comprasArticulo">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="comprasArticulo">
                     Compras por artículo
                     </label>
                 </div>
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="existenciasArticulo">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="existenciasArticulo">
                     Existencias por artículo
                     </label>
                 </div>
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="defaultCheck1">
+                    <input class="form-check-input checkReporte" type="checkbox" value="" id="consumosAreaArt">
+                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="consumosAreaArt">
                     Consumos por área y artículo
                     </label>
                 </div>
             </div>
             <div class ="col-lg-8">
-                <div id="cosoPrueba">
+                <div class="row">
+                    <div class ="container-fluid" style="margin-top: 5%;">
+                        <select id="selectDepto" class="form-control" name="depto" required method="post">
+                            <option value ="">Seleccione un departamento</option>
+                            @foreach($departamentos as $departamento)
+                                <option value="{{$departamento->ubpp}}">{{$departamento->descripcion}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class ="container-fluid" style="margin-top: 5%;">
+                        <select id="selectOficina" class="form-control" name="oficina" required>
+                            <option value ="">Seleccione una oficina</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="reporteSingleton" style="margin-bottom: 5%;">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="checkPorMes">
-                        <label class="form-check-label" for="checkPorMes">
+                        <input id ="chckMes" class="form-check-input" type="checkbox" value="" id="checkPorMes">
+                        <label class="form-check-label" for="chckMes">
                         Generar reporte de un solo mes
                         </label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <label class="col-lg-7 text-left" style="padding-right: 50px;">Mes inicial</label>
-                        <div class="input-group spinner col-md-5">
-                            <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required style="padding-right: 15px;">
+                        <label id="lblMesInicio" class="col-lg-7 text-left" style="padding-right: 50px;">Mes inicial</label>
+                        <div id="groupMesInicio" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
+                            <input id="inptMesInicio" name="numMesInicio" type="text" class="form-control" value="1" required style="padding-right: 15px;" readonly>
                             <div class="input-group-btn-vertical" style="margin-left: 10px;">
-                                <button id="mesIncrement" class="btn btn-default" type="button">
+                                <button id="mesIniIncrement" class="btn btn-default" type="button">
                                     <i class="fa fa-caret-up"></i>
                                 </button>
-                                <button id="mesDecrement" class="btn btn-default" type="button">
+                                <button id="mesIniDecrement" class="btn btn-default" type="button">
                                     <i class="fa fa-caret-down"></i>
                                 </button>
                             </div>
                         </div>
-                        <div class="row">
-                            <label style="width: 45px; padding-right: 50px; padding-left: 30px;" class="col-md-2">Año inicio</label>
-                            <select name="year" class="spinner" style="margin-left: 7px; width: 55px;" required>
-                                <option value="">Año...</option>
-                                <option value="2019">2019</option>
-                            </select>
-                        </div>
+
+                        <label id="lblYearInicio" class="col-lg-7 text-left" style="padding-right: 50px;">Año inicio</label>
+                        <select id="selectYearInicio" name="yearInicio" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%; text-align-last: right;" required>
+                            <option value="" dir="ltr">Año...</option>
+                            <option value="2019" dir="rtl">2019</option>
+                        </select>
+
                     </div>
                     <div class="col-md-6">
-                        <label class="col-lg-7 text-left" style="padding-right: 50px;">Mes fin</label>
-                        <div class="input-group spinner col-md-5">
-                            <input name="numMes" id="no_mes" type="text" class="form-control" value="1" required style="padding-right: 15px;">
+                        <label id="lblMesFin" class="col-lg-7 text-left" style="padding-right: 50px;">Mes fin</label>
+                        <div id="groupMesFin" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
+                            <input id="inptMesFin" name="numMes" type="text" class="form-control" value="1" required style="padding-right: 15px;" readonly>
                             <div class="input-group-btn-vertical" style="margin-left: 10px;">
-                                <button id="mesIncrement" class="btn btn-default" type="button">
+                                <button id="mesFinIncrement" class="btn btn-default" type="button">
                                     <i class="fa fa-caret-up"></i>
                                 </button>
-                                <button id="mesDecrement" class="btn btn-default" type="button">
+                                <button id="mesFinDecrement" class="btn btn-default" type="button">
                                     <i class="fa fa-caret-down"></i>
                                 </button>
                             </div>
                         </div>
-                        <div class="row" style="align-content: center;">
-                            <label style="width: 45px; padding-right: 50px; padding-left: 30px;" class="col-md-2">Año fin</label>
-                            <select name="year" class="spinner" style="margin-left: 7px; width: 55px;" required>
-                                <option value="">Año...</option>
-                                <option value="2019">2019</option>
-                            </select>
-                        </div>
+                        <label id="lblYearFin" class="col-lg-7 text-left" style="padding-right: 50px;">Año fin</label>
+                        <select id="selectYearFin"  name="year" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%; text-align-last: right;" required>
+                            <option value="" dir="ltr">Año...</option>
+                            <option value="2019" dir="rtl">2019</option>
+                        </select>
                     </div>
                 </div>
-                <div class="row" style="padding-top: 20px;">
+                <div class="row" style="padding-top: 25%;">
                     <div class="container-fluid">
-                        <button class="btn btn-submit pull-right">Generar reporte</button>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-cancel">Cancelar</button>
+                            <button type = "submit" class="btn btn-submit">Generar reporte</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -175,6 +186,7 @@
     </form>
 </div>
 
-
+<script type="text/javascript" src="{{ asset('js/almacen/reportes.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/almacen/oficinas-depto.js') }}"></script>
 
 @endsection

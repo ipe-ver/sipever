@@ -20,9 +20,13 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email', 'password', 
+        'name', 'username', 'email', 'password', 'id_empleado'  
     ];
 
+    public function empleados(){
+		return $this->belongsTo('App\Model\Rhumanos\Empleado', 'id_empleado', 'id');
+    }
+    
        
     // Relación many-to-many entre el User y el Role     
     public function roles() 

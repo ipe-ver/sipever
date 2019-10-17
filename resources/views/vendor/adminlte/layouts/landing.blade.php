@@ -19,7 +19,8 @@
 		{!! Html::style('components/bootstrap-table/dist/bootstrap-table.css') !!} 
 
 		<!-- Boostrap Table Filter Control CSS-->
-		{!! Html::style('components/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.css') !!} 		
+		{!! Html::style('components/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.css') !!} 
+
 		<!-- Boostrap Table Select CSS-->
 		{!! Html::style('components/bootstrap-select/dist/css/bootstrap-select.css') !!} 
 		{!! Html::style('components/ajax-bootstrap-select/dist/css/ajax-bootstrap-select.css') !!} 
@@ -27,25 +28,20 @@
 		<!-- HoldOn.js -->
 		{!! Html::style('components/hold-on/HoldOn.min.css') !!} 
 
-	
 		
-
 		
 		<style>
-			
+			.user-body{
+				position:relative;
+				z-index:0; 
+			}
 
-		.user-body{
-			position:relative;
- 			z-index:0; 
-		}
+			#search{
+				position:relative;
+				display: block;
+				z-index:1;
+			}
 
-		#search{
-			position:relative;
-			display: block;
-			z-index:1;
-		}
-
-	
 		</style>	
 
 		
@@ -85,7 +81,7 @@
 							</a>
 							<ul class="dropdown-menu">				
 							
-								<li>
+								<li style="text-align:right;">
 									<div class="input-group">
 										<span class="input-group-addon" style="background-color: #F3EFE0;"><i class="fa fa-phone"></i></span>
 										<input id="search" name="search" type="text" class="form-control" placeholder="Buscar extensiones..." style="background-color: #F3EFE0;">
@@ -218,9 +214,9 @@
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Contencioso</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Consultivo</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Sub. Administrativa</a></li>
-							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Recursos Humanos</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Adquisiciones e Inventarios</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Servicios Generales</a></li>--}}
+							<li><a href="{!! url('/recursos_humanos') !!}"><i class="fa fa-spinner"></i> Recursos Humanos</a></li>
 							<li><a href="{!! url('/tecnologias') !!}"><i class="fa fa-spinner"></i> Tecnologías de la Información</a></li>
 							{{--<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Sub. Prestac. Institucionales</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Prestaciones Económicas</a></li>
@@ -303,8 +299,9 @@
 	@include('adminlte::layouts.partials.modal_gral')
 </body>
 
-<script src="{{ asset('components/jquery/dist/jquery.js') }}"></script>
+		<script src="{{ asset('components/jquery/dist/jquery.js') }}"></script>
 		<script src="{{ asset('components/jquery/dist/jquery.min.js') }}"></script>
+			
 		<script src="{{ asset('components/bootstrap/dist/js/bootstrap.js') }}"></script>
 		<script src="{{ asset('components/admin-lte/dist/js/adminlte.js') }}"></script>
 		<script src="{{ asset('components/toastr/toastr.js') }}"></script>
@@ -389,29 +386,9 @@
 					}
 				});
 
-				/*$( "#search" ).autocomplete({
-					
-					source: function(request, response) {
-						
-						$.ajax({
-							url: "{{url('autocomplete')}}",
-							data: {
-									term : request.term
-							},
-							dataType: "json",
-							success: function(data){
-								var resp = $.map(data,function(obj){
-									return obj.extension+'::'+obj.descripcion;
-								}); 
+		
 
-								response(resp);
-							}
-						});
-					},
-					minLength: 3
-				});*/
-			
-
+				
 			
 			});
 
@@ -420,6 +397,7 @@
 		</script>
 
 		{!! HTML::script('js/funcionesgral.js') !!}
+		
 		
 		@yield('script')	
 

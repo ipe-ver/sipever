@@ -61,6 +61,9 @@ class DatabaseSeeder extends Seeder
         // Seed Extensiones
         $this->call(CatExtensionesTableSeeder::class);
 
+         // Seed Empleados
+         $this->call(CatEmpleadosTableSeeder::class);
+
 
     }
 }

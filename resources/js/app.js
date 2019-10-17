@@ -30,3 +30,10 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#app',
 });
+
+var app = new Vue({
+    el: '#app2',
+    data: {
+      message: 'Hello Vue!'
+    }
+  })

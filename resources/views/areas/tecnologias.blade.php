@@ -45,14 +45,14 @@
                 <div class="box-header with-border">
                     <h4 class="box-title">
                       <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                        Objetivos 
+                        Objetivo
                       </a>
                     </h4>
                 </div>
                 
                 <div id="collapseOne" class="panel-collapse collapse in">
                     <div class="box-body">
-                      <p> Proveer y administrar las tecnologías de información y los sistemas de telecomunicaciones necesarios 
+                      <p style="font-size:20px; text-align:justify;"> Proveer y administrar las tecnologías de información y los sistemas de telecomunicaciones necesarios 
                       para que las unidades administrativas desarrollen sus funciones, y para brindar seguridad y confianza en el manejo 
                       de la información, mediante el fortalecimiento de un gobierno digital y abierto que induzca una mayor participación 
                       de los ciudadanos.</p>

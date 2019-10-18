@@ -91,8 +91,19 @@ class PeriodoController extends Controller
      * @param string $anio
      * @return \Illuminate\Http\Response
      */
-    public function cerrar_mes($no_mes, $anio){
+    public function cerrar_mes(Request $request){
+        $no_mes = $request->input('numMes');
+        $anio = $request->input('year');
+        
+        $mensaje="";
+        if($no_mes < 10){
+            $mensaje = "0{$no_mes} - {$anio}";
+        }else{
+            $mensaje = "{$no_mes} - {$anio}";
+        }
 
+        return back()->with('success', $mensaje);
+        /*
         //Obtenemos los datos de la conexión con la base de datos
         $db = DB::connection()->getPdo();
         //Establecemos la conexión
@@ -100,17 +111,16 @@ class PeriodoController extends Controller
         $db->setAttribute(PDOConnection::ATTR_EMULATE_PREPARES, true);
 
         //Preparamos la llamada al procedimiento remoto
-        $query = $db->prepare('CALL sp_cerrar_mes(?,?,@result)');
+        $query = $db->prepare('CALL sp_cerrar_periodo(?,?,@result)');
         //Hacemos un binding de los parámetros, así protegemos nuestra 
         //llamada de una posible inyección sql
         $query->bindParam(1,$no_mes);
         $query->bindParam(2,$anio);
 
-        //Ejecutamos el procedimiento
-        $query->execute();
-        $query->closeCursor();
-
         try {
+            //Ejecutamos el procedimiento
+            $query->execute();
+            $query->closeCursor();
             //accedemos al valor de retorno para regresar la vista correspondiente.
             $result = $db->query('SELECT @result AS result')->fetch(PDOConnection::FETCH_ASSOC);
 
@@ -123,7 +133,7 @@ class PeriodoController extends Controller
             }
         } catch (Exception $e) {
             return redirect('almacen.cerrar_mes')->withErrors(['msg',$e->getMessage()+"\n Contacte al departamento de tecnologías de la información"]);
-        }
+        }*/
     }
 
 }

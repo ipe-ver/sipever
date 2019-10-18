@@ -28,16 +28,15 @@ class PartidaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $input = Input::only('cta','scta','sscta', 'nombre', 'grupo','ctaarmo', 'nomarmo');
-        $cta = $input['cta'];
-        $scta = $input['scta'];
-        $sscta = $input['sscta'];
-        $nombre = $input['nombre'];
-        $grupo=$input['grupo'];
-        $ctaarmo = $input['ctaarmo'];
-        $nomarmo = $input['nomarmo'];
+        $cta = $request->cta;
+        $scta = $request->scta;
+        $sscta = $request->sscta;
+        $nombre = $request->nombre;
+        $grupo=$request->grupo;
+        $ctaarmo = $request->ctaarmo;
+        $nomarmo = $request->nomarmo;
 
         try {
             DB::select("call sp_almacenar_grupo(?,?,?,?,?,?,?,?)", array($cta, $scta, $sscta, $nombre, $ctaarmo, $nomarmo, $grupo, 1));

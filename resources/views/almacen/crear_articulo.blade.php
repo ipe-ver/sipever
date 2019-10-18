@@ -7,7 +7,7 @@
 		         	<span aria-hidden="true">&times;</span>
 		        </button>
 			</div>
-            <form action="{{route('almacen.articulos.nuevoArticulo')}}">
+            <form action="{{route('almacen.articulos.nuevoArticulo')}}" method="POST">
     			<div class="modal-body">
     				<div class="container-fluid">
                         @csrf

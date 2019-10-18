@@ -58,6 +58,10 @@ window.addEventListener("load", function(){
             inputFin.setAttribute("value", parseInt(inputFin.value)-1);
         }
     });
+    var selectDepto = document.getElementById("selectDepto");
+    var selectOficina = document.getElementById("selectOficina");
+    selectDepto.style.display = 'none';
+    selectOficina.style.display = 'none';
 });
 
 function seleccionarReporte(checkBox){
@@ -68,6 +72,27 @@ function seleccionarReporte(checkBox){
                 boxes[i].checked =  !boxes[i].checked;
             }
         }
+    }
+
+    var selectDepto = document.getElementById("selectDepto");
+    var selectOficina = document.getElementById("selectOficina");
+    if(checkBox.id == "reporteConsDepto" || checkBox.id == "consumosAreaArt"){
+        if(checkBox.checked){
+            selectDepto.style.display = 'block';
+            selectOficina.style.display = 'block';
+            selectDepto.removeAttribute("disabled");
+            selectOficina.removeAttribute("disabled");
+    }else{
+        selectDepto.setAttribute("disabled", "true");
+        selectOficina.setAttribute("disabled", "true");
+        selectDepto.style.display = 'none';
+        selectOficina.style.display = 'none';
+    }
+    }else{
+        selectDepto.style.display = 'none';
+        selectOficina.style.display = 'none';
+        selectDepto.setAttribute("disabled", "true");
+        selectOficina.setAttribute("disabled", "true");
     }
 }
 
@@ -104,6 +129,7 @@ function unSoloMes(checkBox){
         groupMesFin.setAttribute("hidden", "false");
         groupMesFin.style.display = 'table';
         selectYearFin.removeAttribute("disabled");
+        selectYearFin.setAttribute("required", "");
         selectYearFin.style.display = 'table';
     }
 

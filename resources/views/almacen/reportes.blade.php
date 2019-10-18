@@ -54,11 +54,13 @@
 </div>
 
 <div class = "container reportes-box">
-    <form action="{{route('almacen.index')}}">
+    <form action="{{route('almacen.reportes.generar')}}" method="POST">
+        @csrf
+        @method("POST")
         <div class ="row justify-content-md-center">
             <div class="col col-lg-4">
                 <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input checkReporte" type="checkbox" value="" id="reporteValidacionConsumo">
+                    <input class="form-check-input checkReporte" type="checkbox" name="reportes" value="checked" id="reporteValidacionConsumo">
                     <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteValidacionConsumo">
                     Reporte para validación de consumo
                     </label>
@@ -167,7 +169,7 @@
                             </div>
                         </div>
                         <label id="lblYearFin" class="col-lg-7 text-left" style="padding-right: 50px;">Año fin</label>
-                        <select id="selectYearFin"  name="year" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%; text-align-last: right;" required>
+                        <select id="selectYearFin"  name="year" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%; text-align-last: right;">
                             <option value="" dir="ltr">Año...</option>
                             <option value="2019" dir="rtl">2019</option>
                         </select>

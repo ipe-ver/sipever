@@ -247,7 +247,7 @@
 						<!-- MODULO DE ADMINISTRADOR-->
 						@if(Auth::user()->name == 'admin')
 
-						<!--	<li class=""><a href="{!! route('admin.index') !!}"><i class="fas fa-cogs"></i> <span>Configuración</span></a></li>-->
+							<li class=""><a href="{!! route('catalogos.index') !!}"><i class="fas fa-book"></i> <span>Cátalogos</span></a></li>
 							<li class=""><a href="{!! route('expediente.index') !!}"><i class="fas fa-folder-open"></i> <span>Expediente Electrónico</span></a></li>
 
 						@endif

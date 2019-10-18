@@ -47,7 +47,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.
     Route::post('/articulos/buscarNombre','Almacen\ArticuloController@buscarPorNombre')->name('articulos.buscarArticulo');
     Route::get('/articulos/baja/{clave}','Almacen\ArticuloController@destroy')->name('articulos.darBaja');
     Route::post('/articulos/crear','Almacen\ArticuloController@create')->name('articulos.nuevoArticulo');
-    Route::get('/partidas/crear','Almacen\PartidaController@create')->name('partidas.nuevaPartida');
+    Route::post('/partidas/crear','Almacen\PartidaController@create')->name('partidas.nuevaPartida');
     Route::get('/partidas/actualizar/{id}','Almacen\PartidaController@update')->name('partidas.actualizar');
     Route::get('/partidas/eliminar/{id}','Almacen\PartidaController@destroy')->name('partidas.eliminar');
     Route::post('/departamentos/buscaroficina', 'Almacen\ReporteController@getOficinas');

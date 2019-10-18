@@ -129,7 +129,7 @@
                     @csrf
                     @method("POST")
                     <div class="panel-body">
-                        <div class="container-fluid">
+                        <div>
                             <div class="row">
                                 <label class="col-md-2" for="articuloclave">Clave</label>
                                 <label class="col-md-6 text-left colm-form" for="articuloDescripcion">Descripción</label>

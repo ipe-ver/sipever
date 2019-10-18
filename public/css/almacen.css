@@ -57,9 +57,12 @@
   text-align: center;
 }
 
+.separador{
+  border-bottom: 1px solid #C4C4C4;
+}
+
 .form-check{
   padding:5px;
-  border-bottom: 1px solid #C4C4C4;
 }
 
 body{

@@ -54,7 +54,9 @@
 </div>
 
 <div class="container mes-box">
-    <form action="{{route('almacen.index')}}">
+    <form action="{{route('almacen.periodo.cerrar')}}" method = "POST">
+        @csrf
+        @method("POST")
         <div class="col-lg-12" style="text-align-last: center;">
             <div class="row">
                 <div class="col col-md-12 container-fluid" style="align-items: center;">

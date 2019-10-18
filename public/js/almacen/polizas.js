@@ -48,6 +48,8 @@ function seleccionarBox(checkBox){
             if(boxes[i].checked){
                 boxes[i].checked =  !boxes[i].checked;
             }
+            boxes[i].setAttribute("value", "");
         }
     }
+    checkBox.setAttribute("value", "checked");
 }

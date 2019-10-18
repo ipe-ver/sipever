@@ -11,7 +11,7 @@
             </div>
             <b>Generación de pólizas para almacén y contabilidad </b>
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-6">
             @if ($message = Session::get('success'))
                 <div class="alert-container" id="contenedor-alert">
                     <div class="alert success">
@@ -54,17 +54,19 @@
 </div>
 
 <div class="container poliza-box">
-    <form action="{{route('almacen.index')}}">
+    <form action="{{route('almacen.polizas.generar')}}" method = "POST">
+        @csrf
+        @method("POST")
         <div class="row justify-content-md-center">
             <div class="col col-lg-6">
                  <div class="form-check">
-                    <input class="form-check-input checkPoliza" type="checkbox" id="polizaAlmacen">
+                    <input class="form-check-input checkPoliza" type="checkbox" name="almacen" value="" id="polizaAlmacen">
                     <label class="form-check-label" for="polizaAlmacen">
                     Póliza de almacén
                     </label>
                 </div>
                 <div class="form-check">
-                        <input class="form-check-input checkPoliza" type="checkbox" id="polizaConta">
+                        <input class="form-check-input checkPoliza" type="checkbox" name="conta" value ="" id="polizaConta">
                         <label class="form-check-label text-wrap" style="width: 200px; " for="polizaConta">
                         Póliza para contabilidad y presupuesto
                         </label>

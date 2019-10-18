@@ -57,62 +57,68 @@
     <form action="{{route('almacen.reportes.generar')}}" method="POST">
         @csrf
         @method("POST")
+
         <div class ="row justify-content-md-center">
             <div class="col col-lg-4">
-                <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input checkReporte" type="checkbox" name="reportes" value="checked" id="reporteValidacionConsumo">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteValidacionConsumo">
-                    Reporte para validación de consumo
-                    </label>
+                <div>
+                    <h4 class="separador">Reportes</h4>
+                    <div class="form-check" style="display: flex;">
+                        <input class="form-check-input checkReporte" type="checkbox" name="auxAlmacen" value="" id="reporteAuxAlmacen">
+                        <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;"for="reporteAuxAlmacen">
+                        Reporte auxiliar de almacén
+                        </label>
+                    </div>
+                    <div class="form-check" style="display: flex;">
+                        <input class="form-check-input checkReporte" type="checkbox" name="consDepto" value="" id="reporteConsDepto">
+                        <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteConsDepto">
+                        Reporte de consumos por departamento
+                        </label>
+                    </div>
+                    <div class="form-check" style="display: inline-flex;">
+                        <input class="form-check-input checkReporte" type="checkbox" name="existencias" value="" id="reporteExistencias">
+                        <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteExistencias">
+                        Reporte final de existencias
+                        </label>
+                    </div>
+                    <div class="form-check" style="display: inline-flex;">
+                        <input class="form-check-input checkReporte" type="checkbox" name="validConsumo" value="" id="reporteValidacionConsumo">
+                        <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteValidacionConsumo">
+                        Reporte para validación de consumo
+                        </label>
+                    </div>
                 </div>
-                <div class="form-check" style="display: flex;">
-                    <input class="form-check-input checkReporte" type="checkbox" value="" id="reporteConsDepto">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteConsDepto">
-                    Reporte de consumos por departamento
-                    </label>
-                </div>
-
-                <div class="form-check" style="display: flex;">
-                    <input class="form-check-input checkReporte" type="checkbox" value="" id="reporteAuxAlmacen">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;"for="reporteAuxAlmacen">
-                    Reporte auxiliar de almacén
-                    </label>
-                </div>
-                <div class="form-check" style="display: flex;">
-                    <input class="form-check-input checkReporte" type="checkbox" value="" id="consumosArticulo">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="consumosArticulo">
-                    Consumos por artículo
-                    </label>
-                </div>
-                <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input checkReporte" type="checkbox" value="" id="reporteExistencias">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="reporteExistencias">
-                    Reporte final de existencias
-                    </label>
-                </div>
-                <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input checkReporte" type="checkbox" value="" id="comprasArticulo">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="comprasArticulo">
-                    Compras por artículo
-                    </label>
-                </div>
-                <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input checkReporte" type="checkbox" value="" id="existenciasArticulo">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="existenciasArticulo">
-                    Existencias por artículo
-                    </label>
-                </div>
-                <div class="form-check" style="display: inline-flex;">
-                    <input class="form-check-input checkReporte" type="checkbox" value="" id="consumosAreaArt">
-                    <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="consumosAreaArt">
-                    Consumos por área y artículo
-                    </label>
+                <div> 
+                    <h4 class="separador">Concentrados</h4>
+                    <div class="form-check" style="display: inline-flex;">
+                        <input class="form-check-input checkReporte" type="checkbox" name="compArticulo" value="" id="comprasArticulo">
+                        <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="comprasArticulo">
+                        Compras por artículo
+                        </label>
+                    </div>
+                    <div class="form-check" style="display: inline-flex;">
+                        <input class="form-check-input checkReporte" type="checkbox" name="consAreaArt" value="" id="consumosAreaArt">
+                        <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="consumosAreaArt">
+                        Consumos por área y artículo
+                        </label>
+                    </div>
+                    <div class="form-check" style="display: flex;">
+                        <input class="form-check-input checkReporte" type="checkbox" name="consArticulo" value="" id="consumosArticulo">
+                        <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="consumosArticulo">
+                        Consumos por artículo
+                        </label>
+                    </div>
+                    <div class="form-check" style="display: inline-flex;">
+                        <input class="form-check-input checkReporte" type="checkbox" name="existArticulo" value="" id="existenciasArticulo">
+                        <label class="form-check-label text-wrap" style="margin-left: 5px; width: 160px;" for="existenciasArticulo">
+                        Existencias por artículo
+                        </label>
+                    </div>
                 </div>
             </div>
             <div class ="col-lg-8">
                 <div class="row">
                     <div class ="container-fluid" style="margin-top: 5%;">
-                        <select id="selectDepto" class="form-control" name="depto" required method="post">
+                        <select id="selectDepto" class="form-control" name="depto" method="post">
                             <option value ="">Seleccione un departamento</option>
                             @foreach($departamentos as $departamento)
                                 <option value="{{$departamento->ubpp}}">{{$departamento->descripcion}}</option>
@@ -120,7 +126,7 @@
                         </select>
                     </div>
                     <div class ="container-fluid" style="margin-top: 5%;">
-                        <select id="selectOficina" class="form-control" name="oficina" required>
+                        <select id="selectOficina" class="form-control" name="oficina">
                             <option value ="">Seleccione una oficina</option>
                         </select>
                     </div>
@@ -158,7 +164,7 @@
                     <div class="col-md-6">
                         <label id="lblMesFin" class="col-lg-7 text-left" style="padding-right: 50px;">Mes fin</label>
                         <div id="groupMesFin" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%;">
-                            <input id="inptMesFin" name="numMes" type="text" class="form-control" value="1" required style="padding-right: 15px;" readonly>
+                            <input id="inptMesFin" name="mesFin" type="text" class="form-control" value="1" required style="padding-right: 15px;" readonly>
                             <div class="input-group-btn-vertical" style="margin-left: 10px;">
                                 <button id="mesFinIncrement" class="btn btn-default" type="button">
                                     <i class="fa fa-caret-up"></i>
@@ -169,16 +175,15 @@
                             </div>
                         </div>
                         <label id="lblYearFin" class="col-lg-7 text-left" style="padding-right: 50px;">Año fin</label>
-                        <select id="selectYearFin"  name="year" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%; text-align-last: right;">
+                        <select id="selectYearFin"  name="yearFin" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%; text-align-last: right;">
                             <option value="" dir="ltr">Año...</option>
                             <option value="2019" dir="rtl">2019</option>
                         </select>
                     </div>
                 </div>
-                <div class="row" style="padding-top: 25%;">
+                <div class="row" style="padding-top: 40%;">
                     <div class="container-fluid">
                         <div class="pull-right">
-                            <button type="button" class="btn btn-cancel">Cancelar</button>
                             <button type = "submit" class="btn btn-submit">Generar reporte</button>
                         </div>
                     </div>

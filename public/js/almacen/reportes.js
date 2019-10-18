@@ -71,26 +71,33 @@ function seleccionarReporte(checkBox){
             if(boxes[i].checked){
                 boxes[i].checked =  !boxes[i].checked;
             }
+            boxes[i].setAttribute("value", " ");
         }
     }
-
+    checkBox.setAttribute("value","checked");
     var selectDepto = document.getElementById("selectDepto");
     var selectOficina = document.getElementById("selectOficina");
     if(checkBox.id == "reporteConsDepto" || checkBox.id == "consumosAreaArt"){
         if(checkBox.checked){
             selectDepto.style.display = 'block';
             selectOficina.style.display = 'block';
+            selectDepto.setAttribute("required","");
+            selectOficina.setAttribute("required", "");
             selectDepto.removeAttribute("disabled");
             selectOficina.removeAttribute("disabled");
+        }else{
+            selectDepto.setAttribute("disabled", "true");
+            selectOficina.setAttribute("disabled", "true");
+            selectDepto.removeAttribute("required");
+            selectOficina.removeAttribute("required");
+            selectDepto.style.display = 'none';
+            selectOficina.style.display = 'none';
+        }
     }else{
-        selectDepto.setAttribute("disabled", "true");
-        selectOficina.setAttribute("disabled", "true");
         selectDepto.style.display = 'none';
         selectOficina.style.display = 'none';
-    }
-    }else{
-        selectDepto.style.display = 'none';
-        selectOficina.style.display = 'none';
+        selectDepto.removeAttribute("required");
+        selectOficina.removeAttribute("required");
         selectDepto.setAttribute("disabled", "true");
         selectOficina.setAttribute("disabled", "true");
     }
@@ -116,6 +123,7 @@ function unSoloMes(checkBox){
         mesFinIncrement.setAttribute("disabled", "true");
         mesFinDecrement.setAttribute("disabled", "true");
         groupMesFin.style.display = 'none';
+        selectYearFin.removeAttribute("required");
         selectYearFin.setAttribute("disabled", "true");
         selectYearFin.style.display = 'none';
     }else{

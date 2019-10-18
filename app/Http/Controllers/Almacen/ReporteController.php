@@ -21,10 +21,27 @@ class ReporteController extends Controller
         return view('almacen.reportes', compact('departamentos'));
     }
 
+    /**
+     * Obtiene las oficinas asociadas a un departamento
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function getOficinas(Request $request){
         $ubpp = $request->input('ubpp');
         $oficinas = DB::select("call sp_obtener_oficinas(?)", array($ubpp));
         return json_encode($oficinas);
+    }
+
+    /**
+     * Obtiene las oficinas asociadas a un departamento
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function generarReporte(Request $request){
+        $checkboxes = $request->input('reportes');
+        return back()->with('success',$checkboxes);
     }
 
     /**

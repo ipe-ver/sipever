@@ -51,6 +51,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.
     Route::get('/partidas/actualizar/{id}','Almacen\PartidaController@update')->name('partidas.actualizar');
     Route::get('/partidas/eliminar/{id}','Almacen\PartidaController@destroy')->name('partidas.eliminar');
     Route::post('/departamentos/buscaroficina', 'Almacen\ReporteController@getOficinas');
+    Route::post('/reportes/generar', 'Almacen\ReporteController@generarReporte')->name('reportes.generar');
     Route::resource('periodo','Almacen\PeriodoController');
     Route::resource('articulos', 'Almacen\ArticuloController');
     Route::resource('partidas', 'Almacen\PartidaController');
@@ -92,6 +93,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 
 
 });
+
 	//Módulo de Nosotros
 	Route::get('/mision', function () { return view('nosotros.mision'); });
 	Route::get('/informacion', function () { return view('nosotros.informacion'); });
@@ -110,9 +112,9 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 
 	Route::get('search', 'AutoCompleteController@index');
  	Route::get('autocomplete', 'AutoCompleteController@search');
-	
 
-	
+
+
 
 
 

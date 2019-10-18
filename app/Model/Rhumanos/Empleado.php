@@ -20,6 +20,10 @@ class Empleado extends Model
         'estatus',
     ];
 
+    
+
+    protected $appends = ['nombre_completo'];   
+
      /**************** ACCESSORS Y MUTATORS *************************/   
 
     public function setFechaIngresoAttribute($value)
@@ -46,7 +50,11 @@ class Empleado extends Model
         $this->attributes['nombre'] = mb_strtoupper($value,'utf-8');
     }
 
-    
+    public function getNombreCompletoAttribute()
+	{
+		$nombre = $this->primer_apellido.' '.$this->segundo_apellido.' '.$this->nombres;		
+		return $nombre;
+    }
 
    
 }

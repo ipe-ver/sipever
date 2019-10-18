@@ -56,10 +56,9 @@ class ReporteController extends Controller
             $mesFin = $request->input('mesFin');
             $yearFin = $request->input('yearFin');
             $mesF = $this->nombre_mes($mesFin);
-        }
-
-        if($mesFin < $numMesInicio || $yearFin < $yearInicio){
-            return back()->with('warning','Las fechas ingresadas no son correctas');
+            if($mesFin < $numMesInicio || $yearFin < $yearInicio){
+                return back()->with('warning','Las fechas ingresadas no son correctas');
+            }
         }
 
         if ($validConsumo == "checked"){

@@ -63,7 +63,7 @@ if(paneles!=null){
          */
         boton.setAttribute("id", "verArticulo"+index);
         boton.setAttribute("data-target", "#collapseArticulo"+index);
-        boton.setAttribute("aria-controls", "collapseArticulo"+index);
+
 
         //Cada vez que se le de click al botón de despliegue...
         boton.addEventListener('click', function(){

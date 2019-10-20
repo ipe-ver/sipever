@@ -62,7 +62,9 @@ if(paneles!=null){
         panel.setAttribute("id", "collapsePartida"+x);
     }
     var botones = document.getElementsByClassName("btn-left");
+    // Se genera un array de contadores para llevar el control de las veces que se da click en cada boton
     var contadores = new Array(botones.length);
+    // Se inicializan los contadores en 0
     for (var i = 0; i < contadores.length; i++) {
         contadores[i]=0;
     }
@@ -77,9 +79,14 @@ if(paneles!=null){
 
         //Cada vez que se le de click al botón de despliegue...
         boton.addEventListener('click', function(){
+            //Se suma en uno el contador cada vez que se da click
             contadores[index]+=1;
+            //Se obtiene el panel para colapsar
             var panel_target=document.getElementById("collapsePartida"+index);
+            //Después de 384 milisegundos el panel se colapsará.
             setTimeout(function(){
+                //Solo se accederá a la función si el panel está desplegado y el contador es para
+                // Asegurando así que unicamente cuando el panel esté desplegado se acceda a la función.
                 if(panel_target.classList.contains("show")&&contadores[index]%2==0){
                     panel_target.setAttribute("class", "collapse panel-collapse");
                 }

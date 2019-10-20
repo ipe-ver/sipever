@@ -56,6 +56,10 @@ if(paneles!=null){
         panel.setAttribute("id", "collapseArticulo"+x);
     }
     var botones = document.getElementsByClassName("btn-left");
+    var contadores = new Array(botones.length);
+    for (var i = 0; i < contadores.length; i++) {
+        contadores[i]=0;
+    }
     for (let index = 0; index < botones.length; index++) {
         const boton = botones[index];
         /*Las siguientes tres funciones asignan los ids de los paneles que se van a desplegar al dar click
@@ -63,10 +67,15 @@ if(paneles!=null){
          */
         boton.setAttribute("id", "verArticulo"+index);
         boton.setAttribute("data-target", "#collapseArticulo"+index);
-
-
         //Cada vez que se le de click al botón de despliegue...
         boton.addEventListener('click', function(){
+            contadores[index]+=1;
+            var panel_target=document.getElementById("collapseArticulo"+index);
+            setTimeout(function(){
+                if(panel_target.classList.contains("show")&&contadores[index]%2==0){
+                    panel_target.setAttribute("class", "collapse panel-collapse");
+                }
+            },385);
             var btn_editar_aux = document.getElementById('btn_editar'+index);
             //Se agrega el metodo click al boton
             btn_editar_aux.addEventListener("click",function(){

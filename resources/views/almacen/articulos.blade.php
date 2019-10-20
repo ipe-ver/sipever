@@ -124,7 +124,7 @@
                     </div>
                 </div>
             </div>
-            <div id="collapseArticulo" class="panel-collapse collapse">
+            <div id="collapseArticulo" class="collapse panel-collapse ">
                 <form method="POST" action="{{route('almacen.articulos.actualizarArticulo')}}">
                     @csrf
                     @method("POST")

@@ -87,7 +87,7 @@
                         </label>
                     </div>
                 </div>
-                <div> 
+                <div>
                     <h4 class="separador">Concentrados</h4>
                     <div class="form-check" style="display: inline-flex;">
                         <input class="form-check-input checkReporte" type="checkbox" name="compArticulo" value="" id="comprasArticulo">

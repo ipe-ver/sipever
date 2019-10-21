@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
 use DB;
+use PDF;
 
 class ReporteController extends Controller
 {
@@ -86,8 +87,12 @@ class ReporteController extends Controller
         }else{
             $mensaje = "{$mensaje} correspondiente al mes {$mesIni} de {$yearInicio}";
         }
+        date_default_timezone_set('America/Mexico_City');
+        $fecha = date("M,d,Y");
+        $hora = date("h:i a");
+        $pdf = PDF::loadView('almacen.plantilla_reporte',compact('mensaje','fecha','hora'));
 
-        return back()->with('success',$mensaje);
+        return $pdf->stream('reporte.pdf');
     }
 
     /**

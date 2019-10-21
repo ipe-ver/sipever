@@ -22,11 +22,13 @@ for (i = 0; i < close.length; i++) {
 window.addEventListener("load", function(){
     var checks = document.getElementsByClassName("checkReporte");
     for (var i = 0; i < checks.length; i++) {
+        checks[i].checked = false;
         checks[i].addEventListener("click",function(event){
             seleccionarReporte(event.srcElement);
         });
     }
     var chckMes = document.getElementById("chckMes");
+    chckMes.checked = false;
     chckMes.addEventListener("click", function(event){
         unSoloMes(event.srcElement);
     });

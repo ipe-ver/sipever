@@ -254,11 +254,12 @@
 
 						<!-- MODULO DE ALMACÉN-->
 
-						@if(Auth::user()->name == 'almacen_admin')
+						@if(Auth::user()->name == 'almacen_admin' or Auth::user()->name == 'almacen_capturista' or Auth::user()->name == 'almacen_oficinista' )
 
 							<li class=""><a href="{!! route('almacen.index') !!}"><i class="fas fa-box-open"></i> <span>Almacén</span></a></li>
 
 						@endif
+
 
 						<!-- MODULO DE COMPRAS-->
 

@@ -36,14 +36,14 @@
                                 @if(Auth::user()->hasRole('admin'))
                                     <div>Acceso como Administrador</div>
                                 
-                                @elseif(Auth::user()->hasRole('user')) 
-                                    <div>Acceso como Usuario</div>
+                                @elseif(Auth::user()->hasRole('almacen_admin')) 
+                                    <div>Acceso como Administrador de Almacén</div>
 
-                                 @elseif(Auth::user()->hasRole('almacen_admin')) 
-                                    <div>Acceso como Administrador de Almacén</div>    
+                                @elseif(Auth::user()->hasRole('almacen_capturista')) 
+                                    <div>Acceso como Capturista de Almacén</div>    
                                     
-                                @else(Auth::user()->hasRole('compras_admin')) 
-                                    <div>Acceso como Administrador de Compras</div>
+                                @else(Auth::user()->hasRole('almacen_oficinista')) 
+                                    <div>Acceso como Oficinista de Almacén</div>
                                 
                                 @endif
                             </h5>

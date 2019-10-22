@@ -19,7 +19,7 @@
             </div>
 			 
 			 			
-			<h3 class="box-title pull-right">Catálogos de Roles</h3>
+			<h3 class="box-title pull-right">Catálogos de Permisos</h3>
 
 		</div>
 		<div class="box-body">
@@ -57,7 +57,7 @@
 				e.preventDefault();
 				limpiarModal();
 
-				tituloModal.append('<i class="fa fa-plus"></i> Agregar Rol');
+				tituloModal.append('<i class="fa fa-plus"></i> Agregar Permisos');
 
 				var dataCampos = [
 					{campo:'input',idCampo:'name',nameCampo:'Rol:',typeCampo:'text',valorCampo:'',placeholder:'Rol',newClass:'',divSize:'12',datos:''},
@@ -120,7 +120,7 @@
 				searchFormatter: true,
 				//refreshOptions: true,
 				//rowStyle: rowStyle,
-				url: routeBase+'/catalogos/get_roles',
+				url: routeBase+'/catalogos/get_permisos',
 				columns: [{					
 					field: 'id',
 					title: 'ID.',
@@ -128,11 +128,7 @@
 					field: 'name',
 					title: 'Name',
 					filterControl: 'input',	
-				},	{					
-					field: 'description',
-					title: 'Descripcion',
-					filterControl: 'input',	
-				},  {
+				},	{
 					title: 'Acciones',
 					//formatter: formatTableActions,
 					//events: operateEvents

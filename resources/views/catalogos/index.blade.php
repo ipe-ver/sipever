@@ -50,7 +50,7 @@
                         <span class="info-box-icon" style="background: #7AB317;"><img class="img" src="{!! url('') !!}/img_download/USERS/permiso.png"/></span>
 
                         <div class="info-box-content">
-                            <a href="" target="_blank"  style="color: #000000;"><h5 style="font-size: 38px;"><strong>Cátalogo de Permisos</strong></h5></a>
+                            <a href="{!! url('') !!}/catalogos/permisos"   style="color: #000000;"><h5 style="font-size: 38px;"><strong>Cátalogo de Permisos</strong></h5></a>
                         </div>
                     </div>
                 </div>

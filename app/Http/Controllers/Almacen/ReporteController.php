@@ -78,7 +78,7 @@ class ReporteController extends Controller
         }elseif ($existencias == "checked"){
             $mensaje = 'Reporte final de existencias';
             $ruta = "almacen.reportes.reporte_final_existencias";
-            $headers = ['CODIFICACIÓN', 'DESCRIPCIÓN', 'UNIDAD', 'CANTIDAD', 'COSTO', 'IMPORTE'];
+            $headers = ['CODIFICACIÓN', 'DESCRIPCIÓN', 'UNIDAD', 'CANT.', 'COSTO', 'IMPORTE'];
         }elseif ($consArticulo == "checked"){
             $mensaje = 'Concentrado de consumos por artículo';
             $ruta = "almacen.reportes.cons_p_articulo";

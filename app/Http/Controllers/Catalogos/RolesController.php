@@ -12,14 +12,14 @@ class RolesController extends Controller
     public function index()
     {
 
-        return view('catalogos.rol');
+        return view('catalogos.roles');
     } 
 
     public function get_roles()
     {
 
         //$items = User::with('rch_empleados')->orderby('id')->get();
-        $items = User::with('empleados')->get();
+        $items = Role::orderby('id')->get();
        // dd($items);
         
               

@@ -34,7 +34,8 @@ Route::post('registro', 'Auth\RegisterController@registro')->name('registro');
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], function() {
     Route::get('/', function() { return view('admin.index'); })->name('index');
-    Route::get('/users', function () { return view('admin.user.index'); });
+	Route::get('/users', function () { return view('admin.user.index'); });
+	
 
 
 });
@@ -68,6 +69,9 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'catalogos', 'as' => 'catalo
 	Route::get('/', function() { return view('catalogos.index'); })->name('index');
 	Route::get('/users', function() { return view('catalogos.user'); });
 	Route::get('/get_users','Catalogos\UsersController@get_users');
+
+	Route::get('/roles', function() { return view('catalogos.roles'); });
+	Route::get('/get_roles','Catalogos\RolesController@get_roles');
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'expediente.'], function(){

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 
 use App\Http\Controllers\Controller;
+use File;
 use DB;
 use PDF;
 
@@ -53,6 +54,8 @@ class ReporteController extends Controller
         $yearInicio = $request->input('yearInicio');
         $periodo = $request->has('mesFin') && $request->has('yearFin') ? true : false;
         $mesIni = $this->nombre_mes($numMesInicio);
+        $ruta = "";
+        $headers = [];
         if($periodo){
             $mesFin = $request->input('mesFin');
             $yearFin = $request->input('yearFin');
@@ -64,20 +67,29 @@ class ReporteController extends Controller
 
         if ($validConsumo == "checked"){
             $mensaje = 'Reporte para validación de consumos';
+            $ruta = "almacen.reportes.reporte_validacion_cons";
         }elseif ($consDepto == "checked") {
             $mensaje = 'Reporte de consumos por departamento';
+            $ruta = "almacen.reportes.reporte_consumos_depto";
         }elseif ($auxAlmacen == "checked"){
             $mensaje = 'Reporte auxiliar de almacén';
+            $ruta = "almacen.reportes.reporte_auxiliar";
         }elseif ($existencias == "checked"){
             $mensaje = 'Reporte final de existencias';
+            $ruta = "almacen.reportes.reporte_final_existencias";
+            $headers = ['CODIFICACIÓN', 'DESCRIPCIÓN', 'UNIDAD', 'CANTIDAD', 'COSTO', 'IMPORTE'];
         }elseif ($consArticulo == "checked"){
             $mensaje = 'Concentrado de consumos por artículo';
+            $ruta = "almacen.reportes.cons_p_articulo";
         }elseif ($compArticulo == "checked"){
             $mensaje = 'Concentrado de compras por artículo';
+            $ruta = "almacen.reportes.compras_p_articulo";
         }elseif ($existArticulo == "checked"){
             $mensaje = 'Concentrado de existencias por artículo';
+            $ruta = "almacen.reportes.existencias_p_articulo";
         }elseif ($consAreaArt == "checked"){
             $mensaje = 'Concentrado de consumos por área y artículo';
+            $ruta = "almacen.reportes.consumos_p_area";
         }else{
            return back()->with('warning',"Porfavor seleccione un tipo de reporte");
         }
@@ -87,10 +99,14 @@ class ReporteController extends Controller
         }else{
             $mensaje = "{$mensaje} correspondiente al mes de {$mesIni} de {$yearInicio}";
         }
+
+        $archivo = file_get_contents(public_path("/img_system/banner_principal.png"));
+        $imagen_b64 = base64_encode($archivo);
+        $logo_b64 = "data:image/png;base64,{$imagen_b64}";
         date_default_timezone_set('America/Mexico_City');
-        $fecha = date("M,d,Y");
+        $fecha = date("d/M/Y");
         $hora = date("h:i a");
-        $pdf = PDF::loadView('almacen.plantilla_reporte',compact('mensaje','fecha','hora'));
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView($ruta,compact('mensaje','fecha','hora','logo_b64', 'headers'));
 
         return $pdf->stream('reporte.pdf');
     }

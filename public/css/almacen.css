@@ -193,9 +193,10 @@ section.content{
 
 .btn-submit, .btn-submit:focus{
     background-color: #7C2E0C;
+    border-color: #000000;
     border-radius: 5px;
     color: #FFFFFA;
-    opacity: 0.8;
+    opacity: 1;
     margin-top: 0;
     cursor: pointer;
 }
@@ -208,7 +209,7 @@ section.content{
 }
 
 .btn-submit:hover{
-  background-color: #4c0000;
+  background-color: #aa3f10;
   color: #FFFFFA;
   box-shadow: 0 5px #999;
 }
@@ -231,7 +232,7 @@ section.content{
 
 
 .btn-cancel:hover{
-  background-color: #000000;
+  background-color: #060502;
   color: #FFFFFA;
   box-shadow: 0 5px #999;
 }
@@ -331,7 +332,7 @@ section.content{
 .menu-scroll{
   margin-top: 10px;
   padding-bottom: 0;
-  height: 24.3em;
+  height: 33.5em;
   overflow-y: scroll;
 }
 

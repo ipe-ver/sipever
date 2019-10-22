@@ -36,7 +36,7 @@ class ArticuloController extends Controller
     public function page($no_index){
         $partidas = DB::select("call sp_get_grupos");
         $unidades = DB::select("call sp_get_unidades");
-        $articulos = DB::select("call sp_get_articulos(?)", array($no_index*10));
+        $articulos = DB::select("call sp_get_articulos(?)", array($no_index*15));
         $no_partida = 0;
         if($no_index == 0){
             return redirect()->route('almacen.articulos.index');
@@ -49,7 +49,7 @@ class ArticuloController extends Controller
     /**
      * Método para buscar artículos por partida.
      *
-     * @param Request $request 
+     * @param Request $request
      * @return \Illuminate\Http\Response
     */
 
@@ -96,7 +96,7 @@ class ArticuloController extends Controller
      */
     public function create(Request $request)
     {
-       
+
         $clave = $request->clave;
         $descripcion = $request->descripcion;
         $existencias = $request->existencias;
@@ -159,7 +159,7 @@ class ArticuloController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
-    {   
+    {
         $clave = $request->clave;
         $descripcion = $request->descripcion;
         $existencias = $request->existencias;

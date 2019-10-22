@@ -90,7 +90,7 @@ if(paneles!=null){
                 if(panel_target.classList.contains("show")&&contadores[index]%2==0){
                     panel_target.setAttribute("class", "collapse panel-collapse");
                 }
-            },385);
+            },390);
             var btn_editar_aux = document.getElementById('btn_editar'+index);
             //Se agrega el metodo click al boton
             btn_editar_aux.addEventListener("click",function(){

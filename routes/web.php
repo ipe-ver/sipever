@@ -34,7 +34,8 @@ Route::post('registro', 'Auth\RegisterController@registro')->name('registro');
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], function() {
     Route::get('/', function() { return view('admin.index'); })->name('index');
-    Route::get('/users', function () { return view('admin.user.index'); });
+	Route::get('/users', function () { return view('admin.user.index'); });
+	
 
 
 });
@@ -66,7 +67,14 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'catalogos', 'as' => 'catalogos.'], function() {
 	Route::get('/', function() { return view('catalogos.index'); })->name('index');
-	Route::get('/user', function() { return view('catalogos.user'); })->name('user');
+	Route::get('/users', function() { return view('catalogos.user'); });
+	Route::get('/get_users','Catalogos\UsersController@get_users');
+
+	Route::get('/roles', function() { return view('catalogos.roles'); });
+	Route::get('/get_roles','Catalogos\RolesController@get_roles');
+
+	Route::get('/permisos', function() { return view('catalogos.permisos'); });
+	Route::get('/get_permisos','Catalogos\PermisosController@get_permisos');
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'expediente.'], function(){
@@ -115,7 +123,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 
 
 	// MOSTRAR LA INFORMACION DE LOS ACTIVOS Y PENSIONADOS EN LA TABLA DE LA PAGINA PRINCIPAL
-	Route::get('get_usuarios','Expediente\ExpedienteController@getExpedientes');
+	//Route::get('get_usuarios','Expediente\ExpedienteController@getExpedientes');
 
 	//Route::get('search', 'AutoCompleteController@index');
  	//Route::get('autocomplete', 'AutoCompleteController@search');

@@ -19,7 +19,7 @@
             </div>
 			 
 			 			
-			<h3 class="box-title pull-right">Catálogos de Usuario</h3>
+			<h3 class="box-title pull-right">Catálogos de Roles</h3>
 
 		</div>
 		<div class="box-body">
@@ -57,12 +57,13 @@
 				e.preventDefault();
 				limpiarModal();
 
-				tituloModal.append('<i class="fa fa-plus"></i> Agregar Usuario');
+				tituloModal.append('<i class="fa fa-plus"></i> Agregar Rol');
 
 				var dataCampos = [
-					{campo:'input',idCampo:'name',nameCampo:'Name:',typeCampo:'text',valorCampo:'',placeholder:'Name',newClass:'',divSize:'12',datos:''},
-					{campo:'input',idCampo:'username',nameCampo:'Username:',typeCampo:'text',valorCampo:'',placeholder:'Username',newClass:'',divSize:'12',datos:''},	
-					{campo:'input',idCampo:'email',nameCampo:'E-mail:',typeCampo:'text',valorCampo:'',placeholder:'E-mail',newClass:'',divSize:'12',datos:''},				
+					{campo:'input',idCampo:'name',nameCampo:'Rol:',typeCampo:'text',valorCampo:'',placeholder:'Rol',newClass:'',divSize:'12',datos:''},
+					{campo:'input',idCampo:'description',nameCampo:'Descripción del rol:',typeCampo:'text',valorCampo:'',placeholder:'Descripción del rol',newClass:'',divSize:'12',datos:''},	
+					
+					
 				];
 
 				campos = estilo_modal.mostrar(dataCampos);
@@ -119,23 +120,18 @@
 				searchFormatter: true,
 				//refreshOptions: true,
 				//rowStyle: rowStyle,
-				url: routeBase+'/catalogos/get_users',
+				url: routeBase+'/catalogos/get_roles',
 				columns: [{					
 					field: 'id',
 					title: 'ID.',
 				},	{					
-					field: 'username',
-					title: 'Username',
+					field: 'name',
+					title: 'Name',
 					filterControl: 'input',	
 				},	{					
-					field: 'email',
-					title: 'E-mail',
+					field: 'description',
+					title: 'Descripcion',
 					filterControl: 'input',	
-				}, {
-					field: 'empleados.nombrecompleto',
-					title: 'Empleado',	
-					filterControl: 'input',				
-					
 				},  {
 					title: 'Acciones',
 					//formatter: formatTableActions,
@@ -149,4 +145,5 @@
 	</script>
 	
 @endsection
+
 

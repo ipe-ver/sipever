@@ -30,7 +30,7 @@
                         <span class="info-box-icon" style="background: #F77825;"><img class="img" src="{!! url('') !!}/img_download/USERS/usuario.png"/></span>
 
                         <div class="info-box-content">
-                            <a href="{!! url('') !!}/catalogos/user" target="_blank"  style="color: #000000;"><h5 style="font-size: 38px;"><strong>Cátalogo de Usuarios</strong></h5></a>
+                            <a href="{!! url('') !!}/catalogos/users" style="color: #000000;"><h5 style="font-size: 38px;"><strong>Cátalogo de Usuarios</strong></h5></a>
                         </div>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                         <span class="info-box-icon" style="background: #F67280;"><img class="img" src="{!! url('') !!}/img_download/USERS/rol.png"/></span>
 
                         <div class="info-box-content">
-                            <a href="" target="_blank"  style="color: #000000;"><h5 style="font-size: 38px;"><strong>Cátalogo de Roles</strong></h5></a>
+                            <a href="{!! url('') !!}/catalogos/roles"   style="color: #000000;"><h5 style="font-size: 38px;"><strong>Cátalogo de Roles</strong></h5></a>
                         </div>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                         <span class="info-box-icon" style="background: #7AB317;"><img class="img" src="{!! url('') !!}/img_download/USERS/permiso.png"/></span>
 
                         <div class="info-box-content">
-                            <a href="" target="_blank"  style="color: #000000;"><h5 style="font-size: 38px;"><strong>Cátalogo de Permisos</strong></h5></a>
+                            <a href="{!! url('') !!}/catalogos/permisos"   style="color: #000000;"><h5 style="font-size: 38px;"><strong>Cátalogo de Permisos</strong></h5></a>
                         </div>
                     </div>
                 </div>

@@ -14,16 +14,8 @@ class RoleTableSeeder extends Seeder
      */
     public function run()
     {
-        /*$role = new Role();
-        $role->name = 'admin';
-        $role->description = 'Administrator';
-        $role->save();
-        $role = new Role();
-        $role->name = 'user';
-        $role->description = 'User';
-        $role->save();*/
 
-
+        //Rol de Administrador
         $role = Role::create(['name' => 'admin', 'description' => 'Administrator']);
         Permission::create(['name' => 'admin_roles_create']);
         Permission::create(['name' => 'admin_roles_edit']);
@@ -38,22 +30,8 @@ class RoleTableSeeder extends Seeder
             'admin_roles_destroy'
         ]);
 
-        
 
-
-
-        $role = Role::create(['name' => 'user', 'description' => 'User']);
-        Permission::create(['name' => 'user_roles_create']);
-        Permission::create(['name' => 'user_roles_edit']);
-        Permission::create(['name' => 'user_roles_show']);
-        //$role->givePermissionTo('admin_roles_ver');
-
-        $role->givePermissionTo([
-            'user_roles_create',
-            'user_roles_edit',
-            'user_roles_show'
-        ]);
-
+        //Rol de Administrador de Almacén   
         $role = Role::create(['name' => 'almacen_admin', 'description' => 'Almacen_admin']);
         Permission::create(['name' => 'almacen_admin_roles_create']);
         Permission::create(['name' => 'almacen_admin_roles_edit']);
@@ -68,19 +46,38 @@ class RoleTableSeeder extends Seeder
             'almacen_admin_roles_destroy'
         ]);
 
-        $role = Role::create(['name' => 'compras_admin', 'description' => 'Compras_admin']);
-        Permission::create(['name' => 'compras_admin_roles_create']);
-        Permission::create(['name' => 'compras_admin_roles_edit']);
-        Permission::create(['name' => 'compras_admin_roles_show']);
-        Permission::create(['name' => 'compras_admin_roles_destroy']);
+        //Rol de Capturista de Almacén
+        $role = Role::create(['name' => 'almacen_capturista', 'description' => 'Almacen_capturista']);
+        Permission::create(['name' => 'almacen_capturista_roles_create']);
+        Permission::create(['name' => 'almacen_capturista_roles_edit']);
+        Permission::create(['name' => 'almacen_capturista_roles_show']);
+        Permission::create(['name' => 'almacen_capturista_roles_destroy']);
         //$role->givePermissionTo('admin_roles_ver');
 
         $role->givePermissionTo([
-            'compras_admin_roles_create',
-            'compras_admin_roles_edit',
-            'compras_admin_roles_show',
-            'compras_admin_roles_destroy'
+            'almacen_capturista_roles_create',
+            'almacen_capturista_roles_edit',
+            'almacen_capturista_roles_show',
+            'almacen_capturista_roles_destroy'
         ]);
+
+        //Rol de Oficinista de Almacén    
+        $role = Role::create(['name' => 'almacen_oficinista', 'description' => 'Almacen_oficinista']);
+        Permission::create(['name' => 'almacen_oficinista_roles_create']);
+        Permission::create(['name' => 'almacen_oficinista_roles_edit']);
+        Permission::create(['name' => 'almacen_oficinista_roles_show']);
+        Permission::create(['name' => 'almacen_oficinista_roles_destroy']);
+        //$role->givePermissionTo('admin_roles_ver');
+
+        $role->givePermissionTo([
+            'almacen_oficinista_roles_create',
+            'almacen_oficinista_roles_edit',
+            'almacen_oficinista_roles_show',
+            'almacen_oficinista_roles_destroy'
+
+        ]);
+
+        
 
     }
 }

@@ -42,6 +42,15 @@ class CatEmpleadosTableSeeder extends Seeder
                 'nombre' => 'KARLA YESSICA',
 				'estatus' => 1,
             ),
+            array( // row #4
+                'id' => 4,
+                'no_personal' => 2824,
+                'fecha_ingreso' => '2018/08/09',
+                'apellido_paterno' => 'BARRADAS',
+                'apellido_materno' => 'MERINOS',
+                'nombre' => 'ANGEL LUIS',
+				'estatus' => 1,
+            ),
 			
 		);
 

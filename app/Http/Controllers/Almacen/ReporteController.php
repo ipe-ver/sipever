@@ -85,7 +85,7 @@ class ReporteController extends Controller
         if($periodo){
             $mensaje = "{$mensaje} del mes de {$mesIni} de {$yearInicio} al mes de {$mesF} de {$yearFin}";
         }else{
-            $mensaje = "{$mensaje} correspondiente al mes {$mesIni} de {$yearInicio}";
+            $mensaje = "{$mensaje} correspondiente al mes de {$mesIni} de {$yearInicio}";
         }
         date_default_timezone_set('America/Mexico_City');
         $fecha = date("M,d,Y");

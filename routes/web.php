@@ -66,7 +66,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'catalogos', 'as' => 'catalogos.'], function() {
 	Route::get('/', function() { return view('catalogos.index'); })->name('index');
-	Route::get('/user', function() { return view('catalogos.user'); })->name('user');
+	Route::get('/users', function() { return view('catalogos.user'); });
+	Route::get('/get_users','Catalogos\UsersController@get_users');
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'expediente.'], function(){
@@ -115,7 +116,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 
 
 	// MOSTRAR LA INFORMACION DE LOS ACTIVOS Y PENSIONADOS EN LA TABLA DE LA PAGINA PRINCIPAL
-	Route::get('get_usuarios','Expediente\ExpedienteController@getExpedientes');
+	//Route::get('get_usuarios','Expediente\ExpedienteController@getExpedientes');
 
 	//Route::get('search', 'AutoCompleteController@index');
  	//Route::get('autocomplete', 'AutoCompleteController@search');

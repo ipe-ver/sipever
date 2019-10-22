@@ -18,7 +18,7 @@
             </div>
 			 
 			 			
-			<h3 class="box-title pull-right">Catálogos de Usuario</h3>
+			<h3 class="box-title pull-right">Catálogos de Roles</h3>
 
 		</div>
 		<div class="box-body">

@@ -7,15 +7,21 @@
   <body>
     <style type="text/css" media="screen">
       @page { margin: 10px 25px; }
-      header { 
-        position: fixed; 
-        top: 0px; 
-        left: 0px; 
+
+      body{
+        font-family: Panton;
+        src:url('{{public_path('fonts/Panton-Regular.otf')}}');
+      }
+
+      header {
+        position: fixed;
+        top: 0px;
+        left: 0px;
         right: 0px;
       }
-      .hijo { 
-        margin-top: 170px;
-        page-break-after: always; 
+      .hijo {
+        margin-top: 20%;
+        page-break-after: always;
       }
       .hijo:last-child { page-break-after: never; }
 
@@ -75,9 +81,9 @@
             <p style="font-size: 10px;font-weight: bold; margin:0; padding:0;">Fecha: {{$fecha}}</p>
             <p style="font-size: 10px; font-weight: bold;">Hora: {{$hora}}</p>
           </div>
-        </div>      
+        </div>
           <h4 style="word-wrap: break-word; width: 50%; margin-left: 27%; padding:10px; ">{{$mensaje}}</h4>
-      </div> 
+      </div>
       <table class="table">
         <tr>
           @foreach($headers as $header)

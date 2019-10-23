@@ -21,8 +21,7 @@ class PermisosController extends Controller
         $items = DB::table('permissions')->get();
        
        // dd($items);
-        
-              
+           
         return response()->json($items);
     } 
 }

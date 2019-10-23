@@ -1011,37 +1011,124 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SET @num_periodos := (SELECT COUNT(id_periodo) FROM periodos WHERE periodos.no_mes <= mes_fin 
-                        AND periodos.no_mes >= mes_inicio AND periodos.anio = anio);
-                SET @periodos := (SELECT GROUP_CONCAT(DISTINCT(id_periodo)) FROM periodos WHERE periodos.no_mes <= mes_fin 
-                        AND periodos.no_mes >= mes_inicio AND periodos.anio = anio);
-                SET @aux_periodo := 1;
-                
-                SELECT articulo.clave AS Codificacion, articulo.descripcion AS Descripcion, unidad.descripcion AS Unidad
+                SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = mes_inicio AND anio = anio);
+                SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = mes_fin AND anio = anio);
+
+                SET @num_articulos_consumidos := (SELECT COUNT(articulo.id)
                 FROM cat_articulos articulo
                 INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
                 INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
                 INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
-                WHERE consumo.id_periodo BETWEEN 1 AND 2;
+                WHERE consumo.id_periodo BETWEEN @periodo_min AND @periodo_max);
 
-                WHILE @aux_periodo <= @num_periodos DO
-                    SET @periodo_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@periodos, ",", @aux_periodo), ",", -1));
-                    
-                    SELECT articulo.clave AS Codificacion, SUM(detalle.cantidad) AS Total
-                    FROM cat_articulos articulo
-                    INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
-                    INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
-                    WHERE consumo.id_periodo = @periodo_actual
-                    GROUP BY detalle.id_articulo;
-
-                    SET @aux_periodo := @aux_periodo + 1;
-                END WHILE;
-                
-                SELECT SUM(detalle.cantidad) AS TotalMeses
+                SET @articulos_consumidos := (SELECT GROUP_CONCAT(DISTINCT(articulo.id))
                 FROM cat_articulos articulo
+                INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
                 INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
                 INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
-                WHERE consumo.id_periodo BETWEEN 1 AND 2;
+                WHERE consumo.id_periodo BETWEEN @periodo_min AND @periodo_max);
+
+                SELECT articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD"
+                FROM cat_articulos articulo
+                INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
+                INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+                WHERE consumo.id_periodo BETWEEN @periodo_min AND @periodo_max;
+
+                WHILE @periodo_min <= @periodo_max DO
+                    SET @aux_articulos_consumidos := 1;
+
+                    WHILE @aux_articulos_consumidos <= @num_articulos_consumidos DO
+                        SET @articulo_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@articulos_consumidos, ",", @aux_articulos_consumidos), ",", -1));
+                        SET @condicion := (SELECT IF((SELECT SUM(detalle.cantidad) FROM detalles detalle 
+                                            INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+                                            INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo 
+                                            WHERE articulo.id = @articulo_actual AND consumo.id_periodo = @periodo_min) > 0,1,0));
+                        IF @condicion = 1 THEN
+                        
+                        ELSE
+
+                        END IF;
+
+                        SET @aux_articulos_consumidos := @aux_articulos_consumidos + 1;
+                    END WHILE;
+
+                    SET @periodo_min := @periodo_min + 1;
+                END WHILE;
+            END
+        ');
+
+        /**Procedimiento almacenado para la obtención del reporte "CONCENTRADO DE EXISTENCIAS POR ARTICULOS DEL MES X AL MES X DEL X"
+         * Recibe como parametros los meses que e desean obtener (ej. del 1 al 6) y el año.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_concentrado_existencias_articulo;
+
+            CREATE PROCEDURE `sp_concentrado_existencias_articulo`(
+                IN `mes_inicio` INT,
+                IN `mes_fin` INT,
+                IN `anio` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SET @num_periodos := (SELECT COUNT(id_periodo) FROM periodos WHERE periodos.no_mes <= mes_fin 
+                        AND periodos.no_mes >= mes_inicio AND periodos.anio = anio);
+                SET @periodos := (SELECT GROUP_CONCAT(DISTINCT(id_periodo)) FROM periodos WHERE periodos.no_mes <= mes_fin 
+                        AND periodos.no_mes >= mes_inicio AND periodos.anio = anio);
+                SET @num_partidas := (SELECT COUNT(id) FROM cat_cuentas_contables);
+                SET @partidas := (SELECT GROUP_CONCAT(DISTINCT(id)) FROM cat_cuentas_contables);
+                SET @aux_partidas := 1;
+                
+                WHILE @aux_partidas <= @num_partidas DO
+                    SET @partida_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@partidas, ",", @aux_partidas), ",", -1));
+
+                    SELECT partida.sscta AS "SSCTA", partida.nombre AS "PARTIDA", articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION",
+                        unidad.descripcion AS "UNIDAD"
+                        FROM cat_articulos articulo
+                        INNER JOIN cat_cuentas_contables partida ON partida.id = articulo.id_cuenta
+                        INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
+                        WHERE articulo.id_cuenta = @partida_actual
+                        ORDER BY articulo.descripcion ASC;
+                    
+                    SET @aux_periodo := 1;
+            
+                    WHILE @aux_periodo <= @num_periodos DO
+                        SET @periodo_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@periodos, ",", @aux_periodo), ",", -1));
+                        SET @condicion1 := (SELECT IF((SELECT estatus FROM periodos WHERE periodos.id_periodo = @periodo_actual) = 1,1,0));
+
+                        IF @condicion1 = 0 THEN
+                            SELECT inventario.existencias AS "MES"
+                            FROM inventario_inicial_final inventario
+                            INNER JOIN cat_articulos articulo ON articulo.id = inventario.id_articulo
+                            INNER JOIN cat_cuentas_contables cuenta ON cuenta.id = articulo.id_cuenta
+                            WHERE articulo.id_cuenta = @partida_actual AND inventario.id_periodo = @periodo_actual;
+                            
+                            SET @total_periodo := (SELECT SUM(inventario.existencias) FROM inventario_inicial_final inventario
+                                                INNER JOIN cat_articulos articulo ON articulo.id = inventario.id_articulo 
+                                                WHERE inventario.id_periodo = @periodo_actual AND articulo.id_cuenta = @partida_actual);
+                            SET @total_articulos := (SELECT COUNT(id_articulo) FROM inventario_inicial_final inventario
+                                                INNER JOIN cat_articulos articulo ON articulo.id = inventario.id_articulo 
+                                                WHERE inventario.id_periodo = @periodo_actual AND articulo.id_cuenta = @partida_actual);
+                        ELSE
+                            SELECT articulo.existencias AS "EXISTENCIAS"
+                            FROM cat_articulos articulo
+                            INNER JOIN cat_cuentas_contables cuenta ON cuenta.id = articulo.id_cuenta
+                            WHERE articulo.id_cuenta = @partida_actual;
+
+                            SET @total_periodo := (SELECT SUM(cat_articulos.existencias) FROM cat_articulos WHERE cat_articulos.id_cuenta = @partida_actual);
+                            SET @total_articulos := (SELECT COUNT(id) FROM cat_articulos WHERE cat_articulos.id_cuenta = @partida_actual);
+                        END IF;
+
+                        SELECT @total_articulos AS "TIPOS DE ARTICULOS", @total_periodo AS "TOTAL POR MES";
+
+                        SET @aux_periodo := @aux_periodo + 1;
+                    END WHILE;
+
+                    SET @aux_partidas := @aux_partidas + 1;
+                END WHILE;
             END
         ');
     }
@@ -1086,5 +1173,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_obtener_oficinas;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_obtener_departamentos;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_consumos_articulo;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_existencias_articulo;');
     }
 }

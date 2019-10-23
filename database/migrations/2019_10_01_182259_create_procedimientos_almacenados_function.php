@@ -15,6 +15,23 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
     public function up()
     {
 
+        /**
+         * Procedimiento para obtener todos los proveedores
+         * No recibe parámetros. Se obtienen todos los proveedores ordenados por su ID
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_get_proveedores;
+
+            CREATE PROCEDURE `sp_get_proveedores`()
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SELECT * FROM cat_proveedores;
+            END
+        ');
+
         /**Procedimiento almacenado para la obtención de todos los artículos en general.
          * No recibe parametros. Se obtienen todos los artículos ordenados por su ID
          */
@@ -1140,6 +1157,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
      */
     public function down()
     {
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_get_proveedores;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_get_articulos;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_obtener_articulos_grupo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_buscar_articulo_parametro;');

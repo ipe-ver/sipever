@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Almacen;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use DB;
 
 class FacturaController extends Controller
 {
@@ -14,7 +15,24 @@ class FacturaController extends Controller
      */
     public function index()
     {
-        return view('almacen.facturas');
+        $partidas = DB::select("call sp_get_grupos");
+        $proveedores = DB::select("call sp_get_proveedores");
+        return view('almacen.facturas.facturas', compact('partidas','proveedores'));
+    }
+
+    public function getArticulos(Request $request){
+        $nombrePartida = $request->input('partida');
+        $articulos = DB::select("call sp_obtener_articulos_grupo(?)", array($nombrePartida));
+        return json_encode($articulos);
+    }
+
+    public function registrarFactura(Request $request){
+        $articulos = $request->claveArticulo;
+        if(empty($articulos)){
+            return back()->with('warning','Porfavor ingrese al menos un articulo');
+        }else{
+            return back()->withErrors($articulos);
+        }
     }
 
     /**

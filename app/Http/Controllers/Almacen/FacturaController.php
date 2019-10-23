@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Almacen;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Doctrine\DBAL\Driver\PDOConnection;
 use DB;
 
 class FacturaController extends Controller
@@ -31,7 +32,48 @@ class FacturaController extends Controller
         if(empty($articulos)){
             return back()->with('warning','Porfavor ingrese al menos un articulo');
         }else{
-            return back()->withErrors($articulos);
+            $nombreProveedor = $request->proveedor;
+            $fecha_movimiento = $request->fecha_ingreso;
+            $no_factura = $request->noFactura;
+            $fecha_facturacion = $request->fecha_facturacion;
+            $iva=$request->iva;
+            $subtotal = $request->subtotal;
+
+            //Obtenemos los datos de la conexión con la base de datos
+            $db = DB::connection()->getPdo();
+            //Establecemos la conexión
+            $db->setAttribute(PDOConnection::ATTR_ERRMODE, PDOConnection::ERRMODE_EXCEPTION);
+            $db->setAttribute(PDOConnection::ATTR_EMULATE_PREPARES, true);
+
+            //Preparamos la llamada al procedimiento remoto
+            $query = $db->prepare('CALL sp_compra_almacen(?,?,?,?,?,?,?,?,@clave)');
+            //Hacemos un binding de los parámetros, así protegemos nuestra 
+            //llamada de una posible inyección sql
+            $query->bindParam(1,10);
+            $query->bindParam(2,2019);
+            $query->bindParam(3,$nombreProveedor);
+            $query->bindParam(4,$fecha_movimiento);
+            $query->bindParam(5,$no_factura);
+            $query->bindParam(6,$fecha_facturacion);
+            $query->bindParam(7,$iva);
+            $query->bindParam(8,$subtotal);
+            try {
+                //Ejecutamos el procedimiento
+                $query->execute();
+                $query->closeCursor();
+                //accedemos al valor de retorno para regresar la vista correspondiente.
+                $result = $db->query('SELECT @clave AS result')->fetch(PDOConnection::FETCH_ASSOC);
+
+                if ($result) {
+                    return back()->with('success', "{$result}");
+                }elseif ($result ==0) {
+                    return back()->with('warning', "Error al generar nuevo mes, intente de nuevo mas tarde \nSi el problema persiste contacte al departamento de tegnologías de la información");
+                }else{
+                    return back()->withErrors(['msg', "Error de base de datos \n Contacte al departamento de tecnologías de la información"]);
+                }
+            } catch (Exception $e) {
+                return back()->withErrors(['msg',$e->getMessage()+"\n Contacte al departamento de tecnologías de la información"]);
+            }
         }
     }
 

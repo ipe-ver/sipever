@@ -38,7 +38,8 @@ class FacturaController extends Controller
             $fecha_facturacion = $request->fecha_facturacion;
             $iva=$request->iva;
             $subtotal = $request->subtotal;
-
+            $no_mes=10;
+            $anio=2019;
             //Obtenemos los datos de la conexión con la base de datos
             $db = DB::connection()->getPdo();
             //Establecemos la conexión
@@ -49,8 +50,8 @@ class FacturaController extends Controller
             $query = $db->prepare('CALL sp_compra_almacen(?,?,?,?,?,?,?,?,@clave)');
             //Hacemos un binding de los parámetros, así protegemos nuestra 
             //llamada de una posible inyección sql
-            $query->bindParam(1,10);
-            $query->bindParam(2,2019);
+            $query->bindParam(1,$no_mes);
+            $query->bindParam(2,$anio);
             $query->bindParam(3,$nombreProveedor);
             $query->bindParam(4,$fecha_movimiento);
             $query->bindParam(5,$no_factura);
@@ -62,10 +63,11 @@ class FacturaController extends Controller
                 $query->execute();
                 $query->closeCursor();
                 //accedemos al valor de retorno para regresar la vista correspondiente.
-                $result = $db->query('SELECT @clave AS result')->fetch(PDOConnection::FETCH_ASSOC);
+                $results = $db->query('SELECT @clave AS result')->fetch(PDOConnection::FETCH_ASSOC);
 
-                if ($result) {
-                    return back()->with('success', "{$result}");
+                if ($results) {
+                    $resultado = $results['result'];
+                    return back()->with('success', $resultado);
                 }elseif ($result ==0) {
                     return back()->with('warning', "Error al generar nuevo mes, intente de nuevo mas tarde \nSi el problema persiste contacte al departamento de tegnologías de la información");
                 }else{

@@ -57,6 +57,7 @@ class ReporteController extends Controller
         $mesIni = $this->nombre_mes($numMesInicio);
         $ruta = "";
         $headers = [];
+        $nombre_archivo="";
         if($periodo){
             $mesFin = $request->input('mesFin');
             $yearFin = $request->input('yearFin');
@@ -68,28 +69,36 @@ class ReporteController extends Controller
 
         if ($validConsumo == "checked"){
             $mensaje = 'Reporte para validación de consumos';
+            $nombre_archivo="REPVALIDCONS";
             $ruta = "almacen.reportes.reporte_validacion_cons";
         }elseif ($consDepto == "checked") {
             $mensaje = 'Reporte de consumos por departamento';
+            $nombre_archivo="REPCONSDEPTO";
             $ruta = "almacen.reportes.reporte_consumos_depto";
         }elseif ($auxAlmacen == "checked"){
             $mensaje = 'Reporte auxiliar de almacén';
+            $nombre_archivo="REPAUXALM";
             $ruta = "almacen.reportes.reporte_auxiliar";
         }elseif ($existencias == "checked"){
             $mensaje = 'Reporte final de existencias';
+            $nombre_archivo="REPFINALEXIST";
             $ruta = "almacen.reportes.reporte_final_existencias";
             $headers = ['CODIFICACIÓN', 'DESCRIPCIÓN', 'UNIDAD', 'CANT.', 'COSTO', 'IMPORTE'];
         }elseif ($consArticulo == "checked"){
             $mensaje = 'Concentrado de consumos por artículo';
+            $nombre_archivo="CONCENTCONSARTI";
             $ruta = "almacen.reportes.cons_p_articulo";
         }elseif ($compArticulo == "checked"){
             $mensaje = 'Concentrado de compras por artículo';
+            $nombre_archivo="CONCENTCOMPART";
             $ruta = "almacen.reportes.compras_p_articulo";
         }elseif ($existArticulo == "checked"){
             $mensaje = 'Concentrado de existencias por artículo';
+            $nombre_archivo="CONCENTEXISTART";
             $ruta = "almacen.reportes.existencias_p_articulo";
         }elseif ($consAreaArt == "checked"){
             $mensaje = 'Concentrado de consumos por área y artículo';
+            $nombre_archivo="CONCENTCONSAART";
             $ruta = "almacen.reportes.consumos_p_area";
         }else{
            return back()->with('warning',"Porfavor seleccione un tipo de reporte");
@@ -101,15 +110,19 @@ class ReporteController extends Controller
             $mensaje = "{$mensaje} correspondiente al mes de {$mesIni} de {$yearInicio}";
         }
 
+        date_default_timezone_set('America/Mexico_City');
+        $fecha_nombre=date("Ymd");
+        $hora_nombre=date("Hi");
+        $nombre_archivo = "{$fecha_nombre}_{$nombre_archivo}_{$hora_nombre}";
+
         $archivo = file_get_contents(public_path("/img_system/banner_principal.png"));
         $imagen_b64 = base64_encode($archivo);
         $logo_b64 = "data:image/png;base64,{$imagen_b64}";
-        date_default_timezone_set('America/Mexico_City');
         $fecha = date("d/M/Y");
         $hora = date("h:i a");
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView($ruta,compact('mensaje','fecha','hora','logo_b64', 'headers'));
 
-        return $pdf->stream('reporte.pdf');
+        return $pdf->stream($nombre_archivo);
     }
 
     /**

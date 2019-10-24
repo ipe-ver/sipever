@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Almacen;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use PDF;
 
 class PolizaController extends Controller
 {
@@ -30,19 +31,30 @@ class PolizaController extends Controller
         $anio = $request->input('year');
 
         $mes_nombre = $this->nombre_mes($no_mes);
-
+        $ruta = "";
+        $headers = [];
         $mensaje = "";
         if($almacen == "checked"){
             $mensaje = "Poliza de almacén";
+            $ruta = "almacen.polizas.poliza_almacen";
         }elseif($conta == "checked"){
             $mensaje="Poliza para contabilidad y presupuesto";
+            $ruta = "almacen.polizas.contabilidad_presup";
         }else{
             return back()->with('warning',"Porfavor seleccione un tipo de poliza");
         }
 
         $mensaje = "{$mensaje} correspondiente al mes de {$mes_nombre} de {$anio}";
 
-        return back()->with('success',$mensaje);
+        $archivo = file_get_contents(public_path("/img_system/banner_principal.png"));
+        $imagen_b64 = base64_encode($archivo);
+        $logo_b64 = "data:image/png;base64,{$imagen_b64}";
+        date_default_timezone_set('America/Mexico_City');
+        $fecha = date("d/M/Y");
+        $hora = date("h:i a");
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView($ruta,compact('mensaje','fecha','hora','logo_b64', 'headers'));
+
+        return $pdf->stream('poliza.pdf');
     }
 
     /**

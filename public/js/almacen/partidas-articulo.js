@@ -14,7 +14,7 @@
                     $('select[name="articulos"]').append('<option value="">Seleccione un artículo</option>');
                     $.each(datos, function(i, data){
                        $('select[name="articulos"]').append('<option value="'+ data.clave +'">'+ data.descripcion +'</option>');
-                    }); 
+                    });
 
                 }
             });
@@ -23,7 +23,7 @@
             $('select[name="articulos"]').append('<option value="">Seleccione un artículo</option>');
         }
     });
-    $('button[id="btn-agregar"]').on('click', function(){
+    $('button[id="btn-agregar"]').submit(function(event){
         var inputs = new Array(5);
         var row_articulo=document.createElement("tr");
         var clave = $('select[id="selectArticulo"]').val();
@@ -66,18 +66,24 @@
         $('table[id="articulos_factura"]').append(row_articulo);
     });
 
+    $('button[id="btn-cancelar"]').on("click",clrscr);
+    $('button[id="closebtn"]').on("click", clrscr);
+
     $('input[id="subtotal"]').keyup(function(){
-        if(!isNaN($(this).val())){
-            var value = parseFloat($(this).val());
-            var total = $('input[id="total"]');
-            if(!isNaN(parseFloat($('input[id="iva"]').val()))){
-                var iva = parseFloat($('input[id="iva"]').val());
-                var iva_aplicado = (iva * value) / 100;
-                total.val(value + iva_aplicado);
-            }else{
-                total.val(0);
+        if($(this).val().trim()!=""){
+            if(!isNaN($(this).val())){
+                var total = $('input[id="total"]');
+                var value = parseFloat($(this).val());
+                if(!isNaN(parseFloat($('input[id="iva"]').val()))){
+                    var iva = parseFloat($('input[id="iva"]').val());
+                    var iva_aplicado = (iva * value) / 100;
+                    total.val(value + iva_aplicado);
+                }else{
+                    total.val(0);
+                }
             }
-            
+        }else{
+            $('input[id="total"]').val(0);
         }
     });
     $('input[id="iva"]').bind('keyup mouseup', function(){
@@ -94,3 +100,11 @@
         }
     });
 });
+
+function clrscr(){
+    $('select[id="selectPartida"]').val("");
+    $('select[name="articulos"]').empty();
+    $('select[name="articulos"]').append('<option value="">Seleccione un artículo</option>');
+    $('input[name="precio"]').val("");
+    $('input[name="cantidad"]').val("");
+}

@@ -132,8 +132,8 @@
                         <th>Precio</th>
                         <th>Cantidad</th>
                     </tr>
-                </table> 
-            </div>       
+                </table>
+            </div>
         </div>
         <div class="row" style="padding:3%;">
             <a id="btnAgregarArticulo" type="button" class="btn btn-agregar pull-left" data-toggle="modal" href="#agregarArticulo"> Agregar articulo</a>

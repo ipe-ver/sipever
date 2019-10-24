@@ -22,6 +22,7 @@ for (i = 0; i < close.length; i++) {
 window.addEventListener("load", function(){
     checks = document.getElementsByClassName("checkPoliza");
     for (var i = 0; i < checks.length; i++) {
+        checks[i].checked = false;
         checks[i].addEventListener("click",function(event){
             seleccionarBox(event.srcElement);
         });

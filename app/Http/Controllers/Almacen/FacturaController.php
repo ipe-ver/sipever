@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Almacen;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Doctrine\DBAL\Driver\PDOConnection;
+use Exception;
 use DB;
 
 class FacturaController extends Controller
@@ -27,6 +28,12 @@ class FacturaController extends Controller
         return json_encode($articulos);
     }
 
+    /**
+     * Método para registrar una factura por la compra de uno o varios artículos registrados en almacén
+     * @param Request $request
+     * @return Response
+    */
+
     public function registrarFactura(Request $request){
         $articulos = $request->claveArticulo;
         if(empty($articulos)){
@@ -48,7 +55,7 @@ class FacturaController extends Controller
 
             //Preparamos la llamada al procedimiento remoto
             $query = $db->prepare('CALL sp_compra_almacen(?,?,?,?,?,?,?,?,@clave)');
-            //Hacemos un binding de los parámetros, así protegemos nuestra 
+            //Hacemos un binding de los parámetros, así protegemos nuestra
             //llamada de una posible inyección sql
             $query->bindParam(1,$no_mes);
             $query->bindParam(2,$anio);
@@ -65,16 +72,37 @@ class FacturaController extends Controller
                 //accedemos al valor de retorno para regresar la vista correspondiente.
                 $results = $db->query('SELECT @clave AS result')->fetch(PDOConnection::FETCH_ASSOC);
 
+                //Si el valor de retorno no está vacío y es diferente de null
                 if ($results) {
-                    $resultado = $results['result'];
-                    return back()->with('success', $resultado);
-                }elseif ($result ==0) {
-                    return back()->with('warning', "Error al generar nuevo mes, intente de nuevo mas tarde \nSi el problema persiste contacte al departamento de tegnologías de la información");
+                    // Obtenemos la clave generada
+                    $clave_generada = $results['result'];
+                    // OBtenemos los datos de todos los artículos ingresados
+                    $descripciones = $request->descripcionArticulo;
+                    $precios = $request->precioArticulo;
+                    $cantidades = $request->cantidadArticulo;
+
+                    // Se manda a llamar al procedimiento almacenado para registrar los detalles de la factura
+                    // Se llama al procedimiento una vez por cada artículo que corresponda a la factura
+                    for ($i=0; $i < sizeof($articulos) ; $i++) {
+                        $query = $db->prepare('CALL sp_detalles_compra(?,?,?,?)');
+                        $query->bindParam(1,$clave_generada);
+                        $query->bindParam(2,$descripciones[$i]);
+                        $query->bindParam(3,$cantidades[$i]);
+                        $query->bindParam(4,$precios[$i]);
+
+                        $query->execute();
+                        $query->closeCursor();
+                    }
+                    return redirect()->route('almacen.facturas.index')->with('success','Factura registrada correctamente');
+                }elseif (empty($result)) {
+                    // Si el resultado viene vacío se regresa una advertencia
+                    return back()->with('warning', "Error al registrar datos de factura, intente de nuevo mas tarde \nSi el problema persiste contacte al departamento de tecnologías de la información");
                 }else{
                     return back()->withErrors(['msg', "Error de base de datos \n Contacte al departamento de tecnologías de la información"]);
                 }
             } catch (Exception $e) {
-                return back()->withErrors(['msg',$e->getMessage()+"\n Contacte al departamento de tecnologías de la información"]);
+                $mensaje = "{$e->getMessage()} \n Contacte al departamento de tecnologías de la información";
+                return back()->withErrors([$mensaje]);
             }
         }
     }

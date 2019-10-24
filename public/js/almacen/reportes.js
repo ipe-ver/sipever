@@ -98,6 +98,11 @@ function seleccionarReporte(checkBox){
     }else{
         selectDepto.style.display = 'none';
         selectOficina.style.display = 'none';
+        selectDepto.value = "";
+        selectOficina.value = "";
+        for (var i = 1; i < selectOficina.options.length; i++) {
+            selectOficina.options[i].remove();
+        }
         selectDepto.removeAttribute("required");
         selectOficina.removeAttribute("required");
         selectDepto.setAttribute("disabled", "true");
@@ -143,16 +148,4 @@ function unSoloMes(checkBox){
         selectYearFin.style.display = 'table';
     }
 
-}
-
-function changePartida(checkbox){
-    var selectDepto = document.getElementById("selectDepto");
-    var selectOficina = document.getElementById("selectOficina");
-    if(checkBox.checked){
-        selectOficina.display = 'block';
-        selectDepto.style.display = 'block';
-    }else{
-        selectDepto.style.display = 'none';
-        selectOficina.style.display = 'none';
-    }
 }

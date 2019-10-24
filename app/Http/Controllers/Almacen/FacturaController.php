@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Almacen;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Doctrine\DBAL\Driver\PDOConnection;
+use Exception;
+use DB;
 
 class FacturaController extends Controller
 {
@@ -14,7 +17,105 @@ class FacturaController extends Controller
      */
     public function index()
     {
-        return view('almacen.facturas');
+        $partidas = DB::select("call sp_get_grupos");
+        $proveedores = DB::select("call sp_get_proveedores");
+        return view('almacen.facturas.facturas', compact('partidas','proveedores'));
+    }
+
+    public function getArticulos(Request $request){
+        $nombrePartida = $request->input('partida');
+        $articulos = DB::select("call sp_obtener_articulos_grupo(?)", array($nombrePartida));
+        return json_encode($articulos);
+    }
+
+    /**
+     * Método para registrar una factura por la compra de uno o varios artículos registrados en almacén
+     * @param Request $request
+     * @return Response
+    */
+
+    public function registrarFactura(Request $request){
+        // Obtenemos los datos de todos los artículos ingresados
+        $descripciones = $request->descripcionArticulo;
+        $precios = $request->precioArticulo;
+        $cantidades = $request->cantidadArticulo;
+        $articulos = $request->claveArticulo;
+        $subtotal = $request->subtotal;
+        $total_aux = 0;
+        for ($i=0; $i < sizeof($articulos); $i++) {
+            $subtotal_aux = $precios[$i] * $cantidades[$i];
+            $total_aux = $total_aux + $subtotal_aux;
+        }
+
+        if($subtotal != $total_aux){
+            return back()->with('warning','Advertencia, los precios no coinciden con el total, verifique los datos de la factura');
+        }
+
+        if(empty($articulos)){
+            return back()->with('warning','Porfavor ingrese al menos un articulo');
+        }else{
+            $nombreProveedor = $request->proveedor;
+            $fecha_movimiento = $request->fecha_ingreso;
+            $no_factura = $request->noFactura;
+            $fecha_facturacion = $request->fecha_facturacion;
+            $iva=$request->iva;
+            $subtotal = $request->subtotal;
+            $no_mes=10;
+            $anio=2019;
+            //Obtenemos los datos de la conexión con la base de datos
+            $db = DB::connection()->getPdo();
+            //Establecemos la conexión
+            $db->setAttribute(PDOConnection::ATTR_ERRMODE, PDOConnection::ERRMODE_EXCEPTION);
+            $db->setAttribute(PDOConnection::ATTR_EMULATE_PREPARES, true);
+
+            //Preparamos la llamada al procedimiento remoto
+            $query = $db->prepare('CALL sp_compra_almacen(?,?,?,?,?,?,?,?,@clave)');
+            //Hacemos un binding de los parámetros, así protegemos nuestra
+            //llamada de una posible inyección sql
+            $query->bindParam(1,$no_mes);
+            $query->bindParam(2,$anio);
+            $query->bindParam(3,$nombreProveedor);
+            $query->bindParam(4,$fecha_movimiento);
+            $query->bindParam(5,$no_factura);
+            $query->bindParam(6,$fecha_facturacion);
+            $query->bindParam(7,$iva);
+            $query->bindParam(8,$subtotal);
+            try {
+                //Ejecutamos el procedimiento
+                $query->execute();
+                $query->closeCursor();
+                //accedemos al valor de retorno para regresar la vista correspondiente.
+                $results = $db->query('SELECT @clave AS result')->fetch(PDOConnection::FETCH_ASSOC);
+
+                //Si el valor de retorno no está vacío y es diferente de null
+                if ($results) {
+                    // Obtenemos la clave generada
+                    $clave_generada = $results['result'];
+
+                    // Se manda a llamar al procedimiento almacenado para registrar los detalles de la factura
+                    // Se llama al procedimiento una vez por cada artículo que corresponda a la factura
+                    for ($i=0; $i < sizeof($articulos) ; $i++) {
+                        $query = $db->prepare('CALL sp_detalles_compra(?,?,?,?)');
+                        $query->bindParam(1,$clave_generada);
+                        $query->bindParam(2,$descripciones[$i]);
+                        $query->bindParam(3,$cantidades[$i]);
+                        $query->bindParam(4,$precios[$i]);
+
+                        $query->execute();
+                        $query->closeCursor();
+                    }
+                    return redirect()->route('almacen.facturas.index')->with('success','Factura registrada correctamente');
+                }elseif (empty($result)) {
+                    // Si el resultado viene vacío se regresa una advertencia
+                    return back()->with('warning', "Error al registrar datos de factura, intente de nuevo mas tarde \nSi el problema persiste contacte al departamento de tecnologías de la información");
+                }else{
+                    return back()->withErrors(['msg', "Error de base de datos \n Contacte al departamento de tecnologías de la información"]);
+                }
+            } catch (Exception $e) {
+                $mensaje = "{$e->getMessage()} \n Contacte al departamento de tecnologías de la información";
+                return back()->withErrors([$mensaje]);
+            }
+        }
     }
 
     /**

@@ -35,7 +35,22 @@ class FacturaController extends Controller
     */
 
     public function registrarFactura(Request $request){
+        // Obtenemos los datos de todos los artículos ingresados
+        $descripciones = $request->descripcionArticulo;
+        $precios = $request->precioArticulo;
+        $cantidades = $request->cantidadArticulo;
         $articulos = $request->claveArticulo;
+        $subtotal = $request->subtotal;
+        $total_aux = 0;
+        for ($i=0; $i < sizeof($articulos); $i++) {
+            $subtotal_aux = $precios[$i] * $cantidades[$i];
+            $total_aux = $total_aux + $subtotal_aux;
+        }
+
+        if($subtotal != $total_aux){
+            return back()->with('warning','Advertencia, los precios no coinciden con el total, verifique los datos de la factura');
+        }
+
         if(empty($articulos)){
             return back()->with('warning','Porfavor ingrese al menos un articulo');
         }else{
@@ -76,10 +91,6 @@ class FacturaController extends Controller
                 if ($results) {
                     // Obtenemos la clave generada
                     $clave_generada = $results['result'];
-                    // OBtenemos los datos de todos los artículos ingresados
-                    $descripciones = $request->descripcionArticulo;
-                    $precios = $request->precioArticulo;
-                    $cantidades = $request->cantidadArticulo;
 
                     // Se manda a llamar al procedimiento almacenado para registrar los detalles de la factura
                     // Se llama al procedimiento una vez por cada artículo que corresponda a la factura

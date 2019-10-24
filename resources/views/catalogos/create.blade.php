@@ -8,12 +8,12 @@
 <div class="col-md-12">
 	<div class="box" id="div_empleado">
 		<div class="box-header">	
-			<h3 class="box-title pull-right">Agregar nuevo equipo</h3>
+			<h3 class="box-title pull-right">Agregar nuevo usuario</h3>
 		</div>
 	<form autocomplete="off">
 		<div class="box box-primary">
 			<div class="box-header">
-				<h3 class="box-title">Datos del equipo</h3>
+				<h3 class="box-title">Datos del usuario</h3>
 			</div>
 			<div class="box-body" id="datos_equipo">
 
@@ -41,16 +41,11 @@
 			text-align: right;
 		}
 	</style>
-	<!-- InputMask -->	
-	{!! HTML::script('components/inputmask/dist/inputmask/inputmask.js') !!}
-	{!! HTML::script('components/inputmask/dist/inputmask/inputmask.date.extensions.js') !!}	
-	{!! HTML::script('components/inputmask/dist/inputmask/inputmask.extensions.js') !!}	
-	{!! HTML::script('components/bootstrap-timepicker/js/bootstrap-timepicker.js') !!}
-	{!! HTML::script('components/moment/min/moment.min.js') !!}
-	{!! HTML::script('components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') !!}
-	{!! HTML::script('components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') !!}	
 	<!-- Select2 bootstrap -->
+	
+	{!! HTML::script('components/select2/dist/js/select2.js') !!}	
 	{!! HTML::script('components/select2/dist/js/select2.min.js') !!}
+
 	
 
 	<script type="text/javascript">
@@ -60,40 +55,36 @@
 		DECLARACION DE LAS VARIABLES EQUIPO, CATCLASIFICACIONES Y CATAREAS
 	***********************************************************************************************/
         	
-            var catRoles		            = @json($catRoles);
-           // console.log(catRoles);
-        	
-
-        	
+            		           
+			var catRoles		                = @json($catRoles);
+				
+			console.log(catRoles);  
+		 
 
 	/**********************************************************************************************
 		FORMULARIO DE EQUIPO EN JAVASCRIPT
 	***********************************************************************************************/
 
 			campos1 = estilo_modal.mostrar([
-				{campo:'input',idCampo:'username',nameCampo:'Username:',typeCampo:'text',valorCampo: '', placeholder:'Nombre del equipo',newClass:'mayuscula',divSize:'4',datos:''},
-				{campo:'input',idCampo:'email',nameCampo:'E-mail:',typeCampo:'text',valorCampo: '', placeholder:'Estado situacional',newClass:'mayuscula',divSize:'4',datos:''},
-				{campo:'select',idCampo:'name',nameCampo:'Name:',typeCampo:'text',valorCampo: '', placeholder:'',newClass:'',divSize:'4',datos: catRoles},	
+				{campo:'input', idCampo:'username', nameCampo:'Username:', typeCampo:'text', valorCampo: '', placeholder:'Nombre del equipo', newClass:'mayuscula', divSize:'12',datos:''},
+				{campo:'input', idCampo:'email', nameCampo:'E-mail:', typeCampo:'text', valorCampo: '', placeholder:'Estado situacional', newClass:'mayuscula', divSize:'12', datos:''},
+				{campo:'select',idCampo:'id',nameCampo:'Rol:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: catRoles },	
 				
 			]);
 
-			
-
-	
-	
-	
 
 			$('#datos_equipo').append(campos1);
 		
 
-			$('#name').selectpicker();
+			$('#id').selectpicker();
 
 	/**********************************************************************************************
 		BOTONES DE GUARDAR Y CANCELAR EN EL FORMULARIO DE EQUIPO
 	***********************************************************************************************/
 
-			
+				espacio = document.createTextNode(' ');	
 				$('#datos_buttom').append(imprimirBoton('btn-success', 'btnGuardar', 'Guardar'));
+				$('#datos_buttom').append(espacio);	
 				$('#datos_buttom').append(imprimirBoton('btn-danger', 'btnCancelar', 'Cancelar'));
 				
 			

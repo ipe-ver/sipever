@@ -22,7 +22,8 @@
 		DECLARACION DE LAS VARIABLES EQUIPO, CATCLASIFICACIONES Y CATAREAS
 	***********************************************************************************************/
         	
-            var catRoles		            = @json($catRoles);
+			
+			var catRoles		            = @json($catRoles);
             console.log(catRoles);
         	
 
@@ -35,7 +36,7 @@
 			campos1 = estilo_modal.mostrar([
 				{campo:'input',idCampo:'username',nameCampo:'Username:',typeCampo:'text',valorCampo: '', placeholder:'Nombre del equipo',newClass:'mayuscula',divSize:'4',datos:''},
 				{campo:'input',idCampo:'email',nameCampo:'E-mail:',typeCampo:'text',valorCampo: '', placeholder:'Estado situacional',newClass:'mayuscula',divSize:'4',datos:''},
-				{campo:'select',idCampo:'name',nameCampo:'Name:',typeCampo:'text',valorCampo: '', placeholder:'',newClass:'',divSize:'4',datos: catRoles},	
+				{campo:'select',idCampo:'name',nameCampo:'Name:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'4',datos: catRoles},	
 			]);
 
 			

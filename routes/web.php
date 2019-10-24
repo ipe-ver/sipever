@@ -72,6 +72,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'catalogos', 'as' => 'catalo
 	
 	Route::get('/add_user', 'Catalogos\UsersController@create');
 
+
 	Route::get('/roles', function() { return view('catalogos.roles'); });
 	Route::get('/get_roles','Catalogos\RolesController@get_roles');
 

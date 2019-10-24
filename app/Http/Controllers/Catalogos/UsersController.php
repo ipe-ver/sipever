@@ -13,44 +13,46 @@ use App\Model\Rhumanos\Empleado;
 
 class UsersController extends Controller
 {
-    
-    private $catRoles;
+    /*****************************************************************************************
+				DECLARAR VARIABLES
+	*****************************************************************************************/
+    private $catRoles; 
 
-    public function __construct()
-    {
-       
-        
-
-    }
-
+    /*****************************************************************************************
+				VISTA DE CATALOGO DE USUARIOS
+	*****************************************************************************************/  
     public function index()
     {       
-       // $role = new Role();
-        //dd($role);
+       
         return view('catalogos.user');
        
     } 
 
-    public function create() //Muestra la vista del formulario para crear nuevo tarjetón
+    /*****************************************************************************************
+				VISTA DE AGREGAR USUARIO AL CATALOGO DE USUARIOS
+	*****************************************************************************************/  
+    public function create() 
     {             
-       
-        $catRoles = \App\Role::orderBy('id')->get();
-       // dd($catRoles);
-
-        return view('catalogos.create', compact('catRoles'));   
-            
-           
+        $this->catRoles           = \App\Role::select('id as valor','name as descripcion')->orderBy('id')->get(); 
+        
+        return view('catalogos.create',
+        [
+            'catRoles' => $this->catRoles
+        ]); 
     }
 
 
+    /*****************************************************************************************
+	            LISTADO DE USUARIOS
+	*****************************************************************************************/          
     public function get_users()
     {
-
         $items = User::with('empleados')->get();
            
         return response()->json($items);
     } 
 
+   
 
 
     

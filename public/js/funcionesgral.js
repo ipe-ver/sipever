@@ -343,6 +343,7 @@
 		}
 	};
 
+	
 
 	var cargarMunicipios = function(idEstado = 0, idSelect = null, divSend = null){            
 		//routeConsulta variable global en layoute plantilla.            

@@ -60,18 +60,18 @@
         <div class="row justify-content-md-center">
             <div class="col col-lg-6">
                  <div class="form-check">
-                    <input class="form-check-input checkPoliza" type="checkbox" name="almacen" value="" id="polizaAlmacen">
-                    <label class="form-check-label" for="polizaAlmacen">
-                    Póliza de almacén
+                    <label class="check-container">Póliza de almacén
+                      <input type="checkbox" class="checkPoliza" type="checkbox" name="almacen" value="" id="polizaAlmacen">
+                      <span class="checkmark"></span>
                     </label>
                 </div>
                 <div class="form-check">
-                        <input class="form-check-input checkPoliza" type="checkbox" name="conta" value ="" id="polizaConta">
-                        <label class="form-check-label text-wrap" style="width: 200px; " for="polizaConta">
-                        Póliza para contabilidad y presupuesto
-                        </label>
-                    </div>
+                    <label class="check-container">Póliza para contabilidad y presupuesto
+                      <input type="checkbox" class="checkPoliza" type="checkbox" name="conta" value="" id="polizaConta">
+                      <span class="checkmark"></span>
+                    </label>
                 </div>
+            </div>
             <div class="col col-lg-6">
                     <div class="container-fluid" style="align-items: center;">
                     <label class="text-nowrap col-sm-6" style=" padding-right: 15px;">No. Mes</label>

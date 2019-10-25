@@ -57,8 +57,9 @@
         	
             		           
 			var catRoles		                = @json($catRoles);
+			var catEmpleados	                = @json($catEmpleados);
 				
-			console.log(catRoles);  
+			//console.log(catEmpleados);  
 		 
 
 	/**********************************************************************************************
@@ -67,16 +68,18 @@
 
 			campos1 = estilo_modal.mostrar([
 				{campo:'input', idCampo:'username', nameCampo:'Username:', typeCampo:'text', valorCampo: '', placeholder:'Nombre del equipo', newClass:'mayuscula', divSize:'12',datos:''},
-				{campo:'input', idCampo:'email', nameCampo:'E-mail:', typeCampo:'text', valorCampo: '', placeholder:'Estado situacional', newClass:'mayuscula', divSize:'12', datos:''},
-				{campo:'select',idCampo:'id',nameCampo:'Rol:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: catRoles },	
+				{campo:'input', idCampo:'email', nameCampo:'Correo Electrónico:', typeCampo:'text', valorCampo: '', placeholder:'Estado situacional', newClass:'mayuscula', divSize:'12', datos:''},
+				{campo:'input',idCampo:'password',nameCampo:'Password:',typeCampo:'password',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: ''},
+				{campo:'select',idCampo:'name',nameCampo:'Rol:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: catRoles },	
+				{campo:'select',idCampo:'id_empleado',nameCampo:'Empleado:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: catEmpleados },	
 				
 			]);
 
 
 			$('#datos_equipo').append(campos1);
 		
-
-			$('#id').selectpicker();
+			$('#name').selectpicker();
+			$('#id_empleado').selectpicker();
 
 	/**********************************************************************************************
 		BOTONES DE GUARDAR Y CANCELAR EN EL FORMULARIO DE EQUIPO
@@ -104,22 +107,26 @@
 				var dataString = {
 					username: $("#username").val(),	
 					email: $("#email").val(),	
-					name:  $("#name option:selected").val(),
+					password: $("#password").val(),	
+					name:  $("#name").val(),
+					id_empleado:  $("#id_empleado option:selected").val(),
 					
 				}
+				//console.log(dataString);
 
-					/*$.ajax({
+					$.ajax({
 					type: 'POST',
-					url: routeBase+'/recursos_fisicos/equipos',
-					data: formData,
-					processData: false,
-					contentType: false,
+					url: routeBase+'/registro',
+					data: dataString,
+					//processData: false,
+					//contentType: false,
 					dataType: 'json',
 					success: function(data) {									
 							messageToastr('success', data.message);	
-							window.location.replace(routeBase+'/recursos_fisicos/equipos');																
+							//window.location.replace(routeBase+'/recursos_fisicos/equipos');																
 					},
 					error: function(data) {
+						//console.log(data);
 						var errors = data.responseJSON;						
 						$('.box-body div.has-error').removeClass('has-error');
 						$('.help-block').empty();
@@ -134,9 +141,12 @@
 						$('#datos_buttom').append(imprimirBoton('btn-success', 'btnGuardar', 'Guardar'));
 						$('#datos_buttom').append(imprimirBoton('btn-danger', 'btnCancelar', 'Cancelar'));
 					}
-				});*/
+				});
 
 			})	
+
+
+			
 
 	
 

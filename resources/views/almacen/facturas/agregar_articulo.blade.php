@@ -24,7 +24,7 @@
                <div class="container-fluid" style="margin-top: 5%;">
                		<div class="row">
                			<div class="col-md-6">
-	               			<input type="number" name="cantidad" class="form-control" placeholder="cantidad" required>
+	               			<input type="number" name="cantidad" class="form-control" min="0" placeholder="cantidad" required>
 	               		</div>
 	               		<div class="col-md-6">
 	               			<input type="text" name="precio" class="form-control" placeholder="Precio" required>
@@ -41,6 +41,5 @@
                 </div>
 			</div>
 		</div>
-
 	</div>
 </div>

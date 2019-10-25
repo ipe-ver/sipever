@@ -60,8 +60,9 @@ class FacturaController extends Controller
             $fecha_facturacion = $request->fecha_facturacion;
             $iva=$request->iva;
             $subtotal = $request->subtotal;
-            $no_mes=10;
-            $anio=2019;
+            date_default_timezone_set('America/Mexico_City');
+            $no_mes=date("n");
+            $anio=date("Y");
             //Obtenemos los datos de la conexión con la base de datos
             $db = DB::connection()->getPdo();
             //Establecemos la conexión
@@ -69,7 +70,7 @@ class FacturaController extends Controller
             $db->setAttribute(PDOConnection::ATTR_EMULATE_PREPARES, true);
 
             //Preparamos la llamada al procedimiento remoto
-            $query = $db->prepare('CALL sp_compra_almacen(?,?,?,?,?,?,?,?,@clave)');
+            $query = $db->prepare('CALL sp_factura(?,?,?,?,?,?,?,?,@clave)');
             //Hacemos un binding de los parámetros, así protegemos nuestra
             //llamada de una posible inyección sql
             $query->bindParam(1,$no_mes);

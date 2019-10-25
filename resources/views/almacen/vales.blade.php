@@ -52,7 +52,52 @@
     </div>
     <p></p>
 </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class=" col-sm-2 desc-cuenta text-center">
+            <label>Folio</label>
+        </div>
+        <div class="col-sm-2 text-nowrap text-center">
+            <label>Tipo de vale</label>
+        </div>
+        <div class="col-sm-3 text-center">
+            <label>Fecha de movimiento</label>
+        </div>
+        <div class="col-sm-3 desc-cuenta text-center">
+            <label>Oficina</label>
+        </div>
+    </div>
+</div>
+<div class="panel-group menu-scroll" id="accordion">
+    <div class="panel panel-menu">
+        <div class="panel-heading">
+            <div class="panel-title titulo-panel" id="headingOne">
+                    <div class=" col-sm-2 desc-cuenta pull-left">
+                        COMP20191108
+                    </div>
+                    <div class="col-sm-2 en_stock text-nowrap text-center">
+                        Común
+                    </div>
+                    <div class="col-sm-3 text-center">07/09/2019</div>
+                    <div class="col-sm-3 desc-cuenta text-nowrap">DEPARTAMENTO DE TECNOLOGÍAS DE LA INFORMACIÓN</div>
+                    <div class="pull-right">
+                        <button class = "btn btn-collapse btn-edit" id="btn_editar" disabled="true">
+                            <i class="fas fa-pen">  </i>
+                        </button>
+                        <button class="btn btn-collapse btn-delete" id="btn_eliminar" disabled >
+                            <i class="fas fa-trash-alt">  </i>
+                        </button>
+                        <button id="verArticulo" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapseArticulo">
+                            <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
+                        </button>
 
-
+                </div>
+            </div>
+        </div>
+        <div id="collapseArticulo" class="collapse panel-collapse ">
+            
+        </div>
+    </div>
+</div>
 
 @endsection

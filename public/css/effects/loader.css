@@ -31,7 +31,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  animation: ro 1s infinite;
+  animation: ro 1.5s infinite;
 }
 
 .sp-box .sp1{
@@ -74,10 +74,7 @@
   0%{
     transform: translate(-50%, -50%) rotate(0deg);
   }
-  50%{
-    transform: translate(-50%, -50%) rotate(-180deg);
-  }
   100%{
-    transform: translate(-50%, -50%) rotate(0deg);
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }

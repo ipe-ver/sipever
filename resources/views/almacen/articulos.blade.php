@@ -87,6 +87,22 @@
         </div>
     </div>
 </div>
+<div class="row" style="margin-top: 1%;">
+    <div class="col-md-12">
+        <div class=" col-sm-5 desc-cuenta text-center" style="width: 39%;">
+            <label>Descripción</label>
+        </div>
+        <div class="col-sm-2 text-nowrap" style="margin-right: -1%;">
+            <label>Unidad de medida</label>
+        </div>
+        <div class="col-sm-2 text-center">
+            <label>Estatus</label>
+        </div>
+        <div class="col-sm-3 desc-cuenta text-center">
+            <label>Grupo</label>
+        </div>
+    </div>
+</div>
 <div class="panel-group menu-scroll" id="accordion">
     @foreach ($articulos as $articulo)
         <div class="panel panel-menu">
@@ -109,7 +125,7 @@
                                 En Stock
                             </div>
                 		@endif
-                    	<div class="col-sm-3 desc-cuenta text-nowrap">{{$articulo->descripcion_cuenta}}</div>
+                    	<div class="col-sm-3 desc-cuenta text-nowrap" style="margin-left: 2%;">{{$articulo->descripcion_cuenta}}</div>
                     	<div class="pull-right">
                             <button class = "btn btn-collapse btn-edit" id="btn_editar" disabled="true">
                                 <i class="fas fa-pen">  </i>

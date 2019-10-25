@@ -6,7 +6,11 @@ use App\User;
 use App\Role;
 use Validator;
 use App\Http\Controllers\Controller;
+//use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+
+
 
 /**
  * Class RegisterController
@@ -57,9 +61,8 @@ class RegisterController extends Controller
             'username'          => 'required|string|max:255|unique:users',
             'email'             => 'required|string|email|max:255|unique:users',
             'password'          => 'required|string|min:6|confirmed',
-            'id_tipopersona'    => 'required',
-            'id_persona'        => 'required',
-            'rol'               => 'required',
+            'id_empleado'       => 'required',
+            
         ]);
     }
 
@@ -85,9 +88,12 @@ class RegisterController extends Controller
     {
         $user = User::create([
             'name' => $data['name'],
+            'username' => $data['username'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'id_empleado' => $data['id_empleado'],
         ]);
+        dd($user);
         
         $user
             ->roles()
@@ -98,7 +104,7 @@ class RegisterController extends Controller
     public function registro(Request $request)
     {        
         //try {
-            dd($request);
+           // dd($request);
             $this->validator($request->all())->validate();
             $request->request->add(['name' => $request->username]);
             $usuario = $this->create($request->all());

@@ -17,6 +17,7 @@ class UsersController extends Controller
 				DECLARAR VARIABLES
 	*****************************************************************************************/
     private $catRoles; 
+    private $catEmpleados; 
 
     /*****************************************************************************************
 				VISTA DE CATALOGO DE USUARIOS
@@ -35,9 +36,19 @@ class UsersController extends Controller
     {             
         $this->catRoles           = \App\Role::select('id as valor','name as descripcion')->orderBy('id')->get(); 
         
+        $this->catEmpleados       = \App\Model\Rhumanos\Empleado::where('estatus','1')->get()->sortBy('nombrecompleto');
+        //dd($this->catEmpleados);
+        
+        foreach ($this->catEmpleados as $empleado) {            
+            $this->empleados[] = array('valor' => $empleado->id, 'descripcion' => $empleado->nombrecompleto );
+        } 
+
+        //dd($this->empleados);
+
         return view('catalogos.create',
         [
-            'catRoles' => $this->catRoles
+            'catRoles' => $this->catRoles,
+            'catEmpleados' => $this->empleados, 
         ]); 
     }
 

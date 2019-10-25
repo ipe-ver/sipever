@@ -64,6 +64,10 @@ window.addEventListener("load", function(){
     var selectOficina = document.getElementById("selectOficina");
     selectDepto.style.display = 'none';
     selectOficina.style.display = 'none';
+
+    $('#genReporte').on("click",function(event){
+        $('#loader').show();
+    });
 });
 
 function seleccionarReporte(checkBox){

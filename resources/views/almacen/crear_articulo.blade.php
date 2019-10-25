@@ -1,4 +1,4 @@
-<div class="modal fade" id="createArticulo" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="createArticuloLabel" aria-hidden="true">
+<div class="modal fade" id="createArticulo" data-backdrop="static" tabindex="-1" aria-labelledby="createArticuloLabel">
 	<div class="modal-dialog articulo-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">

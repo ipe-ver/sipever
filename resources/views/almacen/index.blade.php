@@ -2,6 +2,7 @@
 
 @section('content')
 <link href="{{ asset('css/almacen.css') }}" rel="stylesheet" type="text/css" >
+<link rel="stylesheet" type="text/css" href="{{asset('css/effects/loader.css')}}">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <script type="text/javascript" src="{{asset('/js/app.js')}}"></script>
 <script type="text/javascript" src="{{asset('/js/app-landing.js')}}"></script>

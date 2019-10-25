@@ -9,13 +9,16 @@
                 type: "POST",
                 dataType: "json",
                 data: {partida: partida_aux, _token:token},
+                beforeSend: function(){
+                    $("#loader").show();
+                },
                 success: function(datos){
                     $('select[name="articulos"]').empty();
                     $('select[name="articulos"]').append('<option value="">Seleccione un artículo</option>');
                     $.each(datos, function(i, data){
                        $('select[name="articulos"]').append('<option value="'+ data.clave +'">'+ data.descripcion +'</option>');
                     });
-
+                    $("#loader").hide();
                 }
             });
         } else{

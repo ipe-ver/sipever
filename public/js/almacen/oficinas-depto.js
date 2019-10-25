@@ -8,14 +8,17 @@
                 type: "POST",
                 dataType: "json",
                 data: {ubpp: ubpp_aux, _token:token},
+                 beforeSend: function(){
+                    $("#loader").show();
+                },
                 success: function(datos){
                     $('select[name="oficina"]').empty();
                     $('select[name="oficina"]').append('<option value="">Seleccione una oficina</option>');
                     $('select[name="oficina"]').append('<option value="0">Todas</option>');
                     $.each(datos, function(i, data){
                        $('select[name="oficina"]').append('<option value="'+ data.oficina +'">'+ data.descripcion +'</option>');
-                    }); 
-
+                    });
+                    $("#loader").hide();
                 }
             });
         } else{

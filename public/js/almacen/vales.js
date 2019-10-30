@@ -45,7 +45,7 @@ window.addEventListener("load", function(){
                 closebtn.setAttribute("class","closebtn");
                 closebtn.innerHTML="&times;";
                 var info=document.createElement("p");
-                info.innerHTML="Por favor seleccione si es extemporáneo el vale";
+                info.innerHTML="Por favor seleccione si es extemporáneo el vale o no";
                 alert.appendChild(closebtn);
                 alert.appendChild(info);
                 mensaje.appendChild(alert);

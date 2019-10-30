@@ -133,7 +133,7 @@
                             <button onclick="location.href='{{route('almacen.articulos.darBaja', $articulo->clave)}}'" class="btn btn-collapse btn-delete" id="btn_eliminar" disabled >
                                 <i class="fas fa-trash-alt">  </i>
                             </button>
-                            <button id="verArticulo" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapseArticulo" data-parent="#valesAccordion">
+                            <button id="verArticulo" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapseArticulo">
                                 <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
                             </button>
 

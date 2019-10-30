@@ -56,8 +56,8 @@
 </div>
 <div class="panel-group menu-scroll" id="accordion" aria-multiselectable="true">
     @foreach ($partidas as $partida)
-    <div class="panel panel-menu">
-        <div class="panel-heading">
+    <div class="panel panel-default panel-menu">
+        <div class="panel-heading" style="background-color: transparent;">
             <div class="panel-title titulo-panel" id="headingOne">
                 	<div class=" col-xs-1 desc-cuenta pull-left">
                 		{{ $partida->cta }}
@@ -72,7 +72,7 @@
                         <button class="btn btn-collapse btn-delete" id="btn_eliminar" data-toggle="modal" data-target="#eliminarPartida" disabled >
                             <i class="fas fa-trash-alt">  </i>
                         </button>
-                        <button id="verPartida" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapsePartida" aria-expanded="false" data-parent="#partidas">
+                        <button id="verPartida" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapsePartida" aria-expanded="false">
                             <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
                         </button>
                 </div>

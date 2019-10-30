@@ -1,25 +1,5 @@
-var close = document.getElementsByClassName("closebtn");
-var i;
-/*
- * Con esta función se carga el funcionamiento de las notificaciones
-*/
-for (i = 0; i < close.length; i++) {
-    close[i].onclick = function(){
-        var div = this.parentElement;
-        div.style.opacity = "0";
-        //Despues de 600 milisegundos despues de activar el boton de cierre la notificacion desaparecerá
-        setTimeout(function(){ div.style.display = "none"; }, 600);
-        //Despues de 1 segundo la notificaicon desaparecerá del html
-        setTimeout(function(){
-            var alertContainer=document.getElementById("contenedor-alert");
-            if(alertContainer!=null){
-                alertContainer.remove();
-            }
-        }, 1000);
-    }
-}
-
 window.addEventListener("load", function(){
+    cargarMetodo();
 	var paneles = document.getElementsByClassName("panel-collapse");
 	for (let x = 0; x < paneles.length; x++) {
         const panel = paneles[x];
@@ -40,19 +20,72 @@ window.addEventListener("load", function(){
         boton.setAttribute("id", "verVale"+index);
         boton.setAttribute("data-target", "#collapseVale"+index);
         //Cada vez que se le de click al botón de despliegue...
-        boton.addEventListener('click', function(){
-            //Se suma en uno el contador cada vez que se da click
-            contadores[index]+=1;
-            //Se obtiene el panel para colapsar
-            var panel_target=document.getElementById("collapseVale"+index);
-            //Después de 384 milisegundos el panel se colapsará.
-            setTimeout(function(){
-                //Solo se accederá a la función si el panel está desplegado y el contador es para
-                // Asegurando así que unicamente cuando el panel esté desplegado se acceda a la función.
-                if(panel_target.classList.contains("show")&&contadores[index]%2==0){
-                    panel_target.setAttribute("class", "collapse panel-collapse");
-                }
-            },385);
-        });
     }
+
+    $('span[id="closeModal"]').click(function(){
+        $("#myModal").hide();
+    });
+
+    var btns_validar = document.getElementsByClassName("btn-validar");
+    for (var i = 0; i < btns_validar.length; i++) {
+        btns_validar[i].setAttribute("id", `${btns_validar[i].id}${i}`);
+        btns_validar[i].addEventListener("click", function(event){
+            event.preventDefault();
+            var form = document.getElementById("valeForm");
+            if(form.checkValidity()){
+                $("#myModal").show();
+            }else{
+                var message = document.getElementById("messageCol");
+                var mensaje = document.createElement("div");
+                mensaje.setAttribute("class", "alert-container");
+                mensaje.setAttribute("id", "contenedor-alert");
+                var alert = document.createElement("div");
+                alert.setAttribute("class", "alert warning");
+                var closebtn = document.createElement("span");
+                closebtn.setAttribute("class","closebtn");
+                closebtn.innerHTML="&times;";
+                var info=document.createElement("p");
+                info.innerHTML="Por favor seleccione si es extemporáneo el vale";
+                alert.appendChild(closebtn);
+                alert.appendChild(info);
+                mensaje.appendChild(alert);
+                message.appendChild(mensaje);
+                cargarMetodo();
+            }
+        })
+    }
+    $(document).keyup(function(event){
+        if(event.keyCode==27){
+            $("#myModal").hide();
+        }
+    });
 });
+
+function getParentButton(button){
+    var id_aux = parseInt(button.id.split("Validar")[1]);
+    var idParent = `collapseVale${id_aux}`;
+
+}
+
+function cargarMetodo(){
+    var close = document.getElementsByClassName("closebtn");
+    var i;
+    /*
+     * Con esta función se carga el funcionamiento de las notificaciones
+    */
+    for (i = 0; i < close.length; i++) {
+        close[i].onclick = function(){
+            var div = this.parentElement;
+            div.style.opacity = "0";
+            //Despues de 600 milisegundos despues de activar el boton de cierre la notificacion desaparecerá
+            setTimeout(function(){ div.style.display = "none"; }, 600);
+            //Despues de 1 segundo la notificaicon desaparecerá del html
+            setTimeout(function(){
+                var alertContainer=document.getElementById("contenedor-alert");
+                if(alertContainer!=null){
+                    alertContainer.remove();
+                }
+            }, 1000);
+        }
+    }
+}

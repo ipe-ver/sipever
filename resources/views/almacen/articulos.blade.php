@@ -103,11 +103,11 @@
         </div>
     </div>
 </div>
-<div class="panel-group menu-scroll" id="accordion">
+<div class="panel-group menu-scroll" id="accordion" aria-multiselectable="true">
     @foreach ($articulos as $articulo)
         <div class="panel panel-menu">
             <div class="panel-heading">
-                <div class="panel-title titulo-panel" id="headingOne">
+                <div class="panel-title titulo-panel" id="">
                     	<div class=" col-sm-5 desc-cuenta pull-left">
                     		{{ $articulo->descripcion }}
                     	</div>
@@ -133,7 +133,7 @@
                             <button onclick="location.href='{{route('almacen.articulos.darBaja', $articulo->clave)}}'" class="btn btn-collapse btn-delete" id="btn_eliminar" disabled >
                                 <i class="fas fa-trash-alt">  </i>
                             </button>
-                            <button id="verArticulo" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapseArticulo">
+                            <button id="verArticulo" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapseArticulo" data-parent="#valesAccordion">
                                 <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
                             </button>
 

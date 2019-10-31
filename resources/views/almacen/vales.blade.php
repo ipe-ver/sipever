@@ -92,29 +92,27 @@
                 <div class="col-sm-5 desc-cuenta text-nowrap">{{$cabecera->departamento}}</div>
                 <div class="pull-right">
                     <button name="verVale" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse" data-target="#collapseVale">
-                        <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar" onclick="getDetalles('{{$cabecera->tipo}}', '{{$cabecera->folio}}')"></i>
+                        <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar" onclick="getDetalles('{{$cabecera->tipo}}', '{{$cabecera->folio}}', this.parentNode)"></i>
                     </button>
                 </div>
             </div>
         </div>
         <div id="collapseVale" class="panel-collapse collapse">
             <div class="panel-body">
-                <div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <table class="table" id="articulos_factura">
-                                <tr>
-                                    <th>Clave</th>
-                                    <th>Descripcion</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio</th>
-                                    <th>Importe</th>
-                                </tr>
-                                <tr name="detalle">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table" id="articulos_factura">
+                            <tr>
+                                <th>Clave</th>
+                                <th>Descripcion</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Importe</th>
+                            </tr>
+                            <tr name="detalle">
 
-                                </tr>
-                            </table>
-                        </div>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 <div class="row" style="padding-left:1.5%; padding-right: 1.5%;">

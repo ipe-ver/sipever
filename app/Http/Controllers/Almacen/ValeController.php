@@ -33,7 +33,21 @@ class ValeController extends Controller
 
     public function getDetalles(Request $request){
         $tipo = $request->tipo;
-
+        $folio = $request->folio;
+        $respuesta = $app->make('stdClass');
+        if($tipo == 1){
+            $respuesta->clave = "1303";
+            $respuesta->descripcion="PINTURA ACRÍLICA";
+            $respuesta->cantidad = 12;
+            $respuesta->precio=12.45;
+            return json_encode($respuesta);
+        }else{
+            $respuesta->clave = "N/a";
+            $respuesta->descripcion="Calculadora cuántica";
+            $respuesta->cantidad = 1;
+            $respuesta->precio=15000;
+            return json_encode($respuesta);
+        }
     }
 
     /**

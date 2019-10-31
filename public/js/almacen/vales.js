@@ -61,10 +61,23 @@ window.addEventListener("load", function(){
 
 });
 
-function getParentButton(button){
-    var id_aux = parseInt(button.id.split("Validar")[1]);
-    var idParent = `collapseVale${id_aux}`;
+function getParentButton(button,nameButton, idReference){
+    var id_aux = parseInt(button.id.split(nameButton)[1]);
+    var idParent = `${idReference}${id_aux}`;
+    var token = $('meta[name="csrf-token"]').attr('content');
+    var tablas = document.getElementsByName("detalle");
+    var tablaPadre = getParent(tablas[0],6);
+    console.log(tablaPadre.id==idParent);
+}
 
+function getParent(node, parentNo){
+	if(parentNo == 0){
+		console.log(node)
+		return node;
+	}
+	console.log(node);
+	parentNo-=1;
+	return getParent(node.parentNode, parentNo);
 }
 
 function cargarMetodo(){
@@ -90,6 +103,7 @@ function cargarMetodo(){
     }
 }
 
-function getDetalles(tipo, folio){
-	console.log(`${tipo}, ${folio}`);
+function getDetalles(tipo, folio, button){
+	console.log(`${tipo}, ${folio} ${button.id}`);
+	getParentButton(button,"verVale","collapseVale");
 }

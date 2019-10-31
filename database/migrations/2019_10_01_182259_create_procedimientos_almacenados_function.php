@@ -1265,6 +1265,126 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 END WHILE;
             END
         ');
+
+        /**Procedimiento almacenado para obtnere el reporte "RELACION DE CONSUMOS POR ARTICULO CORRESPONDIENTE AL MES DE X DEL X"
+         * Solo recibe como parametros el mes y el año
+         * Falta terminar la tabla final, el concentrado total final está hecho, pero el concentrado total individual falta
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_relacion_consumos_articulo;
+
+            CREATE PROCEDURE `sp_relacion_consumos_articulo`(
+                IN `mes` INT,
+                IN `anio` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio);
+                
+                SELECT articulo.clave AS "COD.", articulo.descripcion AS "DESCRIPCION", consumo.folio AS "VALE", unidad.descripcion AS "UNIDAD", 
+                        detalle.cantidad AS "CANT.", articulo.precio_unitario AS "COSTO UNIT.", (detalle.cantidad * articulo.precio_unitario) AS "IMPORTE",
+                        (SELECT cat_oficinas.descripcion FROM cat_oficinas WHERE cat_oficinas.oficina = 0 AND cat_oficinas.ubpp = (SELECT cat_oficinas.ubpp FROM cat_oficinas 
+                                WHERE consumo.id_oficina = cat_oficinas.id)) AS "DEPARTAMENTO", 
+                        (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id) AS "TOTAL DE ARTICULOS",
+                        (SELECT SUM(detalles.cantidad * articulo.precio_unitario) FROM detalles WHERE detalles.id_articulo = articulo.id) AS "TOTAL"
+                FROM cat_articulos articulo
+                INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+                INNER JOIN cat_oficinas oficina ON oficina.id = consumo.id_oficina
+                INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
+                WHERE consumo.id_periodo = @periodo ORDER BY articulo.descripcion DESC;
+                
+                SELECT COUNT(DISTINCT(detalle.id_consumo)) AS "CONSUMOS", SUM(detalle.cantidad) AS "CANTIDAD DE ARTICULOS", 
+							SUM(detalle.cantidad * articulo.precio_unitario) AS "IMPORTES TOTALES"
+                FROM cat_cuentas_contables partida
+					 INNER JOIN cat_articulos articulo ON articulo.id_cuenta  = partida.id
+					 INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+					 INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+					 WHERE consumo.id_periodo = @periodo;
+            END
+        ');
+
+        /**Procedimiento almacenado para obtener le reporte "REPORTE AUXILIAR DE ALMACEN GENERAL CORRESPONDIENTE AL MES DE X DEL X"
+         * Recibe como parametros el mes y el año
+         * El resultado dependerá del periodo seleccionado, si el periodo está abierto los datos se tomarán del catalogo de articulos,
+         * si el periodo está cerrado los datos se tomarán del inventario inicial final
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_reporte_auxiliar_almacen;
+
+            CREATE PROCEDURE `sp_reporte_auxiliar_almacen`(
+                IN `mes` INT,
+                IN `anio` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio);
+                SET @num_partidas := (SELECT COUNT(id) FROM cat_cuentas_contables);
+                SET @partidas := (SELECT GROUP_CONCAT(DISTINCT(id)) FROM cat_cuentas_contables);
+                SET @aux_partidas := 1;
+                SET @condicion := (SELECT IF((SELECT estatus FROM periodos WHERE periodos.id_periodo = @periodo) = 1,1,0));
+
+                WHILE @aux_partidas <= @num_partidas DO
+                    SET @partida_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@partidas, ",", @aux_partidas), ",", -1));
+
+                    SELECT sscta, nombre FROM cat_cuentas_contables WHERE cat_cuentas_contables.id = @partida_actual;
+
+                    IF @condicion = 1 THEN
+                        SELECT articulo.clave AS "COD.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD", 
+                                articulo.existencias AS "CANT.", articulo.precio_unitario AS "COSTO UNIT.", 
+                                (articulo.existencias * articulo.precio_unitario) AS "IMPORTE", (articulo.existencias * articulo.precio_unitario) AS "INV. FIN."
+                        FROM cat_articulos articulo
+                        INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
+                        INNER JOIN cat_cuentas_contables cuenta ON cuenta.id = articulo.id_cuenta
+                        WHERE cuenta.id = @partida_actual;
+                    ELSE
+                        SELECT articulo.clave AS "COD.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD", 
+                                inventario.existencias AS "CANT.", inventario.precio_promedio AS "COSTO UNIT.", 
+                                (inventario.existencias * inventario.precio_promedio) AS "IMPORTE", (inventario.existencias * inventario.precio_promedio) AS "INV. FIN."
+                        FROM inventario_inicial_final inventario
+                        INNER JOIN cat_articulos articulo ON articulo.id = inventario.id_articulo
+                        INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
+                        INNER JOIN cat_cuentas_contables cuenta ON cuenta.id = articulo.id_cuenta
+                        WHERE cuenta.id = @partida_actual AND inventario.id_periodo = @periodo;
+                    END IF;
+
+                   SET @aux_partidas = @aux_partidas + 1;
+                END WHILE;
+
+                IF @condicion = 1 THEN
+                    SELECT SUM(articulo.existencias) AS "ARTICULOS", SUM(articulo.existencias * articulo.precio_unitario) AS "IMPORTES", 
+                            SUM(articulo.existencias * articulo.precio_unitario) AS "INVENTARIO" FROM cat_articulos articulo;
+                ELSE
+                    SELECT SUM(inventario.existencias) AS "ARTICULOS", SUM(inventario.existencias * inventario.precio_promedio) AS "IMPORTES", 
+                            SUM(inventario.existencias * inventario.precio_promedio) AS "INVENTARIO" FROM inventario_inicial_final inventario;
+                END IF;
+            END
+        ');
+
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_concentrado_compras;
+
+            CREATE PROCEDURE `sp_concentrado_compras`(
+                IN `mes_inicio` INT,
+                IN `mes_fin` INT,
+                IN `anio` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = mes_inicio AND anio = anio);
+                SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = mes_fin AND anio = anio);
+                SET @aux_periodos := @periodo_min;
+            END
+        ');
     }
 
     /**
@@ -1294,8 +1414,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_generar_poliza;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_inventario_grupo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_cerrar_periodo;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_partida;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_todo;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_partida;');//Reporte
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_todo;');//Reporte
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_existencias;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_factura;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_detalles_compra;');
@@ -1306,11 +1426,14 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra_articulos;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_consumo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_detalles_consumo;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_oficina;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_departamento;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_oficina;');//Reporte
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_departamento;');//Reporte
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_obtener_oficinas;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_obtener_departamentos;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_consumos_articulo;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_existencias_articulo;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_consumos_articulo;');//Reporte
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_existencias_articulo;');//Reporte
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_relacion_consumos_articulo;');//Reporte
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_auxiliar_almacen;');//Reporte
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_compras;');//Reporte
     }
 }

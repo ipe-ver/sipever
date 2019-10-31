@@ -34,6 +34,7 @@ class ValeController extends Controller
     public function getDetalles(Request $request){
         $tipo = $request->tipo;
         $folio = $request->folio;
+        $app = app();
         $respuesta = $app->make('stdClass');
         if($tipo == 1){
             $respuesta->clave = "1303";

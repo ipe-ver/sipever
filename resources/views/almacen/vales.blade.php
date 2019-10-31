@@ -69,6 +69,14 @@
         </div>
     </div>
 </div>
+<div class="modal-loader" id="loader">
+    <div class="sp-box">
+        <div class="sp sp1"></div>
+        <div class="sp sp2"></div>
+        <div class="sp sp3"></div>
+        <div class="sp sp4"></div>
+    </div>
+</div>
 <div class="panel-group menu-scroll" id="accordion" aria-multiselectable="true">
     @foreach ($cabeceras as $cabecera)
     <div class="panel panel-default panel-menu">
@@ -91,8 +99,8 @@
                 <div class="col-sm-3 text-center">{{$cabecera->fecha_recepcion}}</div>
                 <div class="col-sm-5 desc-cuenta text-nowrap">{{$cabecera->departamento}}</div>
                 <div class="pull-right">
-                    <button name="verVale" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse" data-target="#collapseVale">
-                        <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar" onclick="getDetalles('{{$cabecera->tipo}}', '{{$cabecera->folio}}', this.parentNode)"></i>
+                    <button name="verVale" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse" data-target="#collapseVale" onclick="getDetalles('{{$cabecera->tipo}}', '{{$cabecera->folio}}', this)">
+                        <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
                     </button>
                 </div>
             </div>

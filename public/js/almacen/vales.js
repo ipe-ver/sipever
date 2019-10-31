@@ -64,18 +64,15 @@ window.addEventListener("load", function(){
 function getParentButton(button,nameButton, idReference){
     var id_aux = parseInt(button.id.split(nameButton)[1]);
     var idParent = `${idReference}${id_aux}`;
-    var token = $('meta[name="csrf-token"]').attr('content');
     var tablas = document.getElementsByName("detalle");
-    var tablaPadre = getParent(tablas[0],6);
-    console.log(tablaPadre.id==idParent);
+    return getParent(tablas[0],6);
+
 }
 
 function getParent(node, parentNo){
 	if(parentNo == 0){
-		console.log(node)
 		return node;
 	}
-	console.log(node);
 	parentNo-=1;
 	return getParent(node.parentNode, parentNo);
 }
@@ -104,6 +101,26 @@ function cargarMetodo(){
 }
 
 function getDetalles(tipo, folio, button){
-	console.log(`${tipo}, ${folio} ${button.id}`);
-	getParentButton(button,"verVale","collapseVale");
+	var padre = getParentButton(button,"verVale","collapseVale");
+	if(padre){
+		if(!padre.hasAttribute("deployed")){
+			var token = $('meta[name="csrf-token"]').attr('content');
+		    $.ajax({
+		        url: "/almacen/vales/getDetalles",
+		        type: "POST",
+		        dataType: "json",
+		        data: {tipo:tipo, folio:folio, _token:token},
+		        beforeSend: function(){
+		            $("#loader").show();
+		        },
+		        success: function(datos){
+		            $("#loader").hide();
+		            console.log(datos);
+		            padre.setAttribute("deployed", "true");
+		        }
+		    });
+		}else{
+			padre.removeAttribute("deployed");
+		}
+	}
 }

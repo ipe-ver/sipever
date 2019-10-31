@@ -1,5 +1,9 @@
 window.addEventListener("load", function(){
     cargarMetodo();
+    var tablas = document.getElementsByClassName("table");
+    for(var i = 0, length1 = tablas.length; i < length1; i++){
+    	tablas[i].id = `articulos_factura${i}`;
+    }
 	var paneles = document.getElementsByClassName("panel-collapse");
 	for (let x = 0; x < paneles.length; x++) {
         const panel = paneles[x];
@@ -61,12 +65,24 @@ window.addEventListener("load", function(){
 
 });
 
-function getParentButton(button,nameButton, idReference){
-    var id_aux = parseInt(button.id.split(nameButton)[1]);
+/**
+ * Función para poblar la tabla
+ * @param node el nodo del cual viene el evento
+ * @param nameNode el nombre del nodo con el cual se obtendrá el id de su padre
+ * @param idReference el id de referencia para saber que padre estamos buscando.
+ * @return el padre del nodo o en caso contrario null
+ */
+function populateTable(node,nameNode, idReference){
+    var id_aux = parseInt(node.id.split(nameNode)[1]);
     var idParent = `${idReference}${id_aux}`;
     var tablas = document.getElementsByName("detalle");
-    return getParent(tablas[0],6);
-
+    for(var i = 0, length1 = tablas.length; i < length1; i++){
+    	var padre_aux = getParent(tablas[i],6);
+    	if(padre_aux.id == idParent){
+    		return padre_aux;
+    	}
+    }
+    return null;
 }
 
 function getParent(node, parentNo){
@@ -101,9 +117,14 @@ function cargarMetodo(){
 }
 
 function getDetalles(tipo, folio, button){
-	var padre = getParentButton(button,"verVale","collapseVale");
-	if(padre){
-		if(!padre.hasAttribute("deployed")){
+	var tablas = document.getElementsByName("detalle");
+	var id_aux = parseInt(button.id.split("Vale")[1]);
+	var panel_padre = getParent(tablas[id_aux],6);
+    var tabla_padre = getParent(tablas[id_aux],2);
+    console.log(tabla_padre);
+    console.log(panel_padre);
+	if(tabla_padre){
+		if(!panel_padre.hasAttribute("deployed")){
 			var token = $('meta[name="csrf-token"]').attr('content');
 		    $.ajax({
 		        url: "/almacen/vales/getDetalles",
@@ -115,12 +136,12 @@ function getDetalles(tipo, folio, button){
 		        },
 		        success: function(datos){
 		            $("#loader").hide();
-		            console.log(datos);
-		            padre.setAttribute("deployed", "true");
+		            panel = populateTable(tabla_padre,"verVale","collapseVale");
+		            panel_padre.setAttribute("deployed", "true");
 		        }
 		    });
 		}else{
-			padre.removeAttribute("deployed");
+			panel_padre.removeAttribute("deployed");
 		}
 	}
 }

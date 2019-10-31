@@ -14,7 +14,26 @@ class ValeController extends Controller
      */
     public function index()
     {
-        return view('almacen.vales');
+        $app = app();
+        $cabecera1 = $app->make('stdClass');
+        $cabecera1->folio = 'CONS201910081545';
+        $cabecera1->tipo = 1;
+        $cabecera1->fecha_recepcion = '08/10/2019';
+        $cabecera1->departamento = 'DEPARTAMENTO DE TECNOLOGÍAS DE LA INFORMACIÓN';
+
+        $cabecera2 = $app->make('stdClass');
+        $cabecera2->folio = 'COMP201910081550';
+        $cabecera2->tipo = 3;
+        $cabecera2->fecha_recepcion = '08/10/2019';
+        $cabecera2->departamento = 'DEPARTAMENTO DE TECNOLOGÍAS DE LA INFORMACIÓN';
+
+        $cabeceras = array($cabecera1, $cabecera2);
+        return view('almacen.vales', compact('cabeceras'));
+    }
+
+    public function getDetalles(Request $request){
+        $tipo = $request->tipo;
+
     }
 
     /**

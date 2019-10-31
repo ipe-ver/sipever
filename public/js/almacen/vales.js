@@ -19,7 +19,6 @@ window.addEventListener("load", function(){
          */
         boton.setAttribute("id", "verVale"+index);
         boton.setAttribute("data-target", "#collapseVale"+index);
-        //Cada vez que se le de click al botón de despliegue...
     }
 
     $('span[id="closeModal"]').click(function(){
@@ -59,6 +58,7 @@ window.addEventListener("load", function(){
             $("#myModal").hide();
         }
     });
+
 });
 
 function getParentButton(button){
@@ -88,4 +88,8 @@ function cargarMetodo(){
             }, 1000);
         }
     }
+}
+
+function getDetalles(tipo, folio){
+	console.log(`${tipo}, ${folio}`);
 }

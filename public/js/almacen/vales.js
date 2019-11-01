@@ -112,8 +112,8 @@ function cargarMetodo(){
 function getDetalles(tipo, folio, button){
 	var tablas = document.getElementsByName("detalle");
 	var id_aux = parseInt(button.id.split("Vale")[1]);
-	var panel_padre = getParent(tablas[id_aux],6);
-    var tabla_padre = getParent(tablas[id_aux],2);
+	var panel_padre = getParent(tablas[id_aux],5);
+    var tabla_padre = tablas[id_aux];
 	if(tabla_padre){
 		if(!panel_padre.hasAttribute("deployed")){
 			var token = $('meta[name="csrf-token"]').attr('content');
@@ -127,17 +127,26 @@ function getDetalles(tipo, folio, button){
 		        },
 		        success: function(datos){
 		            $("#loader").hide();
-		            var row = getTableRow(tabla_padre,"articulos_factura");
-		            console.log(row);
+		            console.log(tabla_padre);
+		            console.log(panel_padre);
+		            var contador = 0;
 		            datos.articulos.forEach(function(element){
-		            	console.log(element);
+		            	var td = document.createElement("tr");
+		            	td.setAttribute("name", `detalle${contador}`);
+		            	for(var i = 0, length1 = element.length; i < length1; i++){
+		            		var tr = document.createElement("td");
+		            		tr.setAttribute("id", `detalle${contador}_${i}`);
+		            		tr.innerHTML=element[i];
+		            		td.appendChild(tr);
+		            	}
+		            	contador++;
+		            	tabla_padre.children[0].appendChild(td);
 		            });
-		            var clave_art = document.createElement("td");
-		            clave_art.innerHTML=datos.clave;
 		            panel_padre.setAttribute("deployed", "true");
 		        }
 		    });
 		}else{
+
 			panel_padre.removeAttribute("deployed");
 		}
 	}

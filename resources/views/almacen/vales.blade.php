@@ -109,16 +109,13 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-sm-12">
-                        <table class="table" id="articulos_factura">
+                        <table class="table text-left" id="articulos_factura" name="detalle">
                             <tr>
                                 <th>Clave</th>
-                                <th>Descripcion</th>
+                                <th width="400px">Descripcion</th>
                                 <th>Cantidad</th>
                                 <th>Precio</th>
                                 <th>Importe</th>
-                            </tr>
-                            <tr name="detalle">
-
                             </tr>
                         </table>
                     </div>

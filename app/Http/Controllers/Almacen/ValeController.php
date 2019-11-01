@@ -43,10 +43,8 @@ class ValeController extends Controller
             $respuesta->articulos[1] = $articulo2;
             return json_encode($respuesta);
         }else{
-            $respuesta->clave = "N/A";
-            $respuesta->descripcion="Calculadora cuántica";
-            $respuesta->cantidad = 1;
-            $respuesta->precio="N/A";
+            $articulo1 = ['N/A','Calculadora cuántica',1,'N/A'];
+            $respuesta->articulos[0] = $articulo1;
             return json_encode($respuesta);
         }
     }

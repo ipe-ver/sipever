@@ -37,16 +37,16 @@ class ValeController extends Controller
         $app = app();
         $respuesta = $app->make('stdClass');
         if($tipo == 1){
-            $respuesta->clave = "1303";
-            $respuesta->descripcion="PINTURA ACRÍLICA";
-            $respuesta->cantidad = 12;
-            $respuesta->precio=12.45;
+            $articulo1 = ['1303','PINTURA ACRÍLICA',12,12.45];
+            $articulo2 = ['1304','PINTURA ACRÍLICA ROJA',10,11.45];
+            $respuesta->articulos[0] = $articulo1;
+            $respuesta->articulos[1] = $articulo2;
             return json_encode($respuesta);
         }else{
-            $respuesta->clave = "N/a";
+            $respuesta->clave = "N/A";
             $respuesta->descripcion="Calculadora cuántica";
             $respuesta->cantidad = 1;
-            $respuesta->precio=15000;
+            $respuesta->precio="N/A";
             return json_encode($respuesta);
         }
     }

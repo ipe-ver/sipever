@@ -72,17 +72,10 @@ window.addEventListener("load", function(){
  * @param idReference el id de referencia para saber que padre estamos buscando.
  * @return el padre del nodo o en caso contrario null
  */
-function populateTable(node,nameNode, idReference){
+function getTableRow(node,nameNode){
     var id_aux = parseInt(node.id.split(nameNode)[1]);
-    var idParent = `${idReference}${id_aux}`;
-    var tablas = document.getElementsByName("detalle");
-    for(var i = 0, length1 = tablas.length; i < length1; i++){
-    	var padre_aux = getParent(tablas[i],6);
-    	if(padre_aux.id == idParent){
-    		return padre_aux;
-    	}
-    }
-    return null;
+    var tablas_aux = document.getElementsByName("detalle");
+    return tablas_aux.item(id_aux);
 }
 
 function getParent(node, parentNo){
@@ -121,8 +114,6 @@ function getDetalles(tipo, folio, button){
 	var id_aux = parseInt(button.id.split("Vale")[1]);
 	var panel_padre = getParent(tablas[id_aux],6);
     var tabla_padre = getParent(tablas[id_aux],2);
-    console.log(tabla_padre);
-    console.log(panel_padre);
 	if(tabla_padre){
 		if(!panel_padre.hasAttribute("deployed")){
 			var token = $('meta[name="csrf-token"]').attr('content');
@@ -136,7 +127,13 @@ function getDetalles(tipo, folio, button){
 		        },
 		        success: function(datos){
 		            $("#loader").hide();
-		            panel = populateTable(tabla_padre,"verVale","collapseVale");
+		            datos.articulos.forEach(function(element){
+		            	console.log(element);
+		            });
+		            var row = getTableRow(tabla_padre,"articulos_factura");
+		            console.log(row);
+		            var clave_art = document.createElement("td");
+		            clave_art.innerHTML=datos.clave;
 		            panel_padre.setAttribute("deployed", "true");
 		        }
 		    });

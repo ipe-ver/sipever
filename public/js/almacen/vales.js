@@ -127,11 +127,11 @@ function getDetalles(tipo, folio, button){
 		        },
 		        success: function(datos){
 		            $("#loader").hide();
+		            var row = getTableRow(tabla_padre,"articulos_factura");
+		            console.log(row);
 		            datos.articulos.forEach(function(element){
 		            	console.log(element);
 		            });
-		            var row = getTableRow(tabla_padre,"articulos_factura");
-		            console.log(row);
 		            var clave_art = document.createElement("td");
 		            clave_art.innerHTML=datos.clave;
 		            panel_padre.setAttribute("deployed", "true");

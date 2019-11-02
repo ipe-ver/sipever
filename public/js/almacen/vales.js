@@ -126,6 +126,27 @@ function getDetalles(tipo, folio, button){
 		        beforeSend: function(){
 		            $("#loader").show();
 		        },
+		        error: function(){
+		        	var message = document.getElementById("messageCol");
+	                var mensaje = document.createElement("div");
+	                mensaje.setAttribute("class", "alert-container");
+	                mensaje.setAttribute("id", "contenedor-alert");
+	                var alert = document.createElement("div");
+	                alert.setAttribute("class", "alert error");
+	                var closebtn = document.createElement("span");
+	                closebtn.setAttribute("class","closebtn");
+	                closebtn.innerHTML="&times;";
+	                var info=document.createElement("p");
+	                info.innerHTML='Error al tratar de conectar con el servidor,' +
+	                	'\nPorfavor contacte al edpartamento de tecnologías de la información';
+	                alert.appendChild(closebtn);
+	                alert.appendChild(info);
+	                mensaje.appendChild(alert);
+	                message.appendChild(mensaje);
+	                cargarMetodo();
+	                panel_padre.setAttribute("deployed", "true");
+	                $("#loader").hide();
+		        },
 		        success: function(datos){
 		            var contador = 0;
 		            datos.articulos.forEach(function(element){
@@ -142,7 +163,8 @@ function getDetalles(tipo, folio, button){
 		            });
 		            panel_padre.setAttribute("deployed", "true");
 		            $("#loader").hide();
-		        }
+		        },
+		        timeout: 5000
 		    });
 		}else{
 			var hijo =tabla_padre.children[1].lastElementChild;

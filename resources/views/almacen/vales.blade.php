@@ -99,7 +99,7 @@
                 <div class="col-sm-3 text-center">{{$cabecera->fecha_recepcion}}</div>
                 <div class="col-sm-5 desc-cuenta text-nowrap">{{$cabecera->departamento}}</div>
                 <div class="pull-right">
-                    <button name="verVale" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse" data-target="#collapseVale" onclick="getDetalles('{{$cabecera->tipo}}', '{{$cabecera->folio}}', this)">
+                    <button name="verVale" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse" data-target="#collapseVale" data-parent="#accordion" onclick="getDetalles('{{$cabecera->tipo}}', '{{$cabecera->folio}}', this)">
                         <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
                     </button>
                 </div>
@@ -110,13 +110,18 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <table class="table text-left" id="articulos_factura" name="detalle">
-                            <tr>
-                                <th>Clave</th>
-                                <th width="400px">Descripcion</th>
-                                <th>Cantidad</th>
-                                <th>Precio</th>
-                                <th>Importe</th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>Clave</th>
+                                    <th width="400px">Descripcion</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                    <th>Importe</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
                         </table>
                     </div>
                 </div>

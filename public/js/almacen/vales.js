@@ -65,13 +65,6 @@ window.addEventListener("load", function(){
 
 });
 
-/**
- * Función para poblar la tabla
- * @param node el nodo del cual viene el evento
- * @param nameNode el nombre del nodo con el cual se obtendrá el id de su padre
- * @param idReference el id de referencia para saber que padre estamos buscando.
- * @return el padre del nodo o en caso contrario null
- */
 function getTableRow(node,nameNode){
     var id_aux = parseInt(node.id.split(nameNode)[1]);
     var tablas_aux = document.getElementsByName("detalle");
@@ -112,7 +105,15 @@ function cargarMetodo(){
 function getDetalles(tipo, folio, button){
 	var tablas = document.getElementsByName("detalle");
 	var id_aux = parseInt(button.id.split("Vale")[1]);
-	var panel_padre = getParent(tablas[id_aux],5);
+	var panel_padre = getParent(tablas[id_aux],4);
+	for(var i = 0, length1 = tablas.length; i < length1; i++){
+    	var hijo_aux =tablas[i].children[1].lastElementChild;
+		while (hijo_aux) {
+			tablas[i].children[1].removeChild(hijo_aux);
+			hijo_aux =tablas[i].children[1].lastElementChild;
+		}
+    }
+	cerrarPaneles(panel_padre);
     var tabla_padre = tablas[id_aux];
 	if(tabla_padre){
 		if(!panel_padre.hasAttribute("deployed")){
@@ -126,9 +127,6 @@ function getDetalles(tipo, folio, button){
 		            $("#loader").show();
 		        },
 		        success: function(datos){
-		            $("#loader").hide();
-		            console.log(tabla_padre);
-		            console.log(panel_padre);
 		            var contador = 0;
 		            datos.articulos.forEach(function(element){
 		            	var td = document.createElement("tr");
@@ -140,14 +138,28 @@ function getDetalles(tipo, folio, button){
 		            		td.appendChild(tr);
 		            	}
 		            	contador++;
-		            	tabla_padre.children[0].appendChild(td);
+		            	tabla_padre.children[1].appendChild(td);
 		            });
 		            panel_padre.setAttribute("deployed", "true");
+		            $("#loader").hide();
 		        }
 		    });
 		}else{
-
+			var hijo =tabla_padre.children[1].lastElementChild;
+			while (hijo) {
+				tabla_padre.children[1].removeChild(hijo);
+				hijo =tabla_padre.children[1].lastElementChild;
+			}
 			panel_padre.removeAttribute("deployed");
+		}
+	}
+}
+
+function cerrarPaneles(panelExclude){
+	var paneles = document.getElementsByClassName("panel-collapse")
+	for(var i = 0, length1 = paneles.length; i < length1; i++){
+		if(panelExclude.id != paneles[i].id){
+			paneles[i].removeAttribute("deployed");
 		}
 	}
 }

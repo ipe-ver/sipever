@@ -80,6 +80,8 @@ if(paneles!=null){
         //Cada vez que se le de click al botón de despliegue...
         boton.addEventListener('click', function(){
             var btn_editar_aux = document.getElementById('btn_editar'+index);
+            var btn_eliminar_aux = document.getElementById('btn_eliminar'+index);
+            cerrarPaneles(btn_editar_aux, btn_editar_aux);
             //Se agrega el metodo click al boton
             btn_editar_aux.addEventListener("click",function(){
                 var panel_aux = document.getElementById("Partida"+index);
@@ -106,12 +108,26 @@ if(paneles!=null){
             }else{
                 btn_editar_aux.setAttribute('disabled', 'true');
             }
-            var btn_eliminar_aux = document.getElementById('btn_eliminar'+index);
              if(btn_eliminar_aux.hasAttribute("disabled")){
                 btn_eliminar_aux.removeAttribute("disabled");
             }else{
                 btn_eliminar_aux.setAttribute('disabled', 'true');
             }
         });
+    }
+}
+
+function cerrarPaneles(btn_editar, btn_eliminar){
+    var botones_edit = document.getElementsByClassName("btn-edit");
+    var botones_delete = document.getElementsByClassName("btn-delete");
+    for(var i = 0, length1 = botones_edit.length; i < length1; i++){
+        if (botones_edit[i].id != btn_editar.id) {
+            botones_edit[i].setAttribute("disabled","true");
+        }
+    }
+    for(var i = 0, length1 = botones_delete.length; i < length1; i++){
+        if (botones_delete[i].id != btn_eliminar.id) {
+            botones_delete[i].setAttribute("disabled","true");
+        }
     }
 }

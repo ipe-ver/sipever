@@ -11,6 +11,12 @@ window.addEventListener("load", function(){
         const panel = paneles[x];
         panel.setAttribute("id", "collapseVale"+x);
     }
+
+    var titulos = document.getElementsByClassName("panel-title");
+    for(var i = 0, length1 = titulos.length; i < length1; i++){
+    	titulos[i].id = `encabezado${i}`;
+    }
+
     var botones = document.getElementsByClassName("btn-left");
     // Se genera un array de contadores para llevar el control de las veces que se da click en cada boton
     var contadores = new Array(botones.length);
@@ -221,23 +227,34 @@ function llenarOrden (index) {
 	for(var i = 0; i < detalles.length; i++){
 		var tr = document.createElement("tr");
 		var articulo_aux = detalles[i].children;
-		for(var index = 0; index < articulo_aux.length; index++){
+		for(var j = 0; j < articulo_aux.length; j++){
 			var td = document.createElement("td");
 			var input = document.createElement("input");
-			input.setAttribute("name",`${index}[]`);
-			if(index!=2){
+			input.setAttribute("name",`${j}[]`);
+			if(j!=2){
 				input.setAttribute("type","text");
-				input.setAttribute("value", `${articulo_aux[index].innerHTML}`);
+				input.setAttribute("value", `${articulo_aux[j].innerHTML}`);
 				input .setAttribute("readonly", "");
 			}else{
 				input.setAttribute("type","number");
-				input.setAttribute("value", `${articulo_aux[index].innerHTML}`);
+				input.setAttribute("value", `${articulo_aux[j].innerHTML}`);
 				input.setAttribute("min", "0");
-				input.setAttribute("max", `${articulo_aux[index].innerHTML}`);
+				input.setAttribute("max", `${articulo_aux[j].innerHTML}`);
 			}
 			td.appendChild(input);
 			tr.appendChild(td);
 		}
 		tbody.appendChild(tr);
 	}
+	var encabezado = document.getElementById(`encabezado${index}`).children;
+	var parent = tabla.parentNode;
+	console.log(encabezado);
+	for(var i = 0, length1 = encabezado.length; i < length1-1; i++){
+		var input = document.createElement("input");
+		input.setAttribute("type", "hidden");
+		input .setAttribute("name", "encabezado[]");
+		input.setAttribute("value", `${encabezado[i].innerHTML.trim()}`);
+		parent.appendChild(input);
+	}
+
 }

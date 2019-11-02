@@ -169,7 +169,9 @@
             <h2>Validar orden</h2>
             <p>Ingrese las cantidades a entregar y después de click en aceptar</p>
         </div>
-        <form>
+        <form action="{{route('almacen.vales.validarOrden')}}" method="POST">
+            @csrf
+            @method('POST')
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
@@ -191,7 +193,7 @@
             <div class="modal-footer">
                 <div class="pull-right" style="margin-top: 5px;">
                     <button id="cancelarValid" type="button" class="btn btn-cancel">Cancelar</button>
-                    <button id = "validarOrden"type="submit" class="btn-validar btn btn-submit">Aceptar</button>
+                    <button id = "validarOrden" type="submit" class="btn btn-submit">Aceptar</button>
                 </div>
             </div>
         </form>

@@ -114,4 +114,13 @@ class ValeController extends Controller
     {
         //
     }
+
+    public function validarOrden(Request $request){
+        $claves = $request->input('0');
+        $descripciones = $request->input('1');
+        $cantidades = $request->input('2');
+        $precios = $request->input('3');
+        $encabezado = $request->encabezado;
+        return redirect()->route('almacen.index');
+    }
 }

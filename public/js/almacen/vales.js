@@ -2,7 +2,9 @@ window.addEventListener("load", function(){
     cargarMetodo();
     var tablas = document.getElementsByClassName("table");
     for(var i = 0, length1 = tablas.length; i < length1; i++){
-    	tablas[i].id = `articulos_factura${i}`;
+    	if(tablas[i].id != "detalleValidar"){
+    		tablas[i].id = `articulos_factura${i}`;
+    	}
     }
 	var paneles = document.getElementsByClassName("panel-collapse");
 	for (let x = 0; x < paneles.length; x++) {
@@ -26,16 +28,40 @@ window.addEventListener("load", function(){
     }
 
     $('span[id="closeModal"]').click(function(){
+    	clearOrden();
         $("#myModal").hide();
     });
+    $('button[id="cancelarValid"]').click(function(){
+        clearOrden();
+        $("#myModal").hide();
+    });
+
+    function clearOrden(){
+    	var tabla_orden = document.getElementById("detalleValidar");
+    	var detalles = tabla_orden.children[1];
+    	for(var i = 0, length1 = detalles.children.length; i < length1; i++){
+    		var hijo =detalles.children[i].lastElementChild;
+			while (hijo) {
+				detalles.children[i].removeChild(hijo);
+				hijo=detalles.children[i].lastElementChild;
+			}
+    	}
+    }
+
+    var forms = document.getElementsByClassName("submit-form");
+    for(var i = 0, length1 = forms.length; i < length1; i++){
+    	forms[i].id = `${forms[i].id}${i}`;
+    }
 
     var btns_validar = document.getElementsByClassName("btn-validar");
     for (var i = 0; i < btns_validar.length; i++) {
         btns_validar[i].setAttribute("id", `${btns_validar[i].id}${i}`);
         btns_validar[i].addEventListener("click", function(event){
             event.preventDefault();
-            var form = document.getElementById("valeForm");
+            var index = parseInt((event.target.id).split("Validar")[1]);
+            var form = document.getElementById("submitForm"+index);
             if(form.checkValidity()){
+            	llenarOrden(index);
                 $("#myModal").show();
             }else{
                 var message = document.getElementById("messageCol");
@@ -59,6 +85,7 @@ window.addEventListener("load", function(){
     }
     $(document).keyup(function(event){
         if(event.keyCode==27){
+        	clearOrden();
             $("#myModal").hide();
         }
     });
@@ -183,5 +210,34 @@ function cerrarPaneles(panelExclude){
 		if(panelExclude.id != paneles[i].id){
 			paneles[i].removeAttribute("deployed");
 		}
+	}
+}
+
+function llenarOrden (index) {
+	var tabla = document.getElementById(`articulos_factura${index}`);
+	var detalles = tabla.children[1].children;
+	var tabla = document.getElementById("detalleValidar");
+	var tbody = tabla.children[1];
+	for(var i = 0; i < detalles.length; i++){
+		var tr = document.createElement("tr");
+		var articulo_aux = detalles[i].children;
+		for(var index = 0; index < articulo_aux.length; index++){
+			var td = document.createElement("td");
+			var input = document.createElement("input");
+			input.setAttribute("name",`${index}[]`);
+			if(index!=2){
+				input.setAttribute("type","text");
+				input.setAttribute("value", `${articulo_aux[index].innerHTML}`);
+				input .setAttribute("readonly", "");
+			}else{
+				input.setAttribute("type","number");
+				input.setAttribute("value", `${articulo_aux[index].innerHTML}`);
+				input.setAttribute("min", "0");
+				input.setAttribute("max", `${articulo_aux[index].innerHTML}`);
+			}
+			td.appendChild(input);
+			tr.appendChild(td);
+		}
+		tbody.appendChild(tr);
 	}
 }

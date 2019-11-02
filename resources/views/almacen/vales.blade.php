@@ -116,7 +116,6 @@
                                     <th width="400px">Descripcion</th>
                                     <th>Cantidad</th>
                                     <th>Precio</th>
-                                    <th>Importe</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -126,7 +125,7 @@
                     </div>
                 </div>
                 <div class="row" style="padding-left:1.5%; padding-right: 1.5%;">
-                    <form id="valeForm" action="{{route('almacen.index')}}">
+                    <form id="submitForm" action="{{route('almacen.index')}}" class="submit-form">
                         @csrf
                         <div class="pull-left">
                             <table>
@@ -167,15 +166,35 @@
     <div class="valid-modal-content">
         <div class="modal-header">
             <span id="closeModal" class="close">&times;</span>
-            <h2>Modal Header</h2>
+            <h2>Validar orden</h2>
+            <p>Ingrese las cantidades a entregar y después de click en aceptar</p>
         </div>
-        <div class="modal-body">
-            <p>Some text in the Modal Body</p>
-            <p>Some other text...</p>
-        </div>
-        <div class="modal-footer">
-            <h3>Modal Footer</h3>
-        </div>
+        <form>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table" id="detalleValidar">
+                            <thead>
+                                <tr>
+                                    <th>Clave</th>
+                                    <th>Descripcion</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right" style="margin-top: 5px;">
+                    <button id="cancelarValid" type="button" class="btn btn-cancel">Cancelar</button>
+                    <button id = "validarOrden"type="submit" class="btn-validar btn btn-submit">Aceptar</button>
+                </div>
+            </div>
+        </form>
     </div>
 
 </div>

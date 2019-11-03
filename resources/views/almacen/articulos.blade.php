@@ -106,8 +106,8 @@
 <div class="panel-group menu-scroll" id="accordion" aria-multiselectable="true">
     @foreach ($articulos as $articulo)
         <div class="panel panel-menu">
-            <div class="panel-heading">
-                <div class="panel-title titulo-panel" id="">
+            <div class="panel-heading titulo-panel">
+                <div class="panel-title" id="">
                     	<div class=" col-sm-5 desc-cuenta pull-left">
                     		{{ $articulo->descripcion }}
                     	</div>

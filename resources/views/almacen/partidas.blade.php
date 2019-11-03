@@ -57,8 +57,8 @@
 <div class="panel-group menu-scroll" id="accordion" aria-multiselectable="true" style="height: 29em;">
     @foreach ($partidas as $partida)
     <div class="panel panel-default panel-menu">
-        <div class="panel-heading" style="background-color: transparent;">
-            <div class="panel-title titulo-panel" id="headingOne">
+        <div class="panel-heading titulo-panel" style="background-color: transparent;">
+            <div class="panel-title" id="headingOne">
                 	<div class=" col-xs-1 desc-cuenta pull-left">
                 		{{ $partida->cta }}
                 	</div>

@@ -1,4 +1,11 @@
+ /**
+  * Este método se utiliza para cargar dinámicamente las oficinas correspondientes al departamento seleccionado
+ */
+
  $(document).ready(function(){
+    /**
+     * Cada vez que cambie el valor del select de departamento.
+     */
     $('select[name="depto"]').on('change', function(){
         var ubpp_aux = $(this).val();
         var token = $('meta[name="csrf-token"]').attr('content');

@@ -80,8 +80,8 @@
 <div class="panel-group menu-scroll" id="accordion" aria-multiselectable="true">
     @foreach ($cabeceras as $cabecera)
     <div class="panel panel-default panel-menu">
-        <div class="panel-heading">
-            <div class="panel-title titulo-panel" id="headingOne">
+        <div class="panel-heading titulo-panel" style="background-color: transparent;">
+            <div class="panel-title" id="headingOne">
                 <div class=" col-sm-2 desc-cuenta pull-left">
                     {{$cabecera->folio}}
                 </div>

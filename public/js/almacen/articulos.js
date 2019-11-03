@@ -24,6 +24,7 @@ for (i = 0; i < close.length; i++) {
 var paneles = document.getElementsByClassName('panel-menu');
 for (var i = paneles.length - 1; i >= 0; i--) {
     paneles[i].setAttribute("id", "Articulo"+i);
+    //Se asignan los ids corrspondientes a los elementos del panel
     var campos = paneles[i].getElementsByClassName('panel-body')[0].getElementsByTagName("input");
     for (var index = campos.length-1; index >= 0; index--) {
         campos[index].setAttribute("id", campos[index].id+i);
@@ -80,6 +81,7 @@ if(paneles!=null){
             cerrarPaneles(btn_editar_aux, btn_eliminar_aux);
             //Se agrega el metodo click al boton
             btn_editar_aux.addEventListener("click",function(){
+                //Se asignan los métodos a los botones de editar y eliminar
                 var panel_aux = document.getElementById("Articulo"+index);
                 var campos_aux = panel_aux.getElementsByClassName('panel-body')[0].getElementsByTagName("input");
                 for (var x = 0; x < campos_aux.length; x++) {
@@ -124,6 +126,11 @@ if(paneles!=null){
     }
 }
 
+/**
+ * Función para cerrar los demás paneles al abrir uno
+ * @param btn_editar, btn_eliminar Recibe como parámetros los botones del panel
+ *                                 que accionó el método para deshabilitar todos los demás
+ */
 function cerrarPaneles(btn_editar, btn_eliminar){
     var botones_edit = document.getElementsByClassName("btn-edit");
     var botones_delete = document.getElementsByClassName("btn-delete");

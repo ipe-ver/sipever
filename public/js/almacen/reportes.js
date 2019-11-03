@@ -66,7 +66,10 @@ window.addEventListener("load", function(){
     selectOficina.style.display = 'none';
 
     $('#genReporte').on("click",function(event){
-        $('#loader').show();
+        var form = document.getElementById("reportesForm");
+        if(form.checkValidity()){
+            $('#loader').show();
+        }
     });
 });
 

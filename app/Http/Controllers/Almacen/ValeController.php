@@ -126,6 +126,7 @@ class ValeController extends Controller
         $precios = $request->input('4');
         $encabezado = $request->encabezado;
         $folio = $encabezado[0];
+        dd($folio, $claves, $descripciones, $cantidades, $precios);
         return redirect()->route('almacen.index');
     }
 }

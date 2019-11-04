@@ -9,7 +9,7 @@
 <div class=" menu-almacen panel-default pull-top">
     <div class="container-fluid">
 	    <div class="row">
-            @if(Auth::user()->name == 'almacen_admin')
+            @if(Auth::user()->hasRole('almacen_admin'))
 	           	<div class="col-xs-2">
 					<a class="nombre_modulo" href="{!! route('almacen.vales.index') !!}">
 						<i class="fas fa-inbox"></i>

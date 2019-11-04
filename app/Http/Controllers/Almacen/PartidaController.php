@@ -20,7 +20,7 @@ class PartidaController extends Controller
         $no_index = 0;
         $partidas = DB::select("call sp_get_grupos");
 
-        return view('almacen.partidas',compact('partidas'));
+        return view('almacen.partidas.partidas',compact('partidas'));
     }
 
     /**

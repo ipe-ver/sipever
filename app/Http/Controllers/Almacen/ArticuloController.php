@@ -23,7 +23,7 @@ class ArticuloController extends Controller
         $articulos = DB::select("call sp_get_articulos(?)", array($no_index));
         $no_partida = 0;
 
-        return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
+        return view('almacen.articulos.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
             'articulos'=>$articulos, 'index' => $no_index, 'no_partida' => $no_partida]);
     }
 
@@ -41,7 +41,7 @@ class ArticuloController extends Controller
         if($no_index == 0){
             return redirect()->route('almacen.articulos.index');
         }else{
-            return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
+            return view('almacen.articulos.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
             'articulos'=>$articulos, 'index' => $no_index, 'no_partida' => $no_partida]);
         }
     }
@@ -65,7 +65,7 @@ class ArticuloController extends Controller
             $articulos = DB::select("call sp_obtener_articulos_grupo(?)", array($nombrePartida));
 
 
-            return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
+            return view('almacen.articulos.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
                 'articulos'=>$articulos, 'index' => $no_index,'no_partida' => $no_partida ]);
         }else{
             return redirect()->route('almacen.articulos.index');
@@ -84,7 +84,7 @@ class ArticuloController extends Controller
             $unidades = DB::select("call sp_get_unidades");
             $articulos = DB::select("call sp_buscar_articulo_parametro(?)", array(strtoupper($nombreArticulo)));
 
-            return view('almacen.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
+            return view('almacen.articulos.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
                 'articulos'=>$articulos, 'index' => $no_index,'no_partida' => $no_partida ]);
         }
     }

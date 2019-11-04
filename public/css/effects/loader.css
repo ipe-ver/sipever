@@ -31,34 +31,38 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  animation: ro 1.5s infinite;
 }
 
 .sp-box .sp1{
-  border-color: #38464e;
+  border-color: #13262F;
   width: 120px;
   height: 120px;
+  animation: ro 1.5s infinite;
 }
 
 .sp-box .sp2{
-  border-color: #4c5f6b;
+  border-color: #E9EBEC;
   width: 100px;
   height: 100px;
-  animation-delay: 0.2s;
+
+  animation: ro_inv 1.5s infinite;
 }
 
 .sp-box .sp3{
-  border-color: #adb6bb;
+  border-color: #13262F;
   width: 80px;
   height: 80px;
-  animation-delay: 0.4s;
+
+  animation: ro 1.5s infinite;
 }
 
 .sp-box .sp4{
-  border-color: #eef0f1;
+  border-color: #E9EBEC;
   width: 60px;
   height: 60px;
-  animation-delay: 0.6s;
+
+  animation: ro_inv 1.5s infinite;
+
 }
 
 @keyframes lds-dual-ring {
@@ -76,5 +80,14 @@
   }
   100%{
     transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes ro_inv{
+  0%{
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100%{
+    transform: translate(-50%, -50%) rotate(-360deg);
   }
 }

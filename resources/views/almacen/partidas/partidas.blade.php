@@ -47,7 +47,7 @@
                 <a class ="icon-ref" style="padding-right: 10px;" href="{{route('almacen.index')}}" title="">
                     <h3 class="fas fa-home"></h3>
                 </a>
-                @include('almacen.crear_partida')
+                @include('almacen.partidas.crear_partida')
                 <a style="margin-bottom: 10px;" type="button" class="btn btn-agregar" data-toggle="modal" href="#createPartida"> Agregar</a>
             </div>
         </div>

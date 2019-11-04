@@ -534,7 +534,447 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 
             END
         ');
-       
+        
+        /**Prodedimiento almacenado para obtener todas las oficinas de cierto departamento
+         * Recibe como parametro la ubpp del departamento
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_obtener_oficinas;
+
+            CREATE PROCEDURE `sp_obtener_oficinas`(
+                IN `ubpp_oficina` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SELECT cat_oficinas.ubpp, cat_oficinas.oficina, cat_oficinas.descripcion, cat_oficinas.subdir 
+                FROM cat_oficinas 
+                WHERE oficina > 0
+                AND ubpp = ubpp_oficina;
+            END
+        ');
+
+        /**Prodedimiento almacenado para obtener todos los departamentos
+         * 
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_obtener_departamentos;
+
+            CREATE PROCEDURE `sp_obtener_departamentos`()
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SELECT cat_oficinas.ubpp, cat_oficinas.oficina, cat_oficinas.descripcion, cat_oficinas.subdir FROM cat_oficinas WHERE oficina = 0;
+            END
+        ');
+
+
+
+
+
+        /** *********************************************************************VALES************************************************ */
+
+
+
+
+
+        /**Procedimiento almacenado para crear un pedido, es el primer paso para la generación de un vale.
+         * Solo recibe como parámetro el nombre de la oficina.
+         * Obtiene como respuesta la clave del pedido generado.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_vale_consumo;
+
+            CREATE PROCEDURE `sp_vale_consumo`(
+                IN `descripcion_oficina` VARCHAR(191),
+                OUT `clave` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.estatus = 1);
+
+                INSERT INTO c_pedido_consumo (id_oficina, id_periodo, folio, tipo_movimiento, fecha_movimiento, created_at) VALUES
+                    ((SELECT id FROM cat_oficinas WHERE cat_oficinas.descripcion = descripcion_oficina), 
+                    @periodo, (SELECT folio FROM folios WHERE folios.id_periodo = @periodo), 1, NOW(), NOW());
+
+                UPDATE folios SET folio = folio + 1, updated_at = NOW() WHERE folios.id_periodo = @periodo;
+
+                SET clave := (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = 
+                    (SELECT MAX(id_pedido_consumo) FROM c_pedido_consumo WHERE c_pedido_consumo.id_oficina = 
+                    (SELECT id FROM cat_oficinas WHERE cat_oficinas.descripcion = descripcion_oficina)));
+            END
+        ');
+        
+        /**Procedimiento almacenado para el almacenamiento de los articulos de cada pedido. Este paso va despúes de la generación del vale
+         * Recibe como parametros el id del pedido generado (obtenido del sp_vale_consumo), la clave del articulo y la cantidad solicitada
+         * Se pueden almacenar diversos articulos de diversas partidas con el mismo id del pedido
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_pedido_articulos;
+
+            CREATE PROCEDURE `sp_pedido_articulos`(
+                IN `id_pedido` INT,
+                IN `clave` INT,
+                IN `cantidad` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                INSERT INTO d_pedido_consumo (id_pedido_consumo, id_articulo, cantidad, no_folio, created_at) VALUES 
+                    (id_pedido, (SELECT id FROM cat_articulos WHERE cat_articulos.clave = clave), cantidad, 
+                    (SELECT folio FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido), NOW());
+            END
+        ');
+        
+        /**Procedimiento almacenado que almacena el consumo hacia almacen. Es el primer paso para validar un vale
+         * Recibe como parametro el id del vale generado.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_consumo;
+
+            CREATE PROCEDURE `sp_consumo`(
+                IN `id_pedido` INT,
+                OUT `clave` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+
+                SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.estatus = 1);
+                SET @oficina := (SELECT id_oficina FROM c_pedido_consumo WHERE id_pedido_consumo = id_pedido);
+                SET @poliza := (SELECT id_poliza FROM polizas WHERE id_periodo = @periodo);
+                SET @folio := (SELECT folio FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido);
+
+                INSERT INTO consumos (id_oficina, id_poliza, id_periodo, id_pedido_consumo, folio, fecha_movimiento, created_at) 
+                VALUES (@oficina, @poliza, @periodo, id_pedido, @folio, NOW(), NOW());
+
+                SET @clave := (SELECT id_consumo FROM consumos WHERE consumos.id_pedido_consumo = id_pedido);
+            END
+        ');
+        
+        /**Procedimiento almacenado para el registro de los detalles sobre los artículos que se van a entregar. Esta es la validación del vale.
+         * Recibe como parametros el id del consumo generado (obtenido del sp_consumo), la clave del artículo y la cantidad que se va a entregar. 
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_detalles_consumo;
+
+            CREATE PROCEDURE `sp_detalles_consumo`(
+                IN `id_consumo` INT,
+                IN `clave` INT,
+                IN `cantidad` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                
+                SET @id_articulo := (SELECT id FROM cat_articulos WHERE cat_articulos.clave = clave);
+                SET @nombre_articulo := (SELECT descripcion FROM cat_articulos WHERE cat_articulos.id = @id_articulo);
+                SET @precio := (SELECT precio_unitario FROM cat_articulos WHERE cat_articulos.id = @id_articulo);
+
+                INSERT INTO detalles (id_consumo, id_articulo, tipo_movimiento, descripcion, cantidad, precio_unitario, subtotal, created_at) 
+                VALUES (id_consumo, @id_articulo, 1, @nombre_articulo, cantidad, @precio, cantidad * @precio, NOW());
+
+                SET @existencias := (SELECT cat_articulos.existencias FROM cat_articulos WHERE cat_articulos.id = @id_articulo);
+
+                UPDATE cat_articulos SET cat_articulos.existencias = (@existencias-cantidad) WHERE cat_articulos.id = @id_articulo;
+            END
+        ');
+        
+        /**Procedimiento almacenado que modifica el tipo de movimiento de un vale.
+         * 1 para consumo y 3 para compra directa.
+         * Recibe como parametro el id del vale.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_cambiar_vale;
+
+            CREATE PROCEDURE `sp_cambiar_vale`(
+                IN `id_pedido` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SET @tipo_movimiento := (SELECT c_pedido_consumo.tipo_movimiento FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido);
+
+                IF @tipo_movimiento = 1 THEN
+                    UPDATE c_pedido_consumo SET tipo_movimiento = 3 WHERE c_pedido_consumo.id_pedido_consumo = id_pedido;
+                ELSE
+                    UPDATE c_pedido_consumo SET tipo_movimiento = 1 WHERE c_pedido_consumo.id_pedido_consumo = id_pedido;
+                END IF;
+            END
+        ');
+        
+        /**Procedimiento almacenado para guardar los artículos que se van a comprar por compra directa
+         * Recibe como parametro el nombre del artículo
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_articulo_compra;
+
+            CREATE PROCEDURE `sp_articulo_compra`(
+                IN `descripcion` VARCHAR(191)
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                INSERT INTO cat_articulos_compra (descripcion) VALUES (descripcion);
+            END
+        ');
+        
+        /**Procedimiento almacenado para el almacenamiento de los articulos de cada pedido. Este paso va despúes de guardar los articulos a comprar.
+         * Este es para la parte de las compras directas
+         * Recibe como parametros el id del pedido generado (obtenido del sp_vale_consumo), la clave del articulo y la cantidad solicitada
+         * Se pueden almacenar diversos articulos de diversas partidas con el mismo id del pedido
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_compra_articulos;
+
+            CREATE PROCEDURE `sp_compra_articulos`(
+                IN `id_pedido` INT,
+                IN `descripcion` VARCHAR(191),
+                IN `cantidad` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                INSERT INTO d_pedido_compra (id_pedido_compra, id_articulo, cantidad, no_folio, created_at) VALUES 
+                    (id_pedido, (SELECT MAX(id) FROM cat_articulos_compra WHERE cat_articulos_compra.descripcion = descripcion), cantidad, 
+                    (SELECT folio FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido), NOW());
+            END
+        ');
+        
+        /**Procedimiento almacenado para los detalles de la compra
+         * Recibe como parametros la clave de la compra, la descripción del artículo comprado, cantidad comprada y precio unitario.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_detalles_compra;
+            
+            CREATE PROCEDURE `sp_detalles_compra`(
+                IN `clave` INT,
+                IN `descripcion` VARCHAR(191),
+                IN `cantidad` INT,
+                IN `precio_unitario` DOUBLE
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SET @i := (SELECT cat_articulos.id FROM cat_articulos WHERE cat_articulos.descripcion = descripcion);
+                SET @iva := (SELECT iva FROM compras WHERE compras.id_compra = clave);
+                    
+                INSERT INTO detalles (id_compra, id_articulo, tipo_movimiento, descripcion, cantidad, precio_unitario, subtotal, total, created_at) 
+                VALUES (clave, @i, 3, descripcion, cantidad, precio_unitario, cantidad * precio_unitario, 
+                (((@iva / 100) * (cantidad * precio_unitario)) + (cantidad * precio_unitario)), NOW());
+
+                SET @existencias := (SELECT cat_articulos.existencias FROM cat_articulos WHERE cat_articulos.id = @i);
+                SET @precio_unitario := (SELECT cat_articulos.precio_unitario FROM cat_articulos WHERE cat_articulos.id = @i);
+                
+                UPDATE cat_articulos SET cat_articulos.precio_unitario = (((@existencias*@precio_unitario)+(cantidad*precio_unitario))/(@existencias+cantidad)),
+                    cat_articulos.existencias = (@existencias+cantidad) WHERE cat_articulos.id = @i;
+            END
+        ');
+
+         /**Procedimiento almacenado para el registro de una compra por artículo que esté dentro del almacén.
+         * Este procedimiento afecta directamente a las existencias del artículo en el catálogo de artículos y modifica su precio conforme a la fórmula de precio promedio.
+         * Recibe como parametros: mes y año para el periodo, nombre del proveedor, descripción del artículo que se se compró,
+         * folio único, fecha de movimiento, número de factura, fecha de facturación, iva del producto, subtotal de la compra,
+         * la cantidad que se compró del artículo y el precio unitario por el cual se compró el artículo.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_factura;
+
+            CREATE PROCEDURE `sp_factura`(
+                IN `mes` INT,
+                IN `anio` INT,
+                IN `nombre_proveedor` VARCHAR(191),
+                IN `fecha_movimiento` DATE,
+                IN `no_factura` VARCHAR(191),
+                IN `fecha_facturacion` DATE,
+                IN `iva` DOUBLE,
+                IN `subtotal` DOUBLE,
+                OUT `clave` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+
+                SET @periodo := (SELECT periodos.id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio AND estatus = 1);
+                SET @folio := (SELECT folios.folio FROM folios WHERE folios.id_periodo = @periodo);
+                SET @proveedor := (SELECT cat_proveedores.id FROM cat_proveedores WHERE cat_proveedores.nombre = nombre_proveedor);
+
+                INSERT INTO compras (id_periodo, id_proveedor, folio, fecha_movimiento, no_factura, fecha_factura, iva, total, created_at)
+                VALUES (@periodo, @proveedor, @folio, fecha_movimiento, no_factura, fecha_facturacion, iva, 
+                    (((iva/100)*subtotal)+subtotal), NOW());
+                        
+                UPDATE folios SET folio = folio + 1, updated_at = NOW() WHERE folios.id_periodo = @periodo;
+
+                SET clave := (SELECT id_compra FROM compras WHERE compras.folio = @folio);
+            END
+        ');
+
+        /**Procedimiento almacenado para obtener todos los vales
+         * No recibe parametros
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_get_vales;
+            
+            CREATE PROCEDURE `sp_get_vales`()
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SELECT folio AS "FOLIO", tipo_movimiento AS "TIPO", (SELECT cat_oficinas.descripcion FROM cat_oficinas WHERE cat_oficinas.id = c_pedido_consumo.id_oficina) AS "OFICINA", 
+                    fecha_movimiento AS "FECHA" FROM c_pedido_consumo;
+            END
+        ');
+
+        /**Procedimiento almacenado para obtener todos los articulos de un vale.
+         * Recibe como parametro el folio del vale y la fecha.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_get_articulos_vale;
+
+            CREATE PROCEDURE `sp_get_articulos_vale`(
+                IN `folio` INT,
+                IN `fecha` DATE
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SET @tipo_vale := (SELECT tipo_movimiento FROM c_pedido_consumo WHERE folio = folio AND fecha_recepcion = fecha);
+                SET @periodo := (SELECT id_periodo FROM c_pedido_consumo WHERE folio = folio AND fecha_recepcion = fecha);
+
+                IF @tipo_vale = 1 THEN
+                    SELECT articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD", 
+                        articulo.precio_unitario AS "PRECIO", pedido.cantidad AS "CANT."
+                    FROM cat_articulos articulo
+                    INNER JOIN d_pedido_consumo pedido ON pedido.id_articulo = articulo.id
+                    INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
+                    WHERE pedido.id_pedido_consumo = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio AND id_periodo = @periodo);
+                ELSE
+                    SELECT articulo.descripcion AS "DESCRIPCION", pedido.cantidad AS "CANT."
+                    FROM cat_articulos_compra articulo
+                    INNER JOIN d_pedido_compra pedido ON pedido.id_articulo = articulo.id
+                    WHERE pedido.id_pedido_compra = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio AND id_periodo = @periodo);
+                END IF;
+            END
+        ');
+
+
+
+
+        /** *******************************REPORTES********************************************* */
+        
+
+
+        /**Procedimiento almacenado para obtener el reporte "REPORTE DE CONSUMOS POR DEPARTAMENTO CORRESPONDIENTE AL MES DE X DEL X"
+         * Solo obtiene los consumos de una oficina
+         * Recibe como parametro la ubpp, el nombre de la oficina, el mes y el año.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_reporte_consumos_oficina;
+
+            CREATE PROCEDURE `sp_reporte_consumos_oficina`(
+                IN `ubpp` INT,
+                IN `oficina` VARCHAR(191),
+                IN `mes` INT,
+                IN `anio` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio);
+                SET @id_oficina := (SELECT id FROM cat_oficinas WHERE cat_oficinas.ubpp = ubpp AND cat_oficinas.descripcion = oficina);
+                SET @num_cuentas := (SELECT COUNT(sscta) FROM cat_cuentas_contables);
+                SET @aux := 1;
+                
+                WHILE @aux <= @num_cuentas DO
+                    SET @condicion3 := (SELECT IF ((SELECT COUNT(articulo.clave) 
+                        FROM cat_articulos articulo
+                        INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                        INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+                        INNER JOIN periodos periodo ON periodo.id_periodo = consumo.id_periodo
+                        WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo) > 0, 1, 0));
+                    IF @condicion3 = 1 THEN
+                        SELECT cat_cuentas_contables.sscta, cat_cuentas_contables.nombre FROM cat_cuentas_contables WHERE cat_cuentas_contables.id = @aux;
+                        SELECT articulo.clave AS codificacion, articulo.descripcion AS descripcion, consumo.folio AS folio, 
+                            unidad.descripcion AS unidad, detalle.cantidad AS cantidad, FORMAT(articulo.precio_unitario, 4) AS costo,
+                            FORMAT(detalle.cantidad * articulo.precio_unitario, 4) AS importe
+                        FROM consumos consumo
+                        INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
+                        INNER JOIN periodos periodo ON periodo.id_periodo = consumo.id_periodo
+                        INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
+                        INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
+                        WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo;
+                    END IF;
+                    SET @aux := @aux + 1;
+                END WHILE;
+            END
+        ');
+
+        /**Procedimiento almacenado para obtener el reporte "REPORTE DE CONSUMOS POR DEPARTAMENTO CORRESPONDIENTE AL MES DE X DEL X"
+         * Recibe como parametros el año y el mes.
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_reporte_consumos_departamento;
+
+            CREATE PROCEDURE `sp_reporte_consumos_departamento`(
+                IN `mes` INT,
+                IN `anio` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio);
+                SET @num_ubpp := (SELECT COUNT(DISTINCT ubpp) FROM cat_oficinas);
+                SET @ubpp := (SELECT GROUP_CONCAT(DISTINCT(ubpp)) FROM cat_oficinas);
+                SET @aux_ubpp := 1;
+
+                WHILE @aux_ubpp <= @num_ubpp DO
+                    SET @ubpp_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@ubpp, ",", @aux_ubpp), ",", -1));
+                    SET @num_oficinas := (SELECT COUNT(id) FROM cat_oficinas WHERE cat_oficinas.ubpp = @ubpp_actual);
+                    SET @oficina := (SELECT GROUP_CONCAT(DISTINCT(ubpp)) FROM cat_oficinas WHERE cat_oficinas.ubpp = @ubpp);
+                    SET @aux_oficina := 1;
+
+                    SELECT ubpp, descripcion FROM cat_oficinas WHERE cat_oficinas.ubpp = @ubpp_actual;
+
+                    WHILE @aux_oficina <= @num_oficinas DO
+                        SET @oficina_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@ubpp, ",", @aux_oficina), ",", -1));
+                        CALL sp_reporte_consumos_oficina(@ubpp_actual, @oficina_actual, mes, anio);
+                        SET @aux_oficina := @aux_oficina + 1;
+                    END WHILE;
+                    SET @aux_ubpp = @aux_ubpp + 1;
+                END WHILE;
+            END
+        ');
+        
         /**Procedimiento almacenado para la obtención de datos sobre el reporte "REPORTE FINAL DE EXISTENCIAS CORRESPONDIENTE AL MES DE X DEL X"
          * Recibe como parametros el mes, el año y la partida a la cual se desee obtener el reporte final de existencias.
          */
@@ -763,429 +1203,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         SET aux_partidas := @aux_partidas + 1;
                     END WHILE;
                 END IF;
-            END
-        ');
-
-         /**Procedimiento almacenado para el registro de una compra por artículo que esté dentro del almacén.
-         * Este procedimiento afecta directamente a las existencias del artículo en el catálogo de artículos y modifica su precio conforme a la fórmula de precio promedio.
-         * Recibe como parametros: mes y año para el periodo, nombre del proveedor, descripción del artículo que se se compró,
-         * folio único, fecha de movimiento, número de factura, fecha de facturación, iva del producto, subtotal de la compra,
-         * la cantidad que se compró del artículo y el precio unitario por el cual se compró el artículo.
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_factura;
-
-            CREATE PROCEDURE `sp_factura`(
-                IN `mes` INT,
-                IN `anio` INT,
-                IN `nombre_proveedor` VARCHAR(191),
-                IN `fecha_movimiento` DATE,
-                IN `no_factura` VARCHAR(191),
-                IN `fecha_facturacion` DATE,
-                IN `iva` DOUBLE,
-                IN `subtotal` DOUBLE,
-                OUT `clave` INT
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-
-                SET @periodo := (SELECT periodos.id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio AND estatus = 1);
-                SET @folio := (SELECT folios.folio FROM folios WHERE folios.id_periodo = @periodo);
-                SET @proveedor := (SELECT cat_proveedores.id FROM cat_proveedores WHERE cat_proveedores.nombre = nombre_proveedor);
-
-                INSERT INTO compras (id_periodo, id_proveedor, folio, fecha_movimiento, no_factura, fecha_factura, iva, total, created_at)
-                VALUES (@periodo, @proveedor, @folio, fecha_movimiento, no_factura, fecha_facturacion, iva, 
-                    (((iva/100)*subtotal)+subtotal), NOW());
-                        
-                UPDATE folios SET folio = folio + 1, updated_at = NOW() WHERE folios.id_periodo = @periodo;
-
-                SET clave := (SELECT id_compra FROM compras WHERE compras.folio = @folio);
-            END
-        ');
-
-        /**Procedimiento almacenado para los detalles de la compra
-         * Recibe como parametros la clave de la compra, la descripción del artículo comprado, cantidad comprada y precio unitario.
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_detalles_compra;
-            
-            CREATE PROCEDURE `sp_detalles_compra`(
-                IN `clave` INT,
-                IN `descripcion` VARCHAR(191),
-                IN `cantidad` INT,
-                IN `precio_unitario` DOUBLE
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                SET @i := (SELECT cat_articulos.id FROM cat_articulos WHERE cat_articulos.descripcion = descripcion);
-                SET @iva := (SELECT iva FROM compras WHERE compras.id_compra = clave);
-                    
-                INSERT INTO detalles (id_compra, id_articulo, tipo_movimiento, descripcion, cantidad, precio_unitario, subtotal, total, created_at) 
-                VALUES (clave, @i, 3, descripcion, cantidad, precio_unitario, cantidad * precio_unitario, 
-                (((@iva / 100) * (cantidad * precio_unitario)) + (cantidad * precio_unitario)), NOW());
-
-                SET @existencias := (SELECT cat_articulos.existencias FROM cat_articulos WHERE cat_articulos.id = @i);
-                SET @precio_unitario := (SELECT cat_articulos.precio_unitario FROM cat_articulos WHERE cat_articulos.id = @i);
-                
-                UPDATE cat_articulos SET cat_articulos.precio_unitario = (((@existencias*@precio_unitario)+(cantidad*precio_unitario))/(@existencias+cantidad)),
-                    cat_articulos.existencias = (@existencias+cantidad) WHERE cat_articulos.id = @i;
-            END
-        ');
-        
-        /**Procedimiento almacenado para crear un pedido, es el primer paso para la generación de un vale.
-         * Solo recibe como parámetro el nombre de la oficina.
-         * Obtiene como respuesta la clave del pedido generado.
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_vale_consumo;
-
-            CREATE PROCEDURE `sp_vale_consumo`(
-                IN `descripcion_oficina` VARCHAR(191),
-                OUT `clave` INT
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.estatus = 1);
-
-                INSERT INTO c_pedido_consumo (id_oficina, id_periodo, folio, tipo_movimiento, fecha_movimiento, created_at) VALUES
-                    ((SELECT id FROM cat_oficinas WHERE cat_oficinas.descripcion = descripcion_oficina), 
-                    @periodo, (SELECT folio FROM folios WHERE folios.id_periodo = @periodo), 1, NOW(), NOW());
-
-                UPDATE folios SET folio = folio + 1, updated_at = NOW() WHERE folios.id_periodo = @periodo;
-
-                SET clave := (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = 
-                    (SELECT MAX(id_pedido_consumo) FROM c_pedido_consumo WHERE c_pedido_consumo.id_oficina = 
-                    (SELECT id FROM cat_oficinas WHERE cat_oficinas.descripcion = descripcion_oficina)));
-            END
-        ');
-
-        /**Procedimiento almacenado que modifica el tipo de movimiento de un vale.
-         * 1 para consumo y 3 para compra directa.
-         * Recibe como parametro el id del vale.
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_cambiar_vale;
-
-            CREATE PROCEDURE `sp_cambiar_vale`(
-                IN `id_pedido` INT
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                SET @tipo_movimiento := (SELECT c_pedido_consumo.tipo_movimiento FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido);
-
-                IF @tipo_movimiento = 1 THEN
-                    UPDATE c_pedido_consumo SET tipo_movimiento = 3 WHERE c_pedido_consumo.id_pedido_consumo = id_pedido;
-                ELSE
-                    UPDATE c_pedido_consumo SET tipo_movimiento = 1 WHERE c_pedido_consumo.id_pedido_consumo = id_pedido;
-                END IF;
-            END
-        ');
-
-        /**Procedimiento almacenado para el almacenamiento de los articulos de cada pedido. Este paso va despúes de la generación del vale
-         * Recibe como parametros el id del pedido generado (obtenido del sp_vale_consumo), la clave del articulo y la cantidad solicitada
-         * Se pueden almacenar diversos articulos de diversas partidas con el mismo id del pedido
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_pedido_articulos;
-
-            CREATE PROCEDURE `sp_pedido_articulos`(
-                IN `id_pedido` INT,
-                IN `clave` INT,
-                IN `cantidad` INT
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                INSERT INTO d_pedido_consumo (id_pedido_consumo, id_articulo, cantidad, no_folio, created_at) VALUES 
-                    (id_pedido, (SELECT id FROM cat_articulos WHERE cat_articulos.clave = clave), cantidad, 
-                    (SELECT folio FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido), NOW());
-            END
-        ');
-
-        /**Procedimiento almacenado para guardar los artículos que se van a comprar por compra directa
-         * Recibe como parametro el nombre del artículo
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_articulo_compra;
-
-            CREATE PROCEDURE `sp_articulo_compra`(
-                IN `descripcion` VARCHAR(191)
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                INSERT INTO cat_articulos_compra (descripcion) VALUES (descripcion);
-            END
-        ');
-
-        /**Procedimiento almacenado para el almacenamiento de los articulos de cada pedido. Este paso va despúes de guardar los articulos a comprar.
-         * Es te es para la parte de las compras directas
-         * Recibe como parametros el id del pedido generado (obtenido del sp_vale_consumo), la clave del articulo y la cantidad solicitada
-         * Se pueden almacenar diversos articulos de diversas partidas con el mismo id del pedido
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_compra_articulos;
-
-            CREATE PROCEDURE `sp_compra_articulos`(
-                IN `id_pedido` INT,
-                IN `descripcion` INT,
-                IN `cantidad` INT
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                INSERT INTO d_pedido_compra (id_pedido_compra, id_articulo, cantidad, no_folio, created_at) VALUES 
-                    (id_pedido, (SELECT MAX(id) FROM cat_articulos_compra WHERE cat_articulos_compra.descripcion = descripcion), cantidad, 
-                    (SELECT folio FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido), NOW());
-            END
-        ');
-
-        /**Procedimiento almacenado que almacena el consumo hacia almacen. Es el primer paso para validar un vale
-         * Recibe como parametro el id del vale generado.
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_consumo;
-
-            CREATE PROCEDURE `sp_consumo`(
-                IN `id_pedido` INT,
-                OUT `clave` INT
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-
-                SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.estatus = 1);
-                SET @oficina := (SELECT id_oficina FROM c_pedido_consumo WHERE id_pedido_consumo = id_pedido);
-                SET @poliza := (SELECT id_poliza FROM polizas WHERE id_periodo = @periodo);
-                SET @folio := (SELECT folio FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido);
-
-                INSERT INTO consumos (id_oficina, id_poliza, id_periodo, id_pedido_consumo, folio, fecha_movimiento, created_at) 
-                VALUES (@oficina, @poliza, @periodo, id_pedido, @folio, NOW(), NOW());
-
-                SET @clave := (SELECT id_consumo FROM consumos WHERE consumos.id_pedido_consumo = id_pedido);
-            END
-        ');
-
-        /**Procedimiento almacenado para obtener todos los vales
-         * No recibe parametros
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_get_vales;
-            
-            CREATE PROCEDURE `sp_get_vales`()
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                SELECT folio AS "FOLIO", tipo_movimiento AS "TIPO", (SELECT cat_oficinas.descripcion FROM cat_oficinas WHERE cat_oficinas.id = c_pedido_consumo.id_oficina) AS "OFICINA", 
-                    fecha_movimiento AS "FECHA" FROM c_pedido_consumo;
-            END
-        ');
-
-        /**Procedimiento almacenado para obtener todos los articulos de un vale.
-         * Recibe como parametro el folio del vale y la fecha.
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_get_articulos_vale;
-
-            CREATE PROCEDURE `sp_get_articulos_vale`(
-                IN `folio` INT,
-                IN `fecha` DATE
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                SET @tipo_vale := (SELECT tipo_movimiento FROM c_pedido_consumo WHERE folio = folio AND fecha_recepcion = fecha);
-                SET @periodo := (SELECT id_periodo FROM c_pedido_consumo WHERE folio = folio AND fecha_recepcion = fecha);
-
-                IF @tipo_vale = 1 THEN
-                    SELECT articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD", 
-                        articulo.precio_unitario AS "PRECIO", pedido.cantidad AS "CANT."
-                    FROM cat_articulos articulo
-                    INNER JOIN d_pedido_consumo pedido ON pedido.id_articulo = articulo.id
-                    INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
-                    WHERE pedido.id_pedido_consumo = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio AND id_periodo = @periodo);
-                ELSE
-                    SELECT articulo.descripcion AS "DESCRIPCION", pedido.cantidad AS "CANT."
-                    FROM cat_articulos_compra articulo
-                    INNER JOIN d_pedido_compra pedido ON pedido.id_articulo = articulo.id
-                    WHERE pedido.id_pedido_compra = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio AND id_periodo = @periodo);
-                END IF;
-            END
-        ');
-
-        /**Procedimiento almacenado para el registro de los detalles sobre los artículos que se van a entregar. Esta es la validación del vale.
-         * Recibe como parametros el id del consumo generado (obtenido del sp_consumo), la clave del artículo y la cantidad que se va a entregar. 
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_detalles_consumo;
-
-            CREATE PROCEDURE `sp_detalles_consumo`(
-                IN `id_consumo` INT,
-                IN `clave` INT,
-                IN `cantidad` INT
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                
-                SET @id_articulo := (SELECT id FROM cat_articulos WHERE cat_articulos.clave = clave);
-                SET @nombre_articulo := (SELECT descripcion FROM cat_articulos WHERE cat_articulos.id = @id_articulo);
-                SET @precio := (SELECT precio_unitario FROM cat_articulos WHERE cat_articulos.id = @id_articulo);
-
-                INSERT INTO detalles (id_consumo, id_articulo, tipo_movimiento, descripcion, cantidad, precio_unitario, subtotal, created_at) 
-                VALUES (id_consumo, @id_articulo, 1, @nombre_articulo, cantidad, @precio, cantidad * @precio, NOW());
-
-                SET @existencias := (SELECT cat_articulos.existencias FROM cat_articulos WHERE cat_articulos.id = @id_articulo);
-
-                UPDATE cat_articulos SET cat_articulos.existencias = (@existencias-cantidad) WHERE cat_articulos.id = @id_articulo;
-            END
-        ');
-
-        /**Procedimiento almacenado para obtener el reporte "REPORTE DE CONSUMOS POR DEPARTAMENTO CORRESPONDIENTE AL MES DE X DEL X"
-         * Solo obtiene los consumos de una oficina
-         * Recibe como parametro la ubpp, el nombre de la oficina, el mes y el año.
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_reporte_consumos_oficina;
-
-            CREATE PROCEDURE `sp_reporte_consumos_oficina`(
-                IN `ubpp` INT,
-                IN `oficina` VARCHAR(191),
-                IN `mes` INT,
-                IN `anio` INT
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio);
-                SET @id_oficina := (SELECT id FROM cat_oficinas WHERE cat_oficinas.ubpp = ubpp AND cat_oficinas.descripcion = oficina);
-                SET @num_cuentas := (SELECT COUNT(sscta) FROM cat_cuentas_contables);
-                SET @aux := 1;
-                
-                WHILE @aux <= @num_cuentas DO
-                    SET @condicion3 := (SELECT IF ((SELECT COUNT(articulo.clave) 
-                        FROM cat_articulos articulo
-                        INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
-                        INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
-                        INNER JOIN periodos periodo ON periodo.id_periodo = consumo.id_periodo
-                        WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo) > 0, 1, 0));
-                    IF @condicion3 = 1 THEN
-                        SELECT cat_cuentas_contables.sscta, cat_cuentas_contables.nombre FROM cat_cuentas_contables WHERE cat_cuentas_contables.id = @aux;
-                        SELECT articulo.clave AS codificacion, articulo.descripcion AS descripcion, consumo.folio AS folio, 
-                            unidad.descripcion AS unidad, detalle.cantidad AS cantidad, FORMAT(articulo.precio_unitario, 4) AS costo,
-                            FORMAT(detalle.cantidad * articulo.precio_unitario, 4) AS importe
-                        FROM consumos consumo
-                        INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
-                        INNER JOIN periodos periodo ON periodo.id_periodo = consumo.id_periodo
-                        INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
-                        INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
-                        WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo;
-                    END IF;
-                    SET @aux := @aux + 1;
-                END WHILE;
-            END
-        ');
-
-        /**Procedimiento almacenado para obtener el reporte "REPORTE DE CONSUMOS POR DEPARTAMENTO CORRESPONDIENTE AL MES DE X DEL X"
-         * Recibe como parametros el año y el mes.
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_reporte_consumos_departamento;
-
-            CREATE PROCEDURE `sp_reporte_consumos_departamento`(
-                IN `mes` INT,
-                IN `anio` INT
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio);
-                SET @num_ubpp := (SELECT COUNT(DISTINCT ubpp) FROM cat_oficinas);
-                SET @ubpp := (SELECT GROUP_CONCAT(DISTINCT(ubpp)) FROM cat_oficinas);
-                SET @aux_ubpp := 1;
-
-                WHILE @aux_ubpp <= @num_ubpp DO
-                    SET @ubpp_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@ubpp, ",", @aux_ubpp), ",", -1));
-                    SET @num_oficinas := (SELECT COUNT(id) FROM cat_oficinas WHERE cat_oficinas.ubpp = @ubpp_actual);
-                    SET @oficina := (SELECT GROUP_CONCAT(DISTINCT(ubpp)) FROM cat_oficinas WHERE cat_oficinas.ubpp = @ubpp);
-                    SET @aux_oficina := 1;
-
-                    SELECT ubpp, descripcion FROM cat_oficinas WHERE cat_oficinas.ubpp = @ubpp_actual;
-
-                    WHILE @aux_oficina <= @num_oficinas DO
-                        SET @oficina_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@ubpp, ",", @aux_oficina), ",", -1));
-                        CALL sp_reporte_consumos_oficina(@ubpp_actual, @oficina_actual, mes, anio);
-                        SET @aux_oficina := @aux_oficina + 1;
-                    END WHILE;
-                    SET @aux_ubpp = @aux_ubpp + 1;
-                END WHILE;
-            END
-        ');
-
-        /**Prodedimiento almacenado para obtener todas las oficinas de cierto departamento
-         * Recibe como parametro la ubpp del departamento
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_obtener_oficinas;
-
-            CREATE PROCEDURE `sp_obtener_oficinas`(
-                IN `ubpp_oficina` INT
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                SELECT cat_oficinas.ubpp, cat_oficinas.oficina, cat_oficinas.descripcion, cat_oficinas.subdir 
-                FROM cat_oficinas 
-                WHERE oficina > 0
-                AND ubpp = ubpp_oficina;
-            END
-        ');
-
-        /**Prodedimiento almacenado para obtener todos los departamentos
-         * 
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_obtener_departamentos;
-
-            CREATE PROCEDURE `sp_obtener_departamentos`()
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                SELECT cat_oficinas.ubpp, cat_oficinas.oficina, cat_oficinas.descripcion, cat_oficinas.subdir FROM cat_oficinas WHERE oficina = 0;
             END
         ');
 
@@ -1433,6 +1450,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 INNER JOIN cat_oficinas oficina ON oficina.id = consumo.id_oficina
                 INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
                 WHERE consumo.id_periodo = @periodo ORDER BY articulo.descripcion DESC;
+
+                SELECT cuenta.sscta AS "SSCTA", cuenta.nombre AS "PARTIDA", IFNULL((SELECT COUNT(id) FROM c_pedido_consumo),0) AS "CONSUMOS"
                 
                 SELECT COUNT(DISTINCT(detalle.id_consumo)) AS "CONSUMOS", SUM(detalle.cantidad) AS "CANTIDAD DE ARTICULOS", 
 							SUM(detalle.cantidad * articulo.precio_unitario) AS "IMPORTES TOTALES"
@@ -1587,6 +1606,9 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         ');
     }
 
+
+
+
     /**
      * Reverse the migrations.
      *
@@ -1614,28 +1636,39 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_generar_poliza;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_inventario_grupo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_cerrar_periodo;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_partida;');//Reporte
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_todo;');//Reporte
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_existencias;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_factura;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_detalles_compra;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_vale_consumo;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_cambiar_vale;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_pedido_articulos;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_articulo_compra;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra_articulos;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_consumo;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_get_vales;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_get_articulos_vale;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_detalles_consumo;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_oficina;');//Reporte
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_departamento;');//Reporte
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_obtener_oficinas;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_obtener_departamentos;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_consumos_articulo;');//Reporte
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_existencias_articulo;');//Reporte
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_relacion_consumos_articulo;');//Reporte
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_auxiliar_almacen;');//Reporte
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_compras;');//Reporte
+
+        /** *******************************************VALES************************************************* */
+
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_vale_consumo;');
+
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_pedido_articulos;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_consumo;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_detalles_consumo;');
+
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_cambiar_vale;');
+
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_articulo_compra;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra_articulos;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_detalles_compra;');
+
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_factura;');
+
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_get_vales;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_get_articulos_vale;');
+
+        /** *************************************REPORTES*************************************************** */
+
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_oficina;');//Reporte - Individual
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_departamento;');//Reporte - Individual
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_partida;');//Reporte - Individual
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_todo;');//Reporte - Individual
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_existencias;');//Reporte - Rangos
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_consumos_articulo;');//Reporte - Rangos
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_existencias_articulo;');//Reporte - Rangos
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_relacion_consumos_articulo;');//Reporte - Individual ** FALTA
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_auxiliar_almacen;');//Reporte - Individual
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_compras;');//Reporte - Rangos
     }
 }

@@ -32,7 +32,7 @@ class RoleTableSeeder extends Seeder
 
 
         //Rol de Administrador de Almacén   
-        $role = Role::create(['name' => 'almacen_admin', 'description' => 'Almacen_admin']);
+       /* $role = Role::create(['name' => 'almacen_admin', 'description' => 'Almacen_admin']);
         Permission::create(['name' => 'almacen_admin_roles_create']);
         Permission::create(['name' => 'almacen_admin_roles_edit']);
         Permission::create(['name' => 'almacen_admin_roles_show']);
@@ -44,10 +44,10 @@ class RoleTableSeeder extends Seeder
             'almacen_admin_roles_edit',
             'almacen_admin_roles_show',
             'almacen_admin_roles_destroy'
-        ]);
+        ]);*/
 
         //Rol de Capturista de Almacén
-        $role = Role::create(['name' => 'almacen_capturista', 'description' => 'Almacen_capturista']);
+        /*$role = Role::create(['name' => 'almacen_capturista', 'description' => 'Almacen_capturista']);
         Permission::create(['name' => 'almacen_capturista_roles_create']);
         Permission::create(['name' => 'almacen_capturista_roles_edit']);
         Permission::create(['name' => 'almacen_capturista_roles_show']);
@@ -59,10 +59,10 @@ class RoleTableSeeder extends Seeder
             'almacen_capturista_roles_edit',
             'almacen_capturista_roles_show',
             'almacen_capturista_roles_destroy'
-        ]);
+        ]);*/
 
         //Rol de Oficinista de Almacén    
-        $role = Role::create(['name' => 'almacen_oficinista', 'description' => 'Almacen_oficinista']);
+       /* $role = Role::create(['name' => 'almacen_oficinista', 'description' => 'Almacen_oficinista']);
         Permission::create(['name' => 'almacen_oficinista_roles_create']);
         Permission::create(['name' => 'almacen_oficinista_roles_edit']);
         Permission::create(['name' => 'almacen_oficinista_roles_show']);
@@ -75,7 +75,7 @@ class RoleTableSeeder extends Seeder
             'almacen_oficinista_roles_show',
             'almacen_oficinista_roles_destroy'
 
-        ]);
+        ]);*/
 
         
 

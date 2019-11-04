@@ -9,14 +9,13 @@
 
 	<div class="box">
 		<div class="box-header">
-            <div class="pull-left">
-                <div class="col-md-2">
-                    <button class="btn btn-primary btn-sm" id="btnAgregar" >
-                            <i class="fa fa-plus"></i> Agregar
-                    </button> 
-
+           
+                <div class="col-md-4">
+					<a href="{{ url('/catalogos') }}"  class="btn btn-danger"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span>&nbsp;Regresar</a>
+					<a href="{!! url('catalogos/add_rol') !!}"   class="btn btn-primary" id="btnAgregar"><i class="fa fa-plus"></i> Agregar Permiso</a>	
+                     
                 </div>   
-            </div>
+         
 			 
 			 			
 			<h3 class="box-title pull-right">Catálogos de Permisos</h3>
@@ -60,8 +59,8 @@
 				tituloModal.append('<i class="fa fa-plus"></i> Agregar Permisos');
 
 				var dataCampos = [
-					{campo:'input',idCampo:'name',nameCampo:'Rol:',typeCampo:'text',valorCampo:'',placeholder:'Rol',newClass:'',divSize:'12',datos:''},
-					{campo:'input',idCampo:'description',nameCampo:'Descripción del rol:',typeCampo:'text',valorCampo:'',placeholder:'Descripción del rol',newClass:'',divSize:'12',datos:''},	
+					
+					{campo:'input',idCampo:'name',nameCampo:'Descripción del permiso:',typeCampo:'text',valorCampo:'',placeholder:'Descripción del permiso',newClass:'',divSize:'12',datos:''},	
 					
 					
 				];
@@ -70,19 +69,21 @@
 
 				bodyModal.append(campos);
 				footerModal.append(imprimirBoton('btn-success', 'btnGuardar', 'Guardar'));
+				footerModal.append(imprimirBoton('btn-danger', 'btnCancelar', 'Cancelar'));
 				modal.modal('show');
 			});	
 
 			footerModal.on('click', '#btnGuardar', function(){
+				$guard_name = 'web';
 				var dataString = {
 					name: $("#name").val(),
-					username: $("#username").val(),
-					email: $("#email").val(),
+					guard_name: $guard_name,
 				}
+				console.log(dataString);
 				
-				/*$.ajax({
+				$.ajax({
 					type: 'POST',
-					url: routeIndex,
+					url: routeBase+'/catalogos/add_permisos',
 					data: dataString,
 					dataType: 'json',
 					success: function(data) {						
@@ -99,9 +100,14 @@
 					error: function(data) {
 						console.log(data);
 					}
-				});*/
+				});
 			})
-			
+
+			footerModal.on('click', '#btnCancelar', function(){
+				window.location.replace(routeBase+'/catalogos/permisos');	
+			})
+
+						
 				
 			table.bootstrapTable({
 				locale: 'es-MX',
@@ -128,7 +134,11 @@
 					field: 'name',
 					title: 'Name',
 					filterControl: 'input',	
-				},	{
+				},	{					
+					field: 'guard_name',
+					title: 'Tipo',
+					filterControl: 'input',	
+				},  {
 					title: 'Acciones',
 					//formatter: formatTableActions,
 					//events: operateEvents

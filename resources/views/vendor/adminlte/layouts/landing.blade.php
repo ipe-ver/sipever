@@ -246,29 +246,25 @@
 
 
 						<!-- MODULO DE ADMINISTRADOR-->
-						@if(Auth::user()->name == 'admin')
+
+					
+						@if(Auth::user()->hasRole('admin')) 
+							
+						
+						
 
 							<li class=""><a href="{!! route('catalogos.index') !!}"><i class="fas fa-book"></i> <span>Cátalogos</span></a></li>
 							<li class=""><a href="{!! route('expediente.index') !!}"><i class="fas fa-folder-open"></i> <span>Expediente Electrónico</span></a></li>
 
-						@endif
+						
+						@endif	
 
-						<!-- MODULO DE ALMACÉN-->
-
-						@if(Auth::user()->name == 'almacen_admin' or Auth::user()->name == 'almacen_capturista' or Auth::user()->name == 'almacen_oficinista' )
+						@if(Auth::user()->hasRole('almacen_admin') or Auth::user()->hasRole('almacen_capturista') or Auth::user()->hasRole('almacen_oficinista') )
 
 							<li class=""><a href="{!! route('almacen.index') !!}"><i class="fas fa-box-open"></i> <span>Almacén</span></a></li>
 
-						@endif
-
-
-						<!-- MODULO DE COMPRAS-->
-
-						@if(Auth::user()->name == 'compras_admin')
-
-							<li class=""><a href="{!! route('compras.index') !!}"><i class="fas fa-cart-plus"></i> <span>Compras</span></a></li>
-
-						@endif
+						@endif	
+						
 
 					</ul>
 				@endauth

@@ -78,8 +78,18 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'catalogos', 'as' => 'catalo
 	Route::get('/roles', function() { return view('catalogos.roles'); });
 	Route::get('/get_roles','Catalogos\RolesController@get_roles');
 
+	Route::get('/add_rol', 'Catalogos\RolesController@create');
+
+	Route::post('/save_rol', 'Catalogos\RolesController@store');
+
+
+	
+
+
 	Route::get('/permisos', function() { return view('catalogos.permisos'); });
 	Route::get('/get_permisos','Catalogos\PermisosController@get_permisos');
+	Route::post('/add_permisos', 'Catalogos\PermisosController@store');
+	
 
 	
 });

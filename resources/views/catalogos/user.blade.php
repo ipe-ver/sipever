@@ -10,14 +10,13 @@
 
 	<div class="box">
 		<div class="box-header">
-            <div class="pull-left">
-                <div class="col-md-2">
-                     
-					<a href="{!! url('catalogos/add_user') !!}"  class="btn btn-primary"><i class="fa fa-plus"></i> Agregar Usuario</a>																											
-
-                </div>   
-            </div>
-			 
+		
+			<div class="col-md-4">
+				
+				<a href="{{ url('/catalogos') }}"  class="btn btn-danger"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span>&nbsp;Regresar</a>
+				<a href="{!! url('catalogos/add_user') !!}"  class="btn btn-primary"><i class="fa fa-plus"></i> Agregar Usuario</a>	
+			</div>	 
+					 
 			 			
 			<h3 class="box-title pull-right">Catálogos de Usuario</h3>
 
@@ -87,11 +86,7 @@
 					title: 'Nombre del Empleado',	
 					filterControl: 'input',				
 					
-				},  {					
-					field: 'name',
-					title: 'Rol',
-					filterControl: 'input',	
-				},	{
+				},  {
 					title: 'Acciones',
 					//formatter: formatTableActions,
 					//events: operateEvents

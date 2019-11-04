@@ -20,21 +20,29 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email', 'password', 'id_empleado'  
+        'name', 'username', 'email', 'password', 'id_empleado', 'id_role'  
     ];
 
     public function empleados(){
 		return $this->belongsTo('App\Model\Rhumanos\Empleado', 'id_empleado', 'id');
     }
     
+    
+    
        
     // Relación many-to-many entre el User y el Role     
     public function roles() 
     {
-        return $this
-            ->belongsToMany('App\Role')
-            ->withTimestamps();
+        return $this->belongsToMany('App\Role', 'role_user', 'user_id', 'role_id');
     }
+
+   
+
+    // Relación many-to-many entre el User y el Role     
+   /* public function permissions() 
+    {
+        return $this->belongsToMany('App\Role', 'role_user', 'user_id', 'role_id');
+    }*/
 
     /**
      * The attributes that should be hidden for arrays.
@@ -77,13 +85,13 @@ class User extends Authenticatable
         }
         return false;
     }
-    public function hasRole($role)
+    /*public function hasRole($role)
     {
         if ($this->roles()->where('name', $role)->first()) {
             return true;
         }
         return false;
-    }
+    }*/
 
     
 }

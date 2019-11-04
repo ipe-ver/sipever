@@ -6,7 +6,10 @@ use App\User;
 use App\Role;
 use Validator;
 use App\Http\Controllers\Controller;
+//use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+
 
 /**
  * Class RegisterController
@@ -56,10 +59,10 @@ class RegisterController extends Controller
             //'name'              => 'required|string|max:255',
             'username'          => 'required|string|max:255|unique:users',
             'email'             => 'required|string|email|max:255|unique:users',
-            'password'          => 'required|string|min:6|confirmed',
-            'id_tipopersona'    => 'required',
-            'id_persona'        => 'required',
-            'rol'               => 'required',
+            'password'          => 'required|string|min:6',
+            'id_empleado'       => 'required',
+            'id_role'           => 'required',
+            
         ]);
     }
 
@@ -69,55 +72,41 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    /*protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'password' => $data['password'],
-            'id_tipopersona' => $data['id_tipopersona'],
-            'id_persona' => $data['id_persona'],            
-        ]);
-    }*/
+    
 
     protected function create(array $data)
     {
+      
+
+        $role = $data['id_role'];
+
         $user = User::create([
             'name' => $data['name'],
+            'username' => $data['username'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'id_empleado' => $data['id_empleado'], 
+                    
         ]);
-        
-        $user
-            ->roles()
-            ->attach(Role::where('name', 'user')->first());
+
+        $user = User::find($user->id);
+       
+        $user->roles()->attach($role);
+
         return $user;
     }
 
     public function registro(Request $request)
     {        
-        //try {
-            dd($request);
+        
             $this->validator($request->all())->validate();
             $request->request->add(['name' => $request->username]);
             $usuario = $this->create($request->all());
-            $usuario->assignRole($request->input('rol'));
 
             return \Response::json(['estatus' => true,
                                     'tipo' => 'success', 
                                     'mensaje'=>'Los datos se almacenaron correctamente'], 200);
 
-        /*} catch (\Exception $e) {
-            return \Response::json(['estatus' => false,
-                                    'tipo' => 'error', 
-                                    'mensage'=>'Error interno consulte al administrador'], 506);
-        }*/
-
-
-        //$this->guard()->login($user);
-
-        //return $this->registered($request, $user)
-                        //?: redirect($this->redirectPath());
+                        
     }
 }

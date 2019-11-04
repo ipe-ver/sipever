@@ -666,7 +666,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             END
         ');
 
-        /**Procedimiento almacenado para el reporte "CONCENTRADO DE EXISTENCIAS POR ARTICULOS DEL MES DE X AL MES DE X DEL 2019"
+        /**Procedimiento almacenado para el reporte "CONCENTRADO DE EXISTENCIAS POR ARTICULOS DEL MES DE X AL MES DE X DEL anio"
          * Recibe como parametros el mes de inicio, el mes de fin y el año
          */
         DB::unprepared('
@@ -684,8 +684,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             BEGIN
                 SET @mes_min := mes_inicio;
                 SET @mes_max := mes_fin;
-                SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = 2019);
-                SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = 2019);
+                SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
+                SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
                 SET @aux_periodos := @periodo_min;
                     
                 myloop: WHILE IFNULL(@periodo_min, 0) = 0 DO
@@ -693,7 +693,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     IF @mes_min > @mes_max THEN
                         LEAVE myloop;
                     ELSE
-                        SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = 2019);
+                        SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                     END IF;
                 END WHILE myloop;
                 
@@ -703,7 +703,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     IF @mes_max < @mes_min THEN
                         LEAVE myloop;
                     ELSE
-                        SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = 2019);
+                        SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
                     END IF;
                 END WHILE myloop;
                 
@@ -998,7 +998,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SELECT folio AS "FOLIO", tipo_movimiento AS "TIPO", fecha_recepcion AS "FECHA" FROM c_pedido_consumo;
+                SELECT folio AS "FOLIO", tipo_movimiento AS "TIPO", (SELECT cat_oficinas.descripcion FROM cat_oficinas WHERE cat_oficinas.id = c_pedido_consumo.id_oficina) AS "OFICINA", 
+                    fecha_movimiento AS "FECHA" FROM c_pedido_consumo;
             END
         ');
 
@@ -1021,13 +1022,14 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @periodo := (SELECT id_periodo FROM c_pedido_consumo WHERE folio = folio AND fecha_recepcion = fecha);
 
                 IF @tipo_vale = 1 THEN
-                    SELECT articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD", pedido.cantidad AS "CANT."
+                    SELECT articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD", 
+                        articulo.precio_unitario AS "PRECIO", pedido.cantidad AS "CANT."
                     FROM cat_articulos articulo
                     INNER JOIN d_pedido_consumo pedido ON pedido.id_articulo = articulo.id
                     INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
                     WHERE pedido.id_pedido_consumo = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio AND id_periodo = @periodo);
                 ELSE
-                    SELECT articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION", pedido.cantidad AS "CANT."
+                    SELECT articulo.descripcion AS "DESCRIPCION", pedido.cantidad AS "CANT."
                     FROM cat_articulos_compra articulo
                     INNER JOIN d_pedido_compra pedido ON pedido.id_articulo = articulo.id
                     WHERE pedido.id_pedido_compra = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio AND id_periodo = @periodo);
@@ -1208,8 +1210,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             BEGIN
                 SET @mes_min := mes_inicio;
                 SET @mes_max := mes_fin;
-                SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = 2019);
-                SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = 2019);
+                SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
+                SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
                 SET @aux_periodos := @periodo_min;
                     
                 myloop: WHILE IFNULL(@periodo_min, 0) = 0 DO
@@ -1217,7 +1219,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     IF @mes_min > @mes_max THEN
                         LEAVE myloop;
                     ELSE
-                        SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = 2019);
+                        SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                     END IF;
                 END WHILE myloop;
                 
@@ -1227,7 +1229,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     IF @mes_max < @mes_min THEN
                         LEAVE myloop;
                     ELSE
-                        SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = 2019);
+                        SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
                     END IF;
                 END WHILE myloop;
                 
@@ -1315,8 +1317,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             BEGIN
                 SET @mes_min := mes_inicio;
                 SET @mes_max := mes_fin;
-                SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = 2019);
-                SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = 2019);
+                SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
+                SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
                 SET @aux_periodos := @periodo_min;
                     
                 myloop: WHILE IFNULL(@periodo_min, 0) = 0 DO
@@ -1324,7 +1326,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     IF @mes_min > @mes_max THEN
                         LEAVE myloop;
                     ELSE
-                        SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = 2019);
+                        SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                     END IF;
                 END WHILE myloop;
                 
@@ -1334,7 +1336,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     IF @mes_max < @mes_min THEN
                         LEAVE myloop;
                     ELSE
-                        SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = 2019);
+                        SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
                     END IF;
                 END WHILE myloop;
                 
@@ -1502,6 +1504,9 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             END
         ');
 
+        /**Procedimiento almacenado para obtner el reporte "CONCENTRADO DE COMPRAS POR ARTICULO X SEMESTRE: DEL MES X AL MES X DEL X"
+         * Recibe como parametros los meses de inicio y fin y el año
+         */
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_concentrado_compras;
 
@@ -1517,15 +1522,15 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             BEGIN
                 SET @mes_min := mes_inicio;
                 SET @mes_max := mes_fin;
-                SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = 2019);
-                SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = 2019);
+                SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
+                SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
                     
                 myloop: WHILE IFNULL(@periodo_min, 0) = 0 DO
                     SET @mes_min := @mes_min + 1;
                     IF @mes_min > @mes_max THEN
                         LEAVE myloop;
                     ELSE
-                        SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = 2019);
+                        SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                     END IF;
                 END WHILE myloop;
                 
@@ -1535,7 +1540,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     IF @mes_max < @mes_min THEN
                         LEAVE myloop;
                     ELSE
-                        SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = 2019);
+                        SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
                     END IF;
                 END WHILE myloop;
                 
@@ -1552,17 +1557,31 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
                     WHILE @periodo_aux <= @periodo_max DO
                         SELECT IFNULL((SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
-                        AND compra.id_periodo = @aux_periodos),0) AS "CANT."
+                        AND compra.id_periodo = @aux_periodos),0) AS "CANT.",
+                        IFNULL((SELECT (detalles.cantidad * detalles.precio_unitario) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                        AND compra.id_periodo = @aux_periodos),0) AS "IMP."
                         FROM cat_articulos articulo
-                        INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
                         INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
                         INNER JOIN compras compra ON compra.id_compra = detalle.id_compra
                         WHERE compra.id_periodo BETWEEN @periodo_min AND @periodo_max;
                         
-                        SELECT SUM(detalles.cantidad) AS "TOTAL POR MES" FROM detalles INNER JOIN compras ON compras.id_compra = detalles.id_compra WHERE compras.id_periodo = @aux_periodos;
+                        SELECT SUM(detalles.cantidad) AS "MES CANT.", SUM(detalles.cantidad * detalles.precio_unitario) AS "MES IMP." 
+                        FROM detalles INNER JOIN compras ON compras.id_compra = detalles.id_compra WHERE compras.id_periodo = @periodo_aux;
 
                         SET @periodo_aux := @periodo_aux + 1;
                     END WHILE;
+
+                    SELECT (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                    AND compra.id_periodo BETWEEN @periodo_min AND @periodo_max) AS "CANT.",
+                    (SELECT SUM(detalles.cantidad * detalles.precio_unitario) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                    AND compra.id_periodo BETWEEN @periodo_min AND @periodo_max) AS "IMP."
+                    FROM cat_articulos articulo
+                    INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                    INNER JOIN compras compra ON compra.id_compra = detalle.id_compra
+                    WHERE compra.id_periodo BETWEEN @periodo_min AND @periodo_max;
+
+                    SELECT SUM(detalles.cantidad) AS "TOTAL CANT.", SUM(detalles.cantidad * detalles.precio_unitario) AS "TOTAL IMP."
+                    FROM detalles INNER JOIN compras ON compras.id_compra = detalles.id_compra WHERE compras.id_periodo BETWEEN @periodo_min AND @periodo_max;
                 END IF;
             END
         ');

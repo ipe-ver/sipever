@@ -59,7 +59,7 @@
 			var catRoles		                = @json($catRoles);
 			var catEmpleados	                = @json($catEmpleados);
 				
-			
+			//console.log(catRoles);  
 		 
 
 	/**********************************************************************************************
@@ -139,7 +139,6 @@
 						messageToastr('error', errors.message);
 						$('#datos_buttom').empty();
 						$('#datos_buttom').append(imprimirBoton('btn-success', 'btnGuardar', 'Guardar'));
-						$('#datos_buttom').append(espacio);	
 						$('#datos_buttom').append(imprimirBoton('btn-danger', 'btnCancelar', 'Cancelar'));
 					}
 				});

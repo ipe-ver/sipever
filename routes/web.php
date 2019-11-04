@@ -35,7 +35,7 @@ Route::post('registro', 'Auth\RegisterController@registro')->name('registro');
 Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], function() {
     Route::get('/', function() { return view('admin.index'); })->name('index');
 	Route::get('/users', function () { return view('admin.user.index'); });
-	
+
 
 
 });
@@ -57,6 +57,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.
     Route::post('/reportes/generar', 'Almacen\ReporteController@generarReporte')->name('reportes.generar');
     Route::post('/polizas/generar', 'Almacen\PolizaController@generarPoliza')->name('polizas.generar');
     Route::post('/periodo/cerrar','Almacen\PeriodoController@cerrar_mes')->name('periodo.cerrar');
+    Route::post('/vales/getDetalles', 'Almacen\ValeController@getDetalles');
+    Route::post('/vales/validarOrden', 'Almacen\ValeController@validarOrden')->name('vales.validarOrden');
     Route::resource('periodo','Almacen\PeriodoController');
     Route::resource('articulos', 'Almacen\ArticuloController');
     Route::resource('partidas', 'Almacen\PartidaController');
@@ -71,7 +73,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'catalogos', 'as' => 'catalo
 	Route::get('/', function() { return view('catalogos.index'); })->name('index');
 	Route::get('/users', function() { return view('catalogos.user'); });
 	Route::get('/get_users','Catalogos\UsersController@get_users');
-	
+
 	Route::get('/add_user', 'Catalogos\UsersController@create');
 
 
@@ -91,7 +93,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'catalogos', 'as' => 'catalo
 	Route::post('/add_permisos', 'Catalogos\PermisosController@store');
 	
 
-	
+
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'expediente.'], function(){

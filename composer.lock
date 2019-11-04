@@ -2289,6 +2289,7 @@
         },
         {
             "name": "psr/log",
+<<<<<<< HEAD
             "version": "1.1.2",
             "source": {
                 "type": "git",
@@ -2299,6 +2300,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/php-fig/log/zipball/446d54b4cb6bf489fc9d75f55843658e6f25d801",
                 "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801",
+=======
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "bf73deb2b3b896a9d9c75f3f0d88185d2faa27e2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/bf73deb2b3b896a9d9c75f3f0d88185d2faa27e2",
+                "reference": "bf73deb2b3b896a9d9c75f3f0d88185d2faa27e2",
+>>>>>>> b6eb8ecc5fc3f4c46e872efe40900ba9c1dd2f76
                 "shasum": ""
             },
             "require": {
@@ -2332,7 +2345,11 @@
                 "psr",
                 "psr-3"
             ],
+<<<<<<< HEAD
             "time": "2019-11-01T11:05:21+00:00"
+=======
+            "time": "2019-10-25T08:06:51+00:00"
+>>>>>>> b6eb8ecc5fc3f4c46e872efe40900ba9c1dd2f76
         },
         {
             "name": "psr/simple-cache",
@@ -4520,20 +4537,21 @@
         },
         {
             "name": "laravel/dusk",
-            "version": "v5.5.2",
+            "version": "v5.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/dusk.git",
-                "reference": "aed755282a13a9b36d26854a0105d519aa22fec9"
+                "reference": "db4f8d75b7c9acf88ef1712e9ccf51c15540934d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/dusk/zipball/aed755282a13a9b36d26854a0105d519aa22fec9",
-                "reference": "aed755282a13a9b36d26854a0105d519aa22fec9",
+                "url": "https://api.github.com/repos/laravel/dusk/zipball/db4f8d75b7c9acf88ef1712e9ccf51c15540934d",
+                "reference": "db4f8d75b7c9acf88ef1712e9ccf51c15540934d",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
+                "ext-pcntl": "*",
                 "ext-zip": "*",
                 "facebook/webdriver": "^1.7",
                 "illuminate/console": "~5.7.0|~5.8.0|^6.0|^7.0",
@@ -4581,7 +4599,7 @@
                 "testing",
                 "webdriver"
             ],
-            "time": "2019-09-24T20:30:07+00:00"
+            "time": "2019-10-29T15:58:57+00:00"
         },
         {
             "name": "mockery/mockery",

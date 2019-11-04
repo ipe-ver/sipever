@@ -59,7 +59,7 @@
 			var catRoles		                = @json($catRoles);
 			var catEmpleados	                = @json($catEmpleados);
 				
-			//console.log(catRoles);  
+			
 		 
 
 	/**********************************************************************************************

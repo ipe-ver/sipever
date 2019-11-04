@@ -658,6 +658,7 @@ if (typeof jQuery === 'undefined') {
       this.$element
         .removeClass('collapsing')
         .addClass('collapse')
+        .removeClass('show')
         .trigger('hidden.bs.collapse')
     }
 

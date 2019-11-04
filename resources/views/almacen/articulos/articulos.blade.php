@@ -47,7 +47,7 @@
                 <a class ="icon-ref" style="padding-right: 10px;" href="{{route('almacen.index')}}" title="">
                     <h3 class="fas fa-home"></h3>
                 </a>
-                @include('almacen.crear_articulo')
+                @include('almacen.articulos.crear_articulo')
                 <a style="margin-bottom: 10px;" type="button" class="btn btn-agregar" data-toggle="modal" href="#createArticulo"> Agregar</a>
             </div>
         </div>
@@ -87,11 +87,27 @@
         </div>
     </div>
 </div>
-<div class="panel-group menu-scroll" id="accordion">
+<div class="row" style="margin-top: 1%;">
+    <div class="col-md-12">
+        <div class=" col-sm-5 desc-cuenta text-center" style="width: 39%;">
+            <label>Descripción</label>
+        </div>
+        <div class="col-sm-2 text-nowrap" style="margin-right: -1%;">
+            <label>Unidad de medida</label>
+        </div>
+        <div class="col-sm-2 text-center">
+            <label>Estatus</label>
+        </div>
+        <div class="col-sm-3 desc-cuenta text-center">
+            <label>Grupo</label>
+        </div>
+    </div>
+</div>
+<div class="panel-group menu-scroll" id="accordion" aria-multiselectable="true">
     @foreach ($articulos as $articulo)
         <div class="panel panel-menu">
-            <div class="panel-heading">
-                <div class="panel-title titulo-panel" id="headingOne">
+            <div class="panel-heading titulo-panel">
+                <div class="panel-title" id="">
                     	<div class=" col-sm-5 desc-cuenta pull-left">
                     		{{ $articulo->descripcion }}
                     	</div>
@@ -109,7 +125,7 @@
                                 En Stock
                             </div>
                 		@endif
-                    	<div class="col-sm-3 desc-cuenta text-nowrap">{{$articulo->descripcion_cuenta}}</div>
+                    	<div class="col-sm-3 desc-cuenta text-nowrap" style="margin-left: 2%;">{{$articulo->descripcion_cuenta}}</div>
                     	<div class="pull-right">
                             <button class = "btn btn-collapse btn-edit" id="btn_editar" disabled="true">
                                 <i class="fas fa-pen">  </i>
@@ -117,7 +133,7 @@
                             <button onclick="location.href='{{route('almacen.articulos.darBaja', $articulo->clave)}}'" class="btn btn-collapse btn-delete" id="btn_eliminar" disabled >
                                 <i class="fas fa-trash-alt">  </i>
                             </button>
-                            <button id="verArticulo" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapseArticulo">
+                            <button id="verArticulo" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapseArticulo">
                                 <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
                             </button>
 

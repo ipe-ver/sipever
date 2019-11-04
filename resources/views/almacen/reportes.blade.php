@@ -54,10 +54,17 @@
 </div>
 
 <div class = "container reportes-box">
-    <form action="{{route('almacen.reportes.generar')}}" method="POST">
+    <div class="modal-loader" id="loader">
+        <div class="sp-box">
+            <div class="sp sp1"></div>
+            <div class="sp sp2"></div>
+            <div class="sp sp3"></div>
+            <div class="sp sp4"></div>
+        </div>
+    </div>
+    <form id="reportesForm" action="{{route('almacen.reportes.generar')}}" method="POST">
         @csrf
         @method("POST")
-
         <div class ="row justify-content-md-center">
             <div class="col col-lg-4">
                 <div>
@@ -184,7 +191,7 @@
                 <div class="row" style="padding-top: 40%;">
                     <div class="container-fluid">
                         <div class="pull-right">
-                            <button type = "submit" class="btn btn-submit">Generar reporte</button>
+                            <button id="genReporte" type = "submit" class="btn btn-submit">Generar reporte</button>
                         </div>
                     </div>
                 </div>

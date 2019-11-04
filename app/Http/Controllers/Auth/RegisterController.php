@@ -10,6 +10,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b6eb8ecc5fc3f4c46e872efe40900ba9c1dd2f76
 
 /**
  * Class RegisterController
@@ -59,9 +63,14 @@ class RegisterController extends Controller
             //'name'              => 'required|string|max:255',
             'username'          => 'required|string|max:255|unique:users',
             'email'             => 'required|string|email|max:255|unique:users',
+<<<<<<< HEAD
             'password'          => 'required|string|min:6',
             'id_empleado'       => 'required',
             'id_role'           => 'required',
+=======
+            'password'          => 'required|string|min:6|confirmed',
+            'id_empleado'       => 'required',
+>>>>>>> b6eb8ecc5fc3f4c46e872efe40900ba9c1dd2f76
             
         ]);
     }
@@ -85,6 +94,7 @@ class RegisterController extends Controller
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+<<<<<<< HEAD
             'id_empleado' => $data['id_empleado'], 
                     
         ]);
@@ -93,12 +103,26 @@ class RegisterController extends Controller
        
         $user->roles()->attach($role);
 
+=======
+            'id_empleado' => $data['id_empleado'],
+        ]);
+        dd($user);
+        
+        $user
+            ->roles()
+            ->attach(Role::where('name', 'user')->first());
+>>>>>>> b6eb8ecc5fc3f4c46e872efe40900ba9c1dd2f76
         return $user;
     }
 
     public function registro(Request $request)
     {        
+<<<<<<< HEAD
         
+=======
+        //try {
+           // dd($request);
+>>>>>>> b6eb8ecc5fc3f4c46e872efe40900ba9c1dd2f76
             $this->validator($request->all())->validate();
             $request->request->add(['name' => $request->username]);
             $usuario = $this->create($request->all());

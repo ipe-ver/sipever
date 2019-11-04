@@ -47,18 +47,18 @@
                 <a class ="icon-ref" style="padding-right: 10px;" href="{{route('almacen.index')}}" title="">
                     <h3 class="fas fa-home"></h3>
                 </a>
-                @include('almacen.crear_partida')
+                @include('almacen.partidas.crear_partida')
                 <a style="margin-bottom: 10px;" type="button" class="btn btn-agregar" data-toggle="modal" href="#createPartida"> Agregar</a>
             </div>
         </div>
     </div>
     <p></p>
 </div>
-<div class="panel-group menu-scroll" id="accordion">
+<div class="panel-group menu-scroll" id="accordion" aria-multiselectable="true" style="height: 29em;">
     @foreach ($partidas as $partida)
-    <div class="panel panel-menu">
-        <div class="panel-heading">
-            <div class="panel-title titulo-panel" id="headingOne">
+    <div class="panel panel-default panel-menu">
+        <div class="panel-heading titulo-panel" style="background-color: transparent;">
+            <div class="panel-title" id="headingOne">
                 	<div class=" col-xs-1 desc-cuenta pull-left">
                 		{{ $partida->cta }}
                 	</div>
@@ -72,7 +72,7 @@
                         <button class="btn btn-collapse btn-delete" id="btn_eliminar" data-toggle="modal" data-target="#eliminarPartida" disabled >
                             <i class="fas fa-trash-alt">  </i>
                         </button>
-                        <button id="verPartida" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapsePartida" aria-expanded="false">
+                        <button id="verPartida" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapsePartida" data-parent="#accordion" aria-expanded="false">
                             <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
                         </button>
                 </div>

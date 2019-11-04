@@ -75,7 +75,7 @@
                         <p>Subtotal</p>
                     </label>
                 </div>
-                <input type="text" name="subtotal" placeholder="Subtotal" class="form-control" id="subtotal" required>
+                <input type="text" name="subtotal" placeholder="Subtotal" class="form-control" id="subtotal" readonly required>
             </div>
             <div class="col-sm-3" style="max-width: 9%;">
                 <div class="text-center">

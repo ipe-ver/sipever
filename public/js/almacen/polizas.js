@@ -40,6 +40,9 @@ window.addEventListener("load", function(){
             input.setAttribute("value", parseInt(input.value)-1);
         }
     });
+    $('#genPoliza').on("click",function(event){
+        $('#loader').show();
+    });
 });
 
 function seleccionarBox(checkBox){

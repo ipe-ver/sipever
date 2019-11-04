@@ -1,0 +1,93 @@
+/* The Modal (background) */
+.modal-loader {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.sp-box{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+.sp-box .sp{
+  border-radius: 50%;
+  border-left: 4px solid #000;
+  border-right: 4px solid #000;
+  border-top: 4px solid transparent !important;
+  border-bottom: 4px solid transparent !important;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.sp-box .sp1{
+  border-color: #13262F;
+  width: 120px;
+  height: 120px;
+  animation: ro 1.5s infinite;
+}
+
+.sp-box .sp2{
+  border-color: #E9EBEC;
+  width: 100px;
+  height: 100px;
+
+  animation: ro_inv 1.5s infinite;
+}
+
+.sp-box .sp3{
+  border-color: #13262F;
+  width: 80px;
+  height: 80px;
+
+  animation: ro 1.5s infinite;
+}
+
+.sp-box .sp4{
+  border-color: #E9EBEC;
+  width: 60px;
+  height: 60px;
+
+  animation: ro_inv 1.5s infinite;
+
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ro{
+  0%{
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100%{
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes ro_inv{
+  0%{
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100%{
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}

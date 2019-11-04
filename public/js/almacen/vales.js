@@ -231,7 +231,7 @@ function llenarOrden (index) {
 			var td = document.createElement("td");
 			var input = document.createElement("input");
 			input.setAttribute("name",`${j}[]`);
-			if(j!=2){
+			if(j!=3){
 				input.setAttribute("type","text");
 				input.setAttribute("value", `${articulo_aux[j].innerHTML}`);
 				input .setAttribute("readonly", "");

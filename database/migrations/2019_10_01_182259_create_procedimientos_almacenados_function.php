@@ -998,8 +998,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SELECT folio AS "FOLIO", tipo_movimiento AS "TIPO", (SELECT cat_oficinas.descripcion FROM cat_oficinas WHERE cat_oficinas.id = c_pedido_consumo.id_oficina) AS "OFICINA", 
-                    fecha_movimiento AS "FECHA" FROM c_pedido_consumo;
+                SELECT folio AS "folio", tipo_movimiento AS "tipo", (SELECT cat_oficinas.descripcion FROM cat_oficinas WHERE cat_oficinas.id = c_pedido_consumo.id_oficina) AS "oficina", 
+                    fecha_movimiento AS "fecha" FROM c_pedido_consumo;
             END
         ');
 

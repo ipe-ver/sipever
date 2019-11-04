@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Almacen;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use DB;
 
 class ValeController extends Controller
 {
@@ -18,16 +19,19 @@ class ValeController extends Controller
         $cabecera1 = $app->make('stdClass');
         $cabecera1->folio = 'CONS201910081545';
         $cabecera1->tipo = 1;
-        $cabecera1->fecha_recepcion = '08/10/2019';
-        $cabecera1->departamento = 'DEPARTAMENTO DE TECNOLOGÍAS DE LA INFORMACIÓN';
+        $cabecera1->fecha = '08/10/2019';
+        $cabecera1->oficina = 'DEPARTAMENTO DE TECNOLOGÍAS DE LA INFORMACIÓN';
 
         $cabecera2 = $app->make('stdClass');
         $cabecera2->folio = 'COMP201910081550';
         $cabecera2->tipo = 3;
-        $cabecera2->fecha_recepcion = '08/10/2019';
-        $cabecera2->departamento = 'DEPARTAMENTO DE TECNOLOGÍAS DE LA INFORMACIÓN';
+        $cabecera2->fecha = '08/10/2019';
+        $cabecera2->oficina = 'DEPARTAMENTO DE TECNOLOGÍAS DE LA INFORMACIÓN';
 
         $cabeceras = array($cabecera1, $cabecera2);
+
+        $cabeceras2 = DB::select('call sp_get_vales()');
+
         return view('almacen.vales', compact('cabeceras'));
     }
 
@@ -37,8 +41,8 @@ class ValeController extends Controller
         $app = app();
         $respuesta = $app->make('stdClass');
         if($tipo == 1){
-            $articulo1 = ['1303','PINTURA ACRÍLICA',12,12.45];
-            $articulo2 = ['1304','PINTURA ACRÍLICA ROJA',10,11.45];
+            $articulo1 = ['1303','PINTURA ACRÍLICA','CJA',12,12.45];
+            $articulo2 = ['1304','PINTURA ACRÍLICA ROJA','CJA',10,11.45];
             $respuesta->articulos[0] = $articulo1;
             $respuesta->articulos[1] = $articulo2;
             return json_encode($respuesta);
@@ -118,9 +122,10 @@ class ValeController extends Controller
     public function validarOrden(Request $request){
         $claves = $request->input('0');
         $descripciones = $request->input('1');
-        $cantidades = $request->input('2');
-        $precios = $request->input('3');
+        $cantidades = $request->input('3');
+        $precios = $request->input('4');
         $encabezado = $request->encabezado;
+        $folio = $encabezado[0];
         return redirect()->route('almacen.index');
     }
 }

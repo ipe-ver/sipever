@@ -862,7 +862,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     SELECT articulo.descripcion AS "DESCRIPCION", pedido.cantidad AS "CANT."
                     FROM cat_articulos_compra articulo
                     INNER JOIN d_pedido_compra pedido ON pedido.id_articulo = articulo.id
-                    WHERE pedido.id_pedido_compra = (SELECT c_pedido_consumo.id_pedido_consumo FROM c_pedido_consumo WHERE c_pedido_consumo.folio = folio AND c_pedido_consumo.id_periodo = @periodo LIMIT 1);
+                    WHERE pedido.id_pedido_compra = (SELECT c_pedido_consumo.id_pedido_consumo FROM c_pedido_consumo WHERE c_pedido_consumo.folio = folio AND c_pedido_consumo.id_periodo = @periodo);
                 END IF;
             END
         ');
@@ -902,22 +902,44 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         FROM cat_articulos articulo
                         INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
                         INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+                        INNER JOIN c_pedido_consumo pedido ON pedido.id_pedido_consumo = consumo.id_pedido_consumo
                         INNER JOIN periodos periodo ON periodo.id_periodo = consumo.id_periodo
-                        WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo) > 0, 1, 0));
+                        WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo AND pedido.id_oficina = @id_oficina) > 0, 1, 0));
+                        
                     IF @condicion3 = 1 THEN
-                        SELECT cat_cuentas_contables.sscta, cat_cuentas_contables.nombre FROM cat_cuentas_contables WHERE cat_cuentas_contables.id = @aux;
-                        SELECT articulo.clave AS codificacion, articulo.descripcion AS descripcion, consumo.folio AS folio, 
-                            unidad.descripcion AS unidad, detalle.cantidad AS cantidad, FORMAT(articulo.precio_unitario, 4) AS costo,
-                            FORMAT(detalle.cantidad * articulo.precio_unitario, 4) AS importe
+                        SELECT cuenta.sscta AS "PARTIDA", cuenta.nombre AS "NOMBRE" ,articulo.clave AS codificacion, articulo.descripcion AS descripcion, consumo.folio AS folio, 
+                            unidad.descripcion AS unidad, detalle.cantidad AS cantidad, FORMAT(articulo.precio_unitario, 2) AS costo,
+                            FORMAT(detalle.cantidad * articulo.precio_unitario, 2) AS importe
                         FROM consumos consumo
                         INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
                         INNER JOIN periodos periodo ON periodo.id_periodo = consumo.id_periodo
+                        INNER JOIN c_pedido_consumo pedido ON pedido.id_pedido_consumo = consumo.id_pedido_consumo
                         INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
                         INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
-                        WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo;
+                        INNER JOIN cat_cuentas_contables cuenta ON cuenta.id = articulo.id_cuenta
+                        WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo AND pedido.id_oficina = @id_oficina;
+                        
+                        SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS", 
+									(SELECT SUM(FORMAT(detalles.cantidad * cat_articulos.precio_unitario, 2)) FROM detalles INNER JOIN cat_articulos ON
+									detalles.id_articulo = cat_articulos.id INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo 
+									WHERE cat_articulos.id_cuenta = @aux AND consumos.id_periodo = @periodo AND consumos.id_oficina = @id_oficina) AS "IMPORTE"
+                        FROM consumos consumo
+                        INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
+                        INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
+                        WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo AND consumo.id_oficina = @id_oficina;
+                        
                     END IF;
                     SET @aux := @aux + 1;
                 END WHILE;
+                
+                SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS", 
+							FORMAT((SELECT SUM(FORMAT(detalles.cantidad * cat_articulos.precio_unitario, 2)) FROM detalles INNER JOIN cat_articulos ON
+							detalles.id_articulo = cat_articulos.id INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo 
+							WHERE consumos.id_periodo = @periodo AND consumos.id_oficina = @id_oficina),2) AS "IMPORTE "
+                FROM consumos consumo
+                INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
+                INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
+                WHERE consumo.id_periodo = @periodo AND consumo.id_oficina = @id_oficina;
             END
         ');
 
@@ -936,25 +958,31 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio);
-                SET @num_ubpp := (SELECT COUNT(DISTINCT ubpp) FROM cat_oficinas);
+                SET @periodo := (SELECT id_periodo FROM periodos WHERE no_mes = mes AND anio = anio);
                 SET @ubpp := (SELECT GROUP_CONCAT(DISTINCT(ubpp)) FROM cat_oficinas);
+                SET @num_ubpp := (SELECT COUNT(DISTINCT(ubpp)) FROM cat_oficinas);
                 SET @aux_ubpp := 1;
-
+                
                 WHILE @aux_ubpp <= @num_ubpp DO
                     SET @ubpp_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@ubpp, ",", @aux_ubpp), ",", -1));
-                    SET @num_oficinas := (SELECT COUNT(id) FROM cat_oficinas WHERE cat_oficinas.ubpp = @ubpp_actual);
-                    SET @oficina := (SELECT GROUP_CONCAT(DISTINCT(ubpp)) FROM cat_oficinas WHERE cat_oficinas.ubpp = @ubpp);
+                    SET @oficina := (SELECT GROUP_CONCAT(DISTINCT(descripcion)) FROM cat_oficinas WHERE ubpp = @ubpp_actual);
+                    SET @num_oficinas := (SELECT COUNT(id) FROM cat_oficinas WHERE ubpp = @ubpp_actual);
                     SET @aux_oficina := 1;
-
-                    SELECT ubpp, descripcion FROM cat_oficinas WHERE cat_oficinas.ubpp = @ubpp_actual;
-
+                    
                     WHILE @aux_oficina <= @num_oficinas DO
-                        SET @oficina_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@ubpp, ",", @aux_oficina), ",", -1));
-                        CALL sp_reporte_consumos_oficina(@ubpp_actual, @oficina_actual, mes, anio);
+                        SET @oficina_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@oficina, ",", @aux_oficina), ",", -1));
+                        SET @id_oficina := (SELECT id FROM cat_oficinas WHERE descripcion = @oficina_actual);
+                        SET @condicion1 := (SELECT IF((SELECT COUNT(id_consumo) FROM consumos WHERE id_oficina = @id_oficina) > 0, 1, 0));
+                        
+                        IF @condicion1 = 1 THEN
+                            SELECT @ubpp_actual AS "AREA", @oficina_actual AS "OFICINA";
+                            CALL sp_reporte_consumos_oficina(@ubpp_actual, @oficina_actual, mes, anio);
+                        END IF;
+                        
                         SET @aux_oficina := @aux_oficina + 1;
                     END WHILE;
-                    SET @aux_ubpp = @aux_ubpp + 1;
+                    
+                    SET @aux_ubpp := @aux_ubpp + 1;
                 END WHILE;
             END
         ');

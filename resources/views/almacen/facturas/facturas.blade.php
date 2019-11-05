@@ -52,6 +52,14 @@
     </div>
     <p></p>
 </div>
+<div class="modal-loader" id="loader2">
+    <div class="sp-box">
+        <div class="sp sp1"></div>
+        <div class="sp sp2"></div>
+        <div class="sp sp3"></div>
+        <div class="sp sp4"></div>
+    </div>
+</div>
 
 @include('almacen.facturas.agregar_articulo')
 

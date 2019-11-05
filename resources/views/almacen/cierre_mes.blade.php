@@ -54,6 +54,14 @@
 </div>
 
 <div class="container mes-box">
+    <div class="modal-loader" id="loader">
+        <div class="sp-box">
+            <div class="sp sp1"></div>
+            <div class="sp sp2"></div>
+            <div class="sp sp3"></div>
+            <div class="sp sp4"></div>
+        </div>
+    </div>
     <form action="{{route('almacen.periodo.cerrar')}}" method = "POST">
         @csrf
         @method("POST")

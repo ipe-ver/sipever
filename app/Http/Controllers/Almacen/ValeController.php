@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Almacen;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Doctrine\DBAL\Driver\PDOConnection;
+use Exception;
 use DB;
 
 class ValeController extends Controller
@@ -15,21 +17,6 @@ class ValeController extends Controller
      */
     public function index()
     {
-        /*$app = app();
-        $cabecera1 = $app->make('stdClass');
-        $cabecera1->folio = 'CONS201910081545';
-        $cabecera1->tipo = 1;
-        $cabecera1->fecha = '08/10/2019';
-        $cabecera1->oficina = 'DEPARTAMENTO DE TECNOLOGÍAS DE LA INFORMACIÓN';
-
-        $cabecera2 = $app->make('stdClass');
-        $cabecera2->folio = 'COMP201910081550';
-        $cabecera2->tipo = 3;
-        $cabecera2->fecha = '08/10/2019';
-        $cabecera2->oficina = 'DEPARTAMENTO DE TECNOLOGÍAS DE LA INFORMACIÓN';
-
-        $cabeceras = array($cabecera1, $cabecera2);*/
-
         $cabeceras = DB::select('call sp_get_vales()');
 
         return view('almacen.vales', compact('cabeceras'));
@@ -110,13 +97,65 @@ class ValeController extends Controller
     }
 
     public function validarOrden(Request $request){
+        $db = DB::connection()->getPdo();
+        //Establecemos la conexión
+        $db->setAttribute(PDOConnection::ATTR_ERRMODE, PDOConnection::ERRMODE_EXCEPTION);
+        $db->setAttribute(PDOConnection::ATTR_EMULATE_PREPARES, true);
+
         $claves = $request->input('0');
         $descripciones = $request->input('1');
         $cantidades = $request->input('3');
         $precios = $request->input('4');
         $encabezado = $request->encabezado;
         $folio = $encabezado[0];
-        dd($folio, $claves, $descripciones, $cantidades, $precios);
+        $tipo = $encabezado[1];
+        if($tipo == "Consumo"){
+            for ($i=0; $i < sizeof($claves); $i++) { 
+                $cantidad_articulo = DB::select('SELECT existencias FROM cat_articulos WHERE clave = ?', array($claves[$i]));
+                if(intval($cantidades[$i]) > intval($cantidad_articulo[0]->existencias)){
+                    return redirect()->back()->with('warning', 'No hay suficientes existencias de uno o mas artículo para satisfacer la solicitud');
+                }
+            }
+        }
+        
+        $id_vale = DB::select('SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = ?', array($folio))[0]->id_pedido_consumo;
+
+        //Preparamos la llamada al procedimiento remoto
+        $query = $db->prepare('CALL sp_consumo(?,@clave)');
+
+        $query->bindParam(1,$id_vale);
+        try{
+            $query->execute();
+            $query->closeCursor();
+            //accedemos al valor de retorno para regresar la vista correspondiente.
+            $results = $db->query('SELECT @clave AS result')->fetch(PDOConnection::FETCH_ASSOC);
+            if ($results) {
+                // Obtenemos la clave generada
+                $clave_generada = $results['result'];
+
+                // Se manda a llamar al procedimiento almacenado para registrar los detalles de la factura
+                // Se llama al procedimiento una vez por cada artículo que corresponda a la factura
+                for ($i=0; $i < sizeof($claves) ; $i++) {
+                    $query = $db->prepare('CALL sp_detalles_consumo(?,?,?)');
+                    $query->bindParam(1,$clave_generada);
+                    $query->bindParam(2,$claves[$i]);
+                    $query->bindParam(3,$cantidades[$i]);
+
+                    $query->execute();
+                    $query->closeCursor();
+                }
+                return redirect()->route('almacen.vales.index')->with('success','Orden procesada correctamente');
+            }elseif (empty($result)) {
+                // Si el resultado viene vacío se regresa una advertencia
+                return back()->with('warning', "Error al registrar datos de factura, intente de nuevo mas tarde \nSi el problema persiste contacte al departamento de tecnologías de la información");
+            }else{
+                return back()->withErrors(['msg', "Error de base de datos \n Contacte al departamento de tecnologías de la información"]);
+            }
+        }catch (Exception $e) {
+            $mensaje = "{$e->getMessage()} \n Contacte al departamento de tecnologías de la información";
+            return back()->withErrors([$mensaje]);
+        }
+
         return redirect()->route('almacen.index');
     }
 }

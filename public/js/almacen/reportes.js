@@ -19,7 +19,9 @@ for (i = 0; i < close.length; i++) {
     }
 }
 
-window.addEventListener("load", function(){
+$("#loader").show();
+$(document).ready(function(){
+    $("#loader").hide();
     var checks = document.getElementsByClassName("checkReporte");
     for (var i = 0; i < checks.length; i++) {
         checks[i].checked = false;

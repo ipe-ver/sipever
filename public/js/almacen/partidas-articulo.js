@@ -1,4 +1,6 @@
+ $("#loader2").show();
  $(document).ready(function(){
+    $("#loader2").hide();
     var contador = 0;
     $('select[id="selectPartida"]').on('change', function(){
         var partida_aux = $(this).val();

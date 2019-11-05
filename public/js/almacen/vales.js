@@ -1,4 +1,6 @@
-window.addEventListener("load", function(){
+$("#loader").show();
+$(document).ready(function(){
+	$("#loader").hide();
     cargarMetodo();
     var tablas = document.getElementsByClassName("table");
     for(var i = 0, length1 = tablas.length; i < length1; i++){

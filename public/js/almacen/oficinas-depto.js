@@ -2,7 +2,9 @@
   * Este método se utiliza para cargar dinámicamente las oficinas correspondientes al departamento seleccionado
  */
 
+ $("#loader").show();
  $(document).ready(function(){
+    $("#loader").hide();
     /**
      * Cada vez que cambie el valor del select de departamento.
      */

@@ -54,6 +54,14 @@
     </div>
     <p></p>
 </div>
+<div class="modal-loader" id="loader">
+    <div class="sp-box">
+        <div class="sp sp1"></div>
+        <div class="sp sp2"></div>
+        <div class="sp sp3"></div>
+        <div class="sp sp4"></div>
+    </div>
+</div>
 <div class="panel-group menu-scroll" id="accordion" aria-multiselectable="true" style="height: 29em;">
     @foreach ($partidas as $partida)
     <div class="panel panel-default panel-menu">

@@ -36,17 +36,30 @@
 
 	{!! HTML::script('components/select2/dist/js/select2.js') !!}	
 	{!! HTML::script('components/select2/dist/js/select2.min.js') !!}
+	
 
 <script type="text/javascript">
 		
-		$(function (){			
-			
+		$(function (){	
 
 			
 			var table = $('#table');
-			
-			
+
+			var formatTableActions = function(value, row, index) {				
 				
+				btn = '<button class="btn btn-info btn-xs edit"><i class="fa fa-edit"></i>&nbsp;Editar</button>';	
+					
+				return [btn].join('');
+			};
+
+			window.operateEvents = {
+				'click .edit': function (e, value, row, index) {
+					location.href = routeBase+'/catalogos/empleados/edit/'+row.id;						
+				},
+
+			}
+
+	
 			table.bootstrapTable({
 				locale: 'es-MX',
 				pagination: true,
@@ -93,8 +106,8 @@
 					
 				},  {
 					title: 'Acciones',
-					//formatter: formatTableActions,
-					//events: operateEvents
+					formatter: formatTableActions,
+					events: operateEvents
 				}]				
 			})	// FIN DE LA TABLA 
 

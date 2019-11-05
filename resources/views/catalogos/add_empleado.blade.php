@@ -54,7 +54,7 @@
 	/**********************************************************************************************
 		DECLARACION DE LAS VARIABLES EQUIPO, CATCLASIFICACIONES Y CATAREAS
 	***********************************************************************************************/
-        	
+			var empleado								= @if(isset($empleado)) @json($empleado); @else{}; @endif
             		           
 			
 			//console.log(catRoles);  
@@ -65,11 +65,11 @@
 	***********************************************************************************************/
 
 			campos1 = estilo_modal.mostrar([
-				{campo:'input', idCampo:'no_personal', nameCampo:'No. de Personal:', typeCampo:'text', valorCampo: '', placeholder:'No. de Personal', newClass:'', divSize:'12',datos:''},
-				{campo:'input', idCampo:'fecha_ingreso', nameCampo:'Fecha de Ingreso:', typeCampo:'text', valorCampo: '', placeholder:'Fecha de Ingreso', newClass:'', divSize:'12', datos:''},
-				{campo:'input',idCampo:'apellido_paterno',nameCampo:'Apellido Paterno:',typeCampo:'text',valorCampo: '', placeholder:'Apellido Paterno',newClass:'mayuscula',divSize:'12',datos: ''},
-                {campo:'input',idCampo:'apellido_materno',nameCampo:'Apellido Materno:',typeCampo:'text',valorCampo: '', placeholder:'Apellido Materno',newClass:'mayuscula',divSize:'12',datos: ''},
-                {campo:'input',idCampo:'nombre',nameCampo:'Nombre(s):',typeCampo:'text',valorCampo: '', placeholder:'Nombre(s)',newClass:'mayuscula',divSize:'12',datos: ''},
+				{campo:'input', idCampo:'no_personal', nameCampo:'No. de Personal:', typeCampo:'text', valorCampo: (Object.keys(empleado).length)? empleado.no_personal: '', placeholder:'No. de Personal', newClass:'', divSize:'12',datos:''},
+				{campo:'input', idCampo:'fecha_ingreso', nameCampo:'Fecha de Ingreso:', typeCampo:'text', valorCampo: (Object.keys(empleado).length)? empleado.fecha_ingreso: '', placeholder:'Fecha de Ingreso', newClass:'', divSize:'12', datos:''},
+				{campo:'input',idCampo:'apellido_paterno',nameCampo:'Apellido Paterno:',typeCampo:'text',valorCampo: (Object.keys(empleado).length)? empleado.apellido_paterno: '', placeholder:'Apellido Paterno',newClass:'mayuscula',divSize:'12',datos: ''},
+                {campo:'input',idCampo:'apellido_materno',nameCampo:'Apellido Materno:',typeCampo:'text',valorCampo: (Object.keys(empleado).length)? empleado.apellido_materno: '', placeholder:'Apellido Materno',newClass:'mayuscula',divSize:'12',datos: ''},
+                {campo:'input',idCampo:'nombre',nameCampo:'Nombre(s):',typeCampo:'text',valorCampo: (Object.keys(empleado).length)? empleado.nombre: '', placeholder:'Nombre(s)',newClass:'mayuscula',divSize:'12',datos: ''},
 			]);
 
 
@@ -82,10 +82,19 @@
 		BOTONES DE GUARDAR Y CANCELAR EN EL FORMULARIO DE EQUIPO
 	***********************************************************************************************/
 
+				
+
 				espacio = document.createTextNode(' ');	
-				$('#datos_buttom').append(imprimirBoton('btn-success', 'btnGuardar', 'Guardar'));
-				$('#datos_buttom').append(espacio);	
-				$('#datos_buttom').append(imprimirBoton('btn-danger', 'btnCancelar', 'Cancelar'));
+				if(Object.keys(empleado).length){
+					$('#datos_buttom').append(imprimirBoton('btn-success', 'btnEditar', 'Editar'));
+					$('#datos_buttom').append(espacio);	
+					$('#datos_buttom').append(imprimirBoton('btn-danger', 'btnCancelar', 'Cancelar'));
+				}else{
+					$('#datos_buttom').append(imprimirBoton('btn-success', 'btnGuardar', 'Guardar'));
+					$('#datos_buttom').append(espacio);	
+					$('#datos_buttom').append(imprimirBoton('btn-danger', 'btnCancelar', 'Cancelar'));
+				
+			}
 				
 			
 
@@ -109,7 +118,7 @@
                     nombre: $("#nombre").val(),	
 					
 				}
-				console.log(dataString);
+				//console.log(dataString);
 
 					$.ajax({
 					type: 'POST',
@@ -136,6 +145,7 @@
 						messageToastr('error', errors.message);
 						$('#datos_buttom').empty();
 						$('#datos_buttom').append(imprimirBoton('btn-success', 'btnGuardar', 'Guardar'));
+						$('#datos_buttom').append(espacio);	
 						$('#datos_buttom').append(imprimirBoton('btn-danger', 'btnCancelar', 'Cancelar'));
 					}
 				});
@@ -157,21 +167,24 @@
 
 
 				var dataString = {
-					username: $("#username").val(),	
-					email: $("#email").val(),	
-					name:  $("#name option:selected").val(),
+					no_personal: $("#no_personal").val(),	
+					fecha_ingreso: $("#fecha_ingreso").val(),	
+					apellido_paterno: $("#apellido_paterno").val(),	
+					apellido_materno: $("#apellido_materno").val(),	
+                    nombre: $("#nombre").val(),	
+					
 				}
 
-					
+				//console.log(dataString);	
 
-					/*$.ajax({
+					$.ajax({
 					type: 'PUT',
-					url: routeBase+'/recursos_fisicos/equipos/update/'+equipo.id,
+					url: routeBase+'/catalogos/empleados/update/'+empleado.id,
 					data: dataString,
 					dataType: 'json',
 					success: function(data) {										
 							messageToastr('success', data.message);						
-							window.location.replace(routeBase+'/recursos_fisicos/equipos');							
+							window.location.replace(routeBase+'/catalogos/empleados');							
 					},
 					error: function(data) {
 						var errors = data.responseJSON;						
@@ -186,9 +199,10 @@
 						messageToastr('error', errors.message);
 						$('#datos_buttom').empty();
 						$('#datos_buttom').append(imprimirBoton('btn-success', 'btnEditar', 'Editar'));
+						$('#datos_buttom').append(espacio);	
 						$('#datos_buttom').append(imprimirBoton('btn-danger', 'btnCancelar', 'Cancelar'));
 					}
-				});*/
+				});
 
 
 			})	

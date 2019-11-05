@@ -79,7 +79,15 @@ class EmpleadoController extends Controller
      */
     public function edit($id)
     {
-        //
+         // instanciar objeto de equioi de acuerdo al id_equipo
+     
+         $empleado = Empleado::find($id);
+        
+         return view('catalogos.add_empleado',
+                     [
+                         'empleado' => $empleado,
+                         
+                     ]);
     }
 
     /**
@@ -91,7 +99,31 @@ class EmpleadoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $estatus = 1;
+       // dd($request);
+        $empleado = Empleado::find($id);
+        //dd($empleado);
+        
+
+        $empleado->no_personal                             = $request->input('no_personal');
+        $empleado->fecha_ingreso                           = $request->input('fecha_ingreso');
+        $empleado->apellido_paterno                        = $request->input('apellido_paterno');
+        $empleado->apellido_materno                        = $request->input('apellido_materno');
+        $empleado->nombre                                  = $request->input('nombre');
+        $empleado->estatus                                 = $estatus;
+        $empleado->save();
+
+                          
+        return response()->json([
+            "estatus" => true,
+            "tipo" => "success",
+            "mensaje" => "La información se agregó correctamente."
+        ]);
+
+        
+                        
+
+
     }
 
     /**

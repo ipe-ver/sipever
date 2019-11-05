@@ -30,15 +30,20 @@ Route::group(['middleware' => 'auth'], function () {
 
 });*/
 
+//REGISTRAR UN USUARIO EN LA TABLA DE USER
 Route::post('registro', 'Auth\RegisterController@registro')->name('registro');
 
-Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], function() {
+/*Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], function() {
     Route::get('/', function() { return view('admin.index'); })->name('index');
 	Route::get('/users', function () { return view('admin.user.index'); });
 
 
 
-});
+});*/
+
+/*******************************************************************************************************
+											MIDDLEWARE DE ALMACÉN
+ ******************************************************************************************************/
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.'], function() {
     Route::get('/', function() { return view('almacen.index'); })->name('index');
@@ -69,37 +74,43 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.
 
 });
 
+/*******************************************************************************************************
+											MIDDLEWARE DE CATALOGOS
+ ******************************************************************************************************/
 Route::group(['middleware' => ['auth'], 'prefix' => 'catalogos', 'as' => 'catalogos.'], function() {
-	Route::get('/', function() { return view('catalogos.index'); })->name('index');
-	Route::get('/users', function() { return view('catalogos.user'); });
-	Route::get('/get_users','Catalogos\UsersController@get_users');
 
-	Route::get('/add_user', 'Catalogos\UsersController@create');
+	// CATALOGO DE USUARIOS
+	Route::get('/', function() { return view('catalogos.index'); })->name('index'); //Carga la vista de catalogos
 
+	Route::get('/users', function() { return view('catalogos.user'); }); //Carga la vista de usuarios
+	Route::get('/get_users','Catalogos\UsersController@get_users'); //Obtiene los usuarios
+	Route::get('/add_user', 'Catalogos\UsersController@create'); //LLeva al formulario de Guardar
 
-	Route::get('/roles', function() { return view('catalogos.roles'); });
-	Route::get('/get_roles','Catalogos\RolesController@get_roles');
+	// CATALOGO DE ROLES
+	Route::get('/roles', function() { return view('catalogos.roles'); }); //Carga la vista de roles
+	Route::get('/get_roles','Catalogos\RolesController@get_roles'); //Obtiene los roles
+	Route::get('/add_rol', 'Catalogos\RolesController@create'); //LLeva al formulario de Guardar 
+	Route::post('/save_rol', 'Catalogos\RolesController@store'); //Guarda la información del rol
 
-	Route::get('/add_rol', 'Catalogos\RolesController@create');
+	// CATALOGO DE PERMISOS
+	Route::get('/permisos', function() { return view('catalogos.permisos'); }); //Carga la vista de permisos
+	Route::get('/get_permisos','Catalogos\PermisosController@get_permisos'); //Obtiene los permisos
+	Route::post('/add_permisos', 'Catalogos\PermisosController@store'); //Guarda la información del permiso
 
-	Route::post('/save_rol', 'Catalogos\RolesController@store');
-
-
+	// CATALOGO DE EMPLEADOS	
+	Route::get('/empleados', function() { return view('catalogos.empleado'); }); //Carga la vista de empleados
+	Route::get('/get_empleados','Catalogos\EmpleadoController@get_empleados');	//Obtiene los empleados
+	Route::get('/add_empleado', 'Catalogos\EmpleadoController@create');//LLeva al formulario de Guardar
+	Route::post('/empleado', 'Catalogos\EmpleadoController@store'); //Guarda la información del empleado
+	Route::get('/empleados/edit/{id}','Catalogos\EmpleadoController@edit'); //LLeva al formulario de Editar
+	Route::put('/empleados/update/{id}', 'Catalogos\EmpleadoController@update'); //Edita la información del empleado
 	
-
-
-	Route::get('/permisos', function() { return view('catalogos.permisos'); });
-	Route::get('/get_permisos','Catalogos\PermisosController@get_permisos');
-	Route::post('/add_permisos', 'Catalogos\PermisosController@store');
-
-	Route::get('/empleados', function() { return view('catalogos.empleado'); });
-	Route::get('/get_empleados','Catalogos\EmpleadoController@get_empleados');	
-	Route::get('/add_empleado', 'Catalogos\EmpleadoController@create');
-	Route::post('/empleado', 'Catalogos\EmpleadoController@store');
-	
-
-
 });
+
+
+/*******************************************************************************************************
+											MIDDLEWARE DE EXPEDIENTE
+ ******************************************************************************************************/
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'expediente.'], function(){
 
@@ -129,17 +140,26 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 
 });
 
+	/*******************************************************************************************************
+											MÓDULO DE NOSOTROS
+ 	******************************************************************************************************/
 	//Módulo de Nosotros
 	Route::get('/mision', function () { return view('nosotros.mision'); });
 	Route::get('/informacion', function () { return view('nosotros.informacion'); });
 	Route::get('/organigrama', function () { return view('nosotros.organigrama'); });
 
+	/*******************************************************************************************************
+											DEPARTAMENTO DE TECNOLOGÍAS
+ 	******************************************************************************************************/
 	//Departamento de tecnologías
 	Route::get('/tecnologias', function () { return view('areas.tecnologias'); });
 	Route::get('/tecnologias/infraestructura', function () { return view('areas.soporte'); });
 	Route::get('/tecnologias/desarrollo', function () { return view('areas.desarrollo'); });
 	Route::get('/descargar_informacion', function () { return view('descargar.informacion'); });
 
+	/*******************************************************************************************************
+											DEPARTAMENTO DE RECURSOS HUMANOS
+ 	******************************************************************************************************/
 	//Departamento de recursos humanos
 	Route::get('/recursos_humanos', function () { return view('areas.recursos_humanos'); });
 	Route::get('/recursos_humanos/nomina', function () { return view('areas.nomina'); });

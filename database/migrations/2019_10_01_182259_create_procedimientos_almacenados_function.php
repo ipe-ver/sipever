@@ -713,7 +713,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
          * 
          */
         DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_actualizar recibo_vale;
+            DROP PROCEDURE IF EXISTS sp_actualizar_recibo_vale;
 
             CREATE PROCEDURE `sp_compra_articulos`(
                 IN `id_pedido` INT
@@ -723,7 +723,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                UPDATE c_pedido_consumo SET recibido = 1 WHERE c_pedido_consumo.id_pedido_consumo = id_pedido;
+                UPDATE c_pedido_consumo SET recibido = 1, fecha_recepcion = NOW() WHERE c_pedido_consumo.id_pedido_consumo = id_pedido;
             END
         ');
         
@@ -967,7 +967,16 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 								  WHERE cat_oficinas.ubpp = @ubpp_actual) > 0, 1, 0));
                     
                     IF @condicion2 = 1 THEN
-                  		SELECT @condicion2;
+                  		SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS", 
+										FORMAT((SELECT SUM(FORMAT(detalles.cantidad * cat_articulos.precio_unitario, 2)) FROM detalles INNER JOIN cat_articulos ON
+										detalles.id_articulo = cat_articulos.id INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo INNER JOIN cat_oficinas
+										ON cat_oficinas.id = consumos.id_oficina
+										WHERE consumos.id_periodo = @periodo AND cat_oficinas.ubpp = @ubpp_actual),2) AS "IMPORTE "
+                			FROM consumos consumo
+                			INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
+                			INNER JOIN cat_oficinas oficina ON oficina.id = consumo.id_oficina
+                			INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
+                			WHERE consumo.id_periodo = @periodo AND oficina.ubpp = @ubpp_actual;
                     END IF;
                     
                     SET @aux_ubpp := @aux_ubpp + 1;
@@ -1650,7 +1659,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_actualizar recibo_vale;');
 
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra_articulos;');
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_detalles_compra;');
 
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_factura;');

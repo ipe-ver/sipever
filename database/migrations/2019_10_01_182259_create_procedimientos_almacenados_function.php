@@ -50,7 +50,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 FROM cat_articulos a
                 INNER JOIN cat_unidades_almacen b ON a.id_unidad = b.id
                 INNER JOIN cat_cuentas_contables c ON a.id_cuenta = c.id
-                WHERE a.id > id_comienzo
+                WHERE a.id >= id_comienzo
                 LIMIT 10;
             END
         ');
@@ -194,7 +194,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             SQL SECURITY DEFINER
             BEGIN
                UPDATE cat_articulos
-               SET estatus = 0, existencias = 0
+               SET estatus = 0, existencias = 0, updated_at = NOW()
                WHERE cat_articulos.clave = clave;
             END
         ');
@@ -591,7 +591,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
             CREATE PROCEDURE `sp_vale_consumo`(
                 IN `descripcion_oficina` VARCHAR(191),
-                OUT `clave` INT
+                OUT `clave` INT 
             )
             LANGUAGE SQL
             NOT DETERMINISTIC
@@ -718,24 +718,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             END
         ');
         
-        /**Procedimiento almacenado para guardar los artículos que se van a comprar por compra directa
-         * Recibe como parametro el nombre del artículo
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_articulo_compra;
-
-            CREATE PROCEDURE `sp_articulo_compra`(
-                IN `descripcion` VARCHAR(191)
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                INSERT INTO cat_articulos_compra (descripcion) VALUES (descripcion);
-            END
-        ');
-        
         /**Procedimiento almacenado para el almacenamiento de los articulos de cada pedido. Este paso va despúes de guardar los articulos a comprar.
          * Este es para la parte de las compras directas
          * Recibe como parametros el id del pedido generado (obtenido del sp_vale_consumo), la clave del articulo y la cantidad solicitada
@@ -754,6 +736,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
+                INSERT INTO cat_articulos_compra (descripcion) VALUES (descripcion);
+
                 INSERT INTO d_pedido_compra (id_pedido_compra, id_articulo, cantidad, no_folio, created_at) VALUES 
                     (id_pedido, (SELECT MAX(id) FROM cat_articulos_compra WHERE cat_articulos_compra.descripcion = descripcion), cantidad, 
                     (SELECT folio FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido), NOW());
@@ -864,8 +848,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SET @tipo_vale := (SELECT tipo_movimiento FROM c_pedido_consumo WHERE folio = folio AND fecha_recepcion = fecha);
-                SET @periodo := (SELECT id_periodo FROM c_pedido_consumo WHERE folio = folio AND fecha_recepcion = fecha);
+                SET @tipo_vale := (SELECT tipo_movimiento FROM c_pedido_consumo WHERE folio = folio AND fecha_movimiento = fecha LIMIT 1);
+                SET @periodo := (SELECT id_periodo FROM c_pedido_consumo WHERE folio = folio AND fecha_movimiento = fecha LIMIT 1);
 
                 IF @tipo_vale = 1 THEN
                     SELECT articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD", 
@@ -873,12 +857,12 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     FROM cat_articulos articulo
                     INNER JOIN d_pedido_consumo pedido ON pedido.id_articulo = articulo.id
                     INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
-                    WHERE pedido.id_pedido_consumo = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio AND id_periodo = @periodo);
+                    WHERE pedido.id_pedido_consumo = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio AND id_periodo = @periodo LIMIT 1);
                 ELSE
                     SELECT articulo.descripcion AS "DESCRIPCION", pedido.cantidad AS "CANT."
                     FROM cat_articulos_compra articulo
                     INNER JOIN d_pedido_compra pedido ON pedido.id_articulo = articulo.id
-                    WHERE pedido.id_pedido_compra = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio AND id_periodo = @periodo);
+                    WHERE pedido.id_pedido_compra = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio AND id_periodo = @periodo LIMIT 1);
                 END IF;
             END
         ');
@@ -1451,7 +1435,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
                 WHERE consumo.id_periodo = @periodo ORDER BY articulo.descripcion DESC;
 
-                SELECT cuenta.sscta AS "SSCTA", cuenta.nombre AS "PARTIDA", IFNULL((SELECT COUNT(id) FROM c_pedido_consumo),0) AS "CONSUMOS"
+                SELECT cuenta.sscta AS "SSCTA", cuenta.nombre AS "PARTIDA", IFNULL((SELECT COUNT(id) FROM c_pedido_consumo),0) AS "CONSUMOS";
                 
                 SELECT COUNT(DISTINCT(detalle.id_consumo)) AS "CONSUMOS", SUM(detalle.cantidad) AS "CANTIDAD DE ARTICULOS", 
 							SUM(detalle.cantidad * articulo.precio_unitario) AS "IMPORTES TOTALES"

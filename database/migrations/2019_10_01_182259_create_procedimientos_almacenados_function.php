@@ -840,7 +840,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             DROP PROCEDURE IF EXISTS sp_get_articulos_vale;
 
             CREATE PROCEDURE `sp_get_articulos_vale`(
-                IN `folio` INT,
+                IN `folio` VARCHAR(200),
                 IN `fecha` DATE
             )
             LANGUAGE SQL
@@ -852,17 +852,16 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @periodo := (SELECT id_periodo FROM c_pedido_consumo WHERE folio = folio AND fecha_movimiento = fecha LIMIT 1);
 
                 IF @tipo_vale = 1 THEN
-                    SELECT articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD", 
-                        articulo.precio_unitario AS "PRECIO", pedido.cantidad AS "CANT."
+                    SELECT articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD", pedido.cantidad AS "CANT.", articulo.precio_unitario AS "PRECIO"
                     FROM cat_articulos articulo
                     INNER JOIN d_pedido_consumo pedido ON pedido.id_articulo = articulo.id
                     INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
                     WHERE pedido.id_pedido_consumo = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio AND id_periodo = @periodo LIMIT 1);
                 ELSE
-                    SELECT articulo.descripcion AS "DESCRIPCION", pedido.cantidad AS "CANT."
+                    SELECT ("N/A")AS "CODIF.", articulo.descripcion AS "DESCRIPCION",("N/A") AS "UNIDAD", pedido.cantidad AS "CANT.",("N/A") AS "PRECIO"
                     FROM cat_articulos_compra articulo
                     INNER JOIN d_pedido_compra pedido ON pedido.id_articulo = articulo.id
-                    WHERE pedido.id_pedido_compra = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio AND id_periodo = @periodo LIMIT 1);
+                    WHERE pedido.id_pedido_compra = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio  AND id_periodo = @periodo LIMIT 1);
                 END IF;
             END
         ');

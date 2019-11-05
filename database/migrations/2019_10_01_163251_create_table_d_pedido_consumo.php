@@ -23,7 +23,7 @@ class CreateTableDPedidoConsumo extends Migration
             $table->foreign('id_articulo')->references('id')->on('cat_articulos');
 
             $table->integer('cantidad');
-            $table->integer('no_folio');
+            $table->string('no_folio');
             
             $table->timestamps();
         });

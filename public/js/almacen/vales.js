@@ -135,7 +135,7 @@ function cargarMetodo(){
     }
 }
 
-function getDetalles(tipo, folio, button){
+function getDetalles(fecha, folio, button){
 	var tablas = document.getElementsByName("detalle");
 	var id_aux = parseInt(button.id.split("Vale")[1]);
 	var panel_padre = getParent(tablas[id_aux],4);
@@ -155,7 +155,7 @@ function getDetalles(tipo, folio, button){
 		        url: "/almacen/vales/getDetalles",
 		        type: "POST",
 		        dataType: "json",
-		        data: {tipo:tipo, folio:folio, _token:token},
+		        data: {fecha:fecha, folio:folio, _token:token},
 		        beforeSend: function(){
 		            $("#loader").show();
 		        },
@@ -181,20 +181,23 @@ function getDetalles(tipo, folio, button){
 	                $("#loader").hide();
 		        },
 		        success: function(datos){
+		            panel_padre.setAttribute("deployed", "true");
 		            var contador = 0;
-		            datos.articulos.forEach(function(element){
+		            datos.forEach(function(element){
 		            	var td = document.createElement("tr");
 		            	td.setAttribute("name", `detalle${contador}`);
-		            	for(var i = 0, length1 = element.length; i < length1; i++){
+		            	var i = 0;
+		            	for(var key in element){
 		            		var tr = document.createElement("td");
 		            		tr.setAttribute("id", `detalle${contador}_${i}`);
-		            		tr.innerHTML=element[i];
+		            		tr.innerHTML=element[key];
 		            		td.appendChild(tr);
+		            		i++;
 		            	}
 		            	contador++;
 		            	tabla_padre.children[1].appendChild(td);
 		            });
-		            panel_padre.setAttribute("deployed", "true");
+
 		            $("#loader").hide();
 		        },
 		        timeout: 5000
@@ -248,7 +251,6 @@ function llenarOrden (index) {
 	}
 	var encabezado = document.getElementById(`encabezado${index}`).children;
 	var parent = tabla.parentNode;
-	console.log(encabezado);
 	for(var i = 0, length1 = encabezado.length; i < length1-1; i++){
 		var input = document.createElement("input");
 		input.setAttribute("type", "hidden");

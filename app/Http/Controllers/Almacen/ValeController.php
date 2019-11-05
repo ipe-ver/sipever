@@ -15,7 +15,7 @@ class ValeController extends Controller
      */
     public function index()
     {
-        $app = app();
+        /*$app = app();
         $cabecera1 = $app->make('stdClass');
         $cabecera1->folio = 'CONS201910081545';
         $cabecera1->tipo = 1;
@@ -28,29 +28,19 @@ class ValeController extends Controller
         $cabecera2->fecha = '08/10/2019';
         $cabecera2->oficina = 'DEPARTAMENTO DE TECNOLOGÍAS DE LA INFORMACIÓN';
 
-        $cabeceras = array($cabecera1, $cabecera2);
+        $cabeceras = array($cabecera1, $cabecera2);*/
 
-        $cabeceras2 = DB::select('call sp_get_vales()');
+        $cabeceras = DB::select('call sp_get_vales()');
 
         return view('almacen.vales', compact('cabeceras'));
     }
 
     public function getDetalles(Request $request){
-        $tipo = $request->tipo;
+        $fecha = $request->fecha;
         $folio = $request->folio;
-        $app = app();
-        $respuesta = $app->make('stdClass');
-        if($tipo == 1){
-            $articulo1 = ['1303','PINTURA ACRÍLICA','CJA',12,12.45];
-            $articulo2 = ['1304','PINTURA ACRÍLICA ROJA','CJA',10,11.45];
-            $respuesta->articulos[0] = $articulo1;
-            $respuesta->articulos[1] = $articulo2;
-            return json_encode($respuesta);
-        }else{
-            $articulo1 = ['N/A','Calculadora cuántica',1,'N/A'];
-            $respuesta->articulos[0] = $articulo1;
-            return json_encode($respuesta);
-        }
+        $detalles = DB::select('call sp_get_articulos_vale(?,?)',array($folio,$fecha));
+        return json_encode($detalles);
+        
     }
 
     /**

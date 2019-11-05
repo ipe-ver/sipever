@@ -23,7 +23,7 @@ class CreateTableDPedidoCompra extends Migration
             $table->foreign('id_articulo')->references('id')->on('cat_articulos_compra');
 
             $table->integer('cantidad');
-            $table->integer('no_folio');
+            $table->string('no_folio');
             
             $table->timestamps();
         });

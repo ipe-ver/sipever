@@ -848,20 +848,21 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SET @tipo_vale := (SELECT tipo_movimiento FROM c_pedido_consumo WHERE folio = folio AND fecha_movimiento = fecha LIMIT 1);
-                SET @periodo := (SELECT id_periodo FROM c_pedido_consumo WHERE folio = folio AND fecha_movimiento = fecha LIMIT 1);
+                SET @tipo_vale := (SELECT c_pedido_consumo.tipo_movimiento FROM c_pedido_consumo WHERE c_pedido_consumo.folio = folio AND c_pedido_consumo.fecha_movimiento = fecha);
+                SET @periodo := (SELECT c_pedido_consumo.id_periodo FROM c_pedido_consumo WHERE c_pedido_consumo.folio = folio AND c_pedido_consumo.fecha_movimiento = fecha);
 
                 IF @tipo_vale = 1 THEN
-                    SELECT articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD", pedido.cantidad AS "CANT.", articulo.precio_unitario AS "PRECIO"
+                    SELECT articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD", 
+                        articulo.precio_unitario AS "PRECIO", pedido.cantidad AS "CANT."
                     FROM cat_articulos articulo
                     INNER JOIN d_pedido_consumo pedido ON pedido.id_articulo = articulo.id
                     INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
-                    WHERE pedido.id_pedido_consumo = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio AND id_periodo = @periodo LIMIT 1);
+                    WHERE pedido.id_pedido_consumo = (SELECT c_pedido_consumo.id_pedido_consumo FROM c_pedido_consumo WHERE c_pedido_consumo.folio = folio AND c_pedido_consumo.id_periodo = @periodo);
                 ELSE
-                    SELECT ("N/A")AS "CODIF.", articulo.descripcion AS "DESCRIPCION",("N/A") AS "UNIDAD", pedido.cantidad AS "CANT.",("N/A") AS "PRECIO"
+                    SELECT articulo.descripcion AS "DESCRIPCION", pedido.cantidad AS "CANT."
                     FROM cat_articulos_compra articulo
                     INNER JOIN d_pedido_compra pedido ON pedido.id_articulo = articulo.id
-                    WHERE pedido.id_pedido_compra = (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE folio = folio  AND id_periodo = @periodo LIMIT 1);
+                    WHERE pedido.id_pedido_compra = (SELECT c_pedido_consumo.id_pedido_consumo FROM c_pedido_consumo WHERE c_pedido_consumo.folio = folio AND c_pedido_consumo.id_periodo = @periodo LIMIT 1);
                 END IF;
             END
         ');

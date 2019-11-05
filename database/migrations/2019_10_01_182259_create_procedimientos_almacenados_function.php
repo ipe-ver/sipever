@@ -718,24 +718,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             END
         ');
         
-        /**Procedimiento almacenado para guardar los artículos que se van a comprar por compra directa
-         * Recibe como parametro el nombre del artículo
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_articulo_compra;
-
-            CREATE PROCEDURE `sp_articulo_compra`(
-                IN `descripcion` VARCHAR(191)
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                INSERT INTO cat_articulos_compra (descripcion) VALUES (descripcion);
-            END
-        ');
-        
         /**Procedimiento almacenado para el almacenamiento de los articulos de cada pedido. Este paso va despúes de guardar los articulos a comprar.
          * Este es para la parte de las compras directas
          * Recibe como parametros el id del pedido generado (obtenido del sp_vale_consumo), la clave del articulo y la cantidad solicitada
@@ -754,6 +736,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
+                INSERT INTO cat_articulos_compra (descripcion) VALUES (descripcion);
+
                 INSERT INTO d_pedido_compra (id_pedido_compra, id_articulo, cantidad, no_folio, created_at) VALUES 
                     (id_pedido, (SELECT MAX(id) FROM cat_articulos_compra WHERE cat_articulos_compra.descripcion = descripcion), cantidad, 
                     (SELECT folio FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido), NOW());

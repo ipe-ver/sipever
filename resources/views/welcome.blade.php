@@ -3,13 +3,11 @@
 
 @section('content')
 
-
-
-
 <div class="row">
 
-
-    <div class="col-md-12">
+    <div class="col-md-1"></div>
+     
+    <div class="col-md-10">
              
         <div class="box box-default">
             <div class="box-header with-border" >
@@ -64,22 +62,22 @@
             </div>
         </div>
     </div>
-  
-    
-  
- 
+
+    <div class="col-md-1"></div>
+
+
 </div>
 
-
 <div class="row">
-    
 
-    <div class="col-md-4">
+    <div class="col-md-1"></div>
+
+    <div class="col-md-5">
         <div class="box box-default">
             <div class="box-header with-border">
-                <i class="fa fa-bullhorn"></i>
+               
 
-                <h3 class="box-title">Avisos!</h3>
+                
             </div>
      
             <div class="box-body">
@@ -87,7 +85,7 @@
                     <div class="inner">
                         <h3>Calendario Oficial 2019</h3>
 
-                        <p>Días de descanso obligatorio para los empleados al servicio del poder ejecutivo del Estado de Veracruz.</p>
+                        <p style="font-size:13px;">Días de descanso obligatorio para los empleados al servicio del poder ejecutivo del Edo. de Veracruz.</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-bag"></i>
@@ -99,12 +97,12 @@
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-5">
         <div class="box box-default">
             <div class="box-header with-border">
-                <i class="fa fa-bullhorn"></i>
+                
 
-                <h3 class="box-title">Avisos!</h3>
+                
             </div>
      
             <div class="box-body">
@@ -113,7 +111,7 @@
                         <h3>Calendario de Nómina 2019</h3>
                         <h3></h3>
 
-                        <p>Entrega de oficios para justificar días para bono de puntualidad del personal activo.</p>
+                        <p style="font-size:13px;">Entrega de oficios para justificar días para bono de puntualidad del personal activo.</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-bag"></i>
@@ -124,35 +122,17 @@
    
         </div>
     </div>
-
-    <div class="col-md-4">
-        <div class="box box-default">
-            <div class="box-header with-border">
-                <i class="fa fa-bullhorn"></i>
-
-                <h3 class="box-title">Avisos!</h3>
-            </div>
      
-            <div class="box-body">
-                <div class="small-box bg-yellow">
-                    <div class="inner">
-                        <h3>Calendario Oficial 2019</h3>
+    
+    
 
-                        <p>Días de descanso obligatorio para los empleados al servicio del poder ejecutivo del Estado de Veracruz </p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-bag"></i>
-                    </div>
-                    <a href="" class="small-box-footer" target="_blank">Descargar <i class="fa fa-download"></i></a>
-                </div>
-            </div>
-   
-        </div>
-    </div>
+    <div class="col-md-1"></div>
 
-  
-   
+
 </div>
+
+
+
 
 
 

@@ -327,7 +327,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
                 SET @mes := 0;
                 SET @anio := 0;
-                SET @folio := 1;
 
                 IF @condicion = 1 THEN
                     SET @mes := 1;
@@ -335,15 +334,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 ELSE
                     SET @mes := MONTH(NOW()) + 1;
                     SET @anio := YEAR(NOW());
-                    SET @folio := (SELECT folio FROM folios WHERE folios.id_periodo = 
-                        (SELECT id_periodo FROM periodos WHERE periodos.no_mes = MONTH(NOW()) AND periodos.anio = YEAR(NOW())));
                 END IF;
                 INSERT INTO periodos (no_mes, anio, estatus) VALUES (@mes, @anio, 1);
-                IF @folio >= 1 THEN
-                    INSERT INTO folios (id_periodo, folio, created_at) VALUES ((SELECT LAST_INSERT_ID()), @folio, NOW());
-                ELSE
-                    INSERT INTO folios (id_periodo, folio, created_at) VALUES ((SELECT LAST_INSERT_ID()), 1, NOW());
-                END IF;
             END
         ');
 
@@ -522,7 +514,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     CALL sp_generar_poliza(1,1234,1);
 
                     UPDATE periodos SET periodos.estatus = 0 WHERE periodos.no_mes = mes AND periodos.anio = anio;
-                    UPDATE folios SET updated_at = NOW();
 
                     CALL sp_abrir_periodo;
                     CALL sp_inventario_inicial;
@@ -591,6 +582,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
             CREATE PROCEDURE `sp_vale_consumo`(
                 IN `descripcion_oficina` VARCHAR(191),
+                IN `tipo_movimiento` INT,
+                IN `folio` VARCHAR(191),
                 OUT `clave` INT 
             )
             LANGUAGE SQL
@@ -602,9 +595,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
                 INSERT INTO c_pedido_consumo (id_oficina, id_periodo, folio, tipo_movimiento, fecha_movimiento, created_at) VALUES
                     ((SELECT id FROM cat_oficinas WHERE cat_oficinas.descripcion = descripcion_oficina), 
-                    @periodo, (SELECT folio FROM folios WHERE folios.id_periodo = @periodo), 1, NOW(), NOW());
-
-                UPDATE folios SET folio = folio + 1, updated_at = NOW() WHERE folios.id_periodo = @periodo;
+                    @periodo, folio, tipo_movimiento, NOW(), NOW());
 
                 SET clave := (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = 
                     (SELECT MAX(id_pedido_consumo) FROM c_pedido_consumo WHERE c_pedido_consumo.id_oficina = 
@@ -650,7 +641,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-
                 SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.estatus = 1);
                 SET @oficina := (SELECT id_oficina FROM c_pedido_consumo WHERE id_pedido_consumo = id_pedido);
                 SET @poliza := (SELECT id_poliza FROM polizas WHERE id_periodo = @periodo);
@@ -693,31 +683,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             END
         ');
         
-        /**Procedimiento almacenado que modifica el tipo de movimiento de un vale.
-         * 1 para consumo y 3 para compra directa.
-         * Recibe como parametro el id del vale.
-         */
-        DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_cambiar_vale;
-
-            CREATE PROCEDURE `sp_cambiar_vale`(
-                IN `id_pedido` INT
-            )
-            LANGUAGE SQL
-            NOT DETERMINISTIC
-            CONTAINS SQL
-            SQL SECURITY DEFINER
-            BEGIN
-                SET @tipo_movimiento := (SELECT c_pedido_consumo.tipo_movimiento FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido);
-
-                IF @tipo_movimiento = 1 THEN
-                    UPDATE c_pedido_consumo SET tipo_movimiento = 3 WHERE c_pedido_consumo.id_pedido_consumo = id_pedido;
-                ELSE
-                    UPDATE c_pedido_consumo SET tipo_movimiento = 1 WHERE c_pedido_consumo.id_pedido_consumo = id_pedido;
-                END IF;
-            END
-        ');
-        
         /**Procedimiento almacenado para el almacenamiento de los articulos de cada pedido. Este paso va despúes de guardar los articulos a comprar.
          * Este es para la parte de las compras directas
          * Recibe como parametros el id del pedido generado (obtenido del sp_vale_consumo), la clave del articulo y la cantidad solicitada
@@ -741,6 +706,24 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 INSERT INTO d_pedido_compra (id_pedido_compra, id_articulo, cantidad, no_folio, created_at) VALUES 
                     (id_pedido, (SELECT MAX(id) FROM cat_articulos_compra WHERE cat_articulos_compra.descripcion = descripcion), cantidad, 
                     (SELECT folio FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido), NOW());
+            END
+        ');
+
+        /**Procedimiento almacenado para actualizar el estado genral de un vale, si se recibió o no
+         * 
+         */
+        DB::unprepared('
+            DROP PROCEDURE IF EXISTS sp_actualizar recibo_vale;
+
+            CREATE PROCEDURE `sp_compra_articulos`(
+                IN `id_pedido` INT
+            )
+            LANGUAGE SQL
+            NOT DETERMINISTIC
+            CONTAINS SQL
+            SQL SECURITY DEFINER
+            BEGIN
+                UPDATE c_pedido_consumo SET recibido = 1 WHERE c_pedido_consumo.id_pedido_consumo = id_pedido;
             END
         ');
         
@@ -794,6 +777,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 IN `fecha_facturacion` DATE,
                 IN `iva` DOUBLE,
                 IN `subtotal` DOUBLE,
+                IN `folio` VARCHAR(191),
                 OUT `clave` INT
             )
             LANGUAGE SQL
@@ -803,16 +787,13 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             BEGIN
 
                 SET @periodo := (SELECT periodos.id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio AND estatus = 1);
-                SET @folio := (SELECT folios.folio FROM folios WHERE folios.id_periodo = @periodo);
                 SET @proveedor := (SELECT cat_proveedores.id FROM cat_proveedores WHERE cat_proveedores.nombre = nombre_proveedor);
 
                 INSERT INTO compras (id_periodo, id_proveedor, folio, fecha_movimiento, no_factura, fecha_factura, iva, total, created_at)
-                VALUES (@periodo, @proveedor, @folio, fecha_movimiento, no_factura, fecha_facturacion, iva, 
+                VALUES (@periodo, @proveedor, folio, fecha_movimiento, no_factura, fecha_facturacion, iva, 
                     (((iva/100)*subtotal)+subtotal), NOW());
-                        
-                UPDATE folios SET folio = folio + 1, updated_at = NOW() WHERE folios.id_periodo = @periodo;
 
-                SET clave := (SELECT id_compra FROM compras WHERE compras.folio = @folio);
+                SET clave := (SELECT id_compra FROM compras WHERE compras.folio = folio);
             END
         ');
 
@@ -861,7 +842,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     SELECT ("N/A") AS "CODIF.", articulo.descripcion AS "DESCRIPCION", ("N/A") AS "UNIDAD", pedido.cantidad AS "CANT.", ("N/A") AS "PRECIO"
                     FROM cat_articulos_compra articulo
                     INNER JOIN d_pedido_compra pedido ON pedido.id_articulo = articulo.id
-                    WHERE pedido.id_pedido_compra = (SELECT c_pedido_consumo.id_pedido_consumo FROM c_pedido_consumo WHERE c_pedido_consumo.folio = folio AND c_pedido_consumo.id_periodo = @periodo LIMIT 1);
+                    WHERE pedido.id_pedido_compra = (SELECT c_pedido_consumo.id_pedido_consumo FROM c_pedido_consumo WHERE c_pedido_consumo.folio = folio AND c_pedido_consumo.id_periodo = @periodo);
                 END IF;
             END
         ');
@@ -901,22 +882,44 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         FROM cat_articulos articulo
                         INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
                         INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+                        INNER JOIN c_pedido_consumo pedido ON pedido.id_pedido_consumo = consumo.id_pedido_consumo
                         INNER JOIN periodos periodo ON periodo.id_periodo = consumo.id_periodo
-                        WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo) > 0, 1, 0));
+                        WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo AND pedido.id_oficina = @id_oficina) > 0, 1, 0));
+                        
                     IF @condicion3 = 1 THEN
-                        SELECT cat_cuentas_contables.sscta, cat_cuentas_contables.nombre FROM cat_cuentas_contables WHERE cat_cuentas_contables.id = @aux;
-                        SELECT articulo.clave AS codificacion, articulo.descripcion AS descripcion, consumo.folio AS folio, 
-                            unidad.descripcion AS unidad, detalle.cantidad AS cantidad, FORMAT(articulo.precio_unitario, 4) AS costo,
-                            FORMAT(detalle.cantidad * articulo.precio_unitario, 4) AS importe
+                        SELECT cuenta.sscta AS "PARTIDA", cuenta.nombre AS "NOMBRE" ,articulo.clave AS codificacion, articulo.descripcion AS descripcion, consumo.folio AS folio, 
+                            unidad.descripcion AS unidad, detalle.cantidad AS cantidad, FORMAT(articulo.precio_unitario, 2) AS costo,
+                            FORMAT(detalle.cantidad * articulo.precio_unitario, 2) AS importe
                         FROM consumos consumo
                         INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
                         INNER JOIN periodos periodo ON periodo.id_periodo = consumo.id_periodo
+                        INNER JOIN c_pedido_consumo pedido ON pedido.id_pedido_consumo = consumo.id_pedido_consumo
                         INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
                         INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
-                        WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo;
+                        INNER JOIN cat_cuentas_contables cuenta ON cuenta.id = articulo.id_cuenta
+                        WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo AND pedido.id_oficina = @id_oficina;
+                        
+                        SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS", 
+									(SELECT SUM(FORMAT(detalles.cantidad * cat_articulos.precio_unitario, 2)) FROM detalles INNER JOIN cat_articulos ON
+									detalles.id_articulo = cat_articulos.id INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo 
+									WHERE cat_articulos.id_cuenta = @aux AND consumos.id_periodo = @periodo AND consumos.id_oficina = @id_oficina) AS "IMPORTE"
+                        FROM consumos consumo
+                        INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
+                        INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
+                        WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo AND consumo.id_oficina = @id_oficina;
+                        
                     END IF;
                     SET @aux := @aux + 1;
                 END WHILE;
+                
+                SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS", 
+							FORMAT((SELECT SUM(FORMAT(detalles.cantidad * cat_articulos.precio_unitario, 2)) FROM detalles INNER JOIN cat_articulos ON
+							detalles.id_articulo = cat_articulos.id INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo 
+							WHERE consumos.id_periodo = @periodo AND consumos.id_oficina = @id_oficina),2) AS "IMPORTE "
+                FROM consumos consumo
+                INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
+                INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
+                WHERE consumo.id_periodo = @periodo AND consumo.id_oficina = @id_oficina;
             END
         ');
 
@@ -935,25 +938,39 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio);
-                SET @num_ubpp := (SELECT COUNT(DISTINCT ubpp) FROM cat_oficinas);
+                SET @periodo := (SELECT id_periodo FROM periodos WHERE no_mes = mes AND anio = anio);
                 SET @ubpp := (SELECT GROUP_CONCAT(DISTINCT(ubpp)) FROM cat_oficinas);
+                SET @num_ubpp := (SELECT COUNT(DISTINCT(ubpp)) FROM cat_oficinas);
                 SET @aux_ubpp := 1;
-
+                
                 WHILE @aux_ubpp <= @num_ubpp DO
                     SET @ubpp_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@ubpp, ",", @aux_ubpp), ",", -1));
-                    SET @num_oficinas := (SELECT COUNT(id) FROM cat_oficinas WHERE cat_oficinas.ubpp = @ubpp_actual);
-                    SET @oficina := (SELECT GROUP_CONCAT(DISTINCT(ubpp)) FROM cat_oficinas WHERE cat_oficinas.ubpp = @ubpp);
+                    SET @oficina := (SELECT GROUP_CONCAT(DISTINCT(descripcion)) FROM cat_oficinas WHERE ubpp = @ubpp_actual);
+                    SET @num_oficinas := (SELECT COUNT(id) FROM cat_oficinas WHERE ubpp = @ubpp_actual);
                     SET @aux_oficina := 1;
-
-                    SELECT ubpp, descripcion FROM cat_oficinas WHERE cat_oficinas.ubpp = @ubpp_actual;
-
+                    
                     WHILE @aux_oficina <= @num_oficinas DO
-                        SET @oficina_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@ubpp, ",", @aux_oficina), ",", -1));
-                        CALL sp_reporte_consumos_oficina(@ubpp_actual, @oficina_actual, mes, anio);
+                        SET @oficina_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@oficina, ",", @aux_oficina), ",", -1));
+                        SET @id_oficina := (SELECT id FROM cat_oficinas WHERE descripcion = @oficina_actual);
+                        SET @condicion1 := (SELECT IF((SELECT COUNT(id_consumo) FROM consumos WHERE id_oficina = @id_oficina) > 0, 1, 0));
+                        
+                        IF @condicion1 = 1 THEN
+                            SELECT @ubpp_actual AS "AREA", @oficina_actual AS "OFICINA";
+                            CALL sp_reporte_consumos_oficina(@ubpp_actual, @oficina_actual, mes, anio);
+                        END IF;
+                        
                         SET @aux_oficina := @aux_oficina + 1;
                     END WHILE;
-                    SET @aux_ubpp = @aux_ubpp + 1;
+                    
+                    SET @condicion2 := (SELECT IF((SELECT COUNT(id_consumo) FROM consumos 
+						  		INNER JOIN cat_oficinas ON cat_oficinas.id = consumos.id_oficina
+								  WHERE cat_oficinas.ubpp = @ubpp_actual) > 0, 1, 0));
+                    
+                    IF @condicion2 = 1 THEN
+                  		SELECT @condicion2;
+                    END IF;
+                    
+                    SET @aux_ubpp := @aux_ubpp + 1;
                 END WHILE;
             END
         ');
@@ -1630,10 +1647,10 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_consumo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_detalles_consumo;');
 
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_cambiar_vale;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_actualizar recibo_vale;');
 
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_articulo_compra;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra_articulos;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_detalles_compra;');
 
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_factura;');

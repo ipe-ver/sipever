@@ -1,73 +1,73 @@
 @extends('almacen.index')
-
-@section('secciones_almacen')
-<link rel="stylesheet" type="text/css" href="{{asset('css/effects/modal.css')}}">
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-5 margin-tb">
+@if(Auth::user()->hasRole('almacen_admin') || Auth::user()->hasRole('almacen_capturista'))
+    @section('secciones_almacen')
+    <link rel="stylesheet" type="text/css" href="{{asset('css/effects/modal.css')}}">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-5 margin-tb">
+                <div class="row">
+                    <h2 class=" col-sm-1 text-center text-nowrap fas fa-inbox">
+                        <span style="font-family: 'Roboto';">Vales</span>
+                    </h2>
+                </div>
+                <b>Administración y registro de vales de consumo de Almacén </b>
+            </div>
+            <div id="messageCol" class="col-md-6">
+                @if ($message = Session::get('success'))
+                <div class="alert-container" id="contenedor-alert">
+                    <div class="alert success">
+                        <span class="closebtn">&times;</span>
+                        <p id="test">{{ $message }}</p>
+                    </div>
+                </div>
+                @elseif ($errors->any())
+                <div class="alert-container" id="contenedor-alert">
+                    <div class="alert alert-danger">
+                        <span class="closebtn">&times;</span>
+                        <strong>Error</strong>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </div>
+                </div>
+                @elseif ($message = Session::get('warning'))
+                <div class="alert-container" id="contenedor-alert">
+                    <div class="alert warning">
+                        <span class="closebtn">&times;</span>
+                        <p id="test">{{ $message }}</p>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </div>
+        @if(Auth::user()->hasRole('almacen_admin'))
             <div class="row">
-                <h2 class=" col-sm-1 text-center text-nowrap fas fa-inbox">
-                    <span style="font-family: 'Roboto';">Vales</span>
-                </h2>
-            </div>
-            <b>Administración y registro de vales de consumo de Almacén </b>
-        </div>
-        <div id="messageCol" class="col-md-6">
-            @if ($message = Session::get('success'))
-            <div class="alert-container" id="contenedor-alert">
-                <div class="alert success">
-                    <span class="closebtn">&times;</span>
-                    <p id="test">{{ $message }}</p>
+                <div class="col-sm-12 margin-tb header">
+                    <h4 class="pull-left nombre-ventana">Vista de los vales enviados sin validar</h4>
+
+                    <div class="pull-right">
+                        <a class="icon-ref" style="padding-right: 10px;" href="{{route('almacen.index')}}" title="">
+                            <h3 class="fas fa-home"></h3>
+                        </a>
+                    </div>
                 </div>
             </div>
-            @elseif ($errors->any())
-            <div class="alert-container" id="contenedor-alert">
-                <div class="alert alert-danger">
-                    <span class="closebtn">&times;</span>
-                    <strong>Error</strong>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
+        @else
+            <div class="row">
+                <div class="col-sm-12 margin-tb header">
+                    <h4 class="pull-left nombre-ventana">Orden de solicitud de consumo</h4>
+
+                    <div class="pull-right">
+                        <a class="icon-ref" style="padding-right: 10px;" href="{{route('almacen.index')}}" title="">
+                            <h3 class="fas fa-home"></h3>
+                        </a>
+                    </div>
                 </div>
             </div>
-            @elseif ($message = Session::get('warning'))
-            <div class="alert-container" id="contenedor-alert">
-                <div class="alert warning">
-                    <span class="closebtn">&times;</span>
-                    <p id="test">{{ $message }}</p>
-                </div>
-            </div>
-            @endif
-        </div>
+        @endif
+        <p></p>
     </div>
-    @if(Auth::user()->hasRole('almacen_admin'))
-        <div class="row">
-            <div class="col-sm-12 margin-tb header">
-                <h4 class="pull-left nombre-ventana">Vista de los vales enviados sin validar</h4>
 
-                <div class="pull-right">
-                    <a class="icon-ref" style="padding-right: 10px;" href="{{route('almacen.index')}}" title="">
-                        <h3 class="fas fa-home"></h3>
-                    </a>
-                </div>
-            </div>
-        </div>
-    @else
-        <div class="row">
-            <div class="col-sm-12 margin-tb header">
-                <h4 class="pull-left nombre-ventana">Orden de solicitud de consumo</h4>
-
-                <div class="pull-right">
-                    <a class="icon-ref" style="padding-right: 10px;" href="{{route('almacen.index')}}" title="">
-                        <h3 class="fas fa-home"></h3>
-                    </a>
-                </div>
-            </div>
-        </div>
-    @endif
-    <p></p>
-</div>
-@if(Auth::user()->hasRole('almacen_admin'))
     <div class="row">
         <div class="col-md-12">
             <div class=" col-sm-2 desc-cuenta text-center">
@@ -217,9 +217,26 @@
         </div>
 
     </div>
-
     <script src="{{asset('js/almacen/vales.js')}}"></script>
-@elseif(!Auth::user()->hasRole('almacen_admin'))
+    @endsection
 @else
+    @section('content')
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-5 margin-tb">
+                    <div class="row">
+                        <h2 class=" col-sm-1 text-center text-nowrap fas fa-box-open">
+                            <span style="font-family: 'Roboto';">Sin acceso</span>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 margin-tb header">
+                    <h3 class="pull-left nombre-ventana">Porfavor inicie sesión con una cuenta autorizada para tener acceso a este módulo</h3>
+                </div>
+            </div>
+            <p></p>
+        </div>
+    @endsection
 @endif
-@endsection

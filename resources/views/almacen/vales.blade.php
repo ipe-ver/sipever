@@ -114,7 +114,7 @@
                     <div class="col-sm-3 text-center">{{$cabecera->fecha}}</div>
                     <div class="col-sm-5 desc-cuenta text-nowrap">{{$cabecera->oficina}}</div>
                     <div class="pull-right">
-                        <button name="verVale" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse" data-target="#collapseVale" data-parent="#accordion" onclick="getDetalles('{{$cabecera->tipo}}', '{{$cabecera->folio}}', this)">
+                        <button name="verVale" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse" data-target="#collapseVale" data-parent="#accordion" onclick="getDetalles('{{$cabecera->fecha}}', '{{$cabecera->folio}}', this)">
                             <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
                         </button>
                     </div>

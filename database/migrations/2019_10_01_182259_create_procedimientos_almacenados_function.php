@@ -715,7 +715,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_actualizar_recibo_vale;
 
-            CREATE PROCEDURE `sp_compra_articulos`(
+            CREATE PROCEDURE `sp_actualizar_recibo_vale`(
                 IN `id_pedido` INT
             )
             LANGUAGE SQL
@@ -1656,7 +1656,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_consumo;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_detalles_consumo;');
 
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_actualizar recibo_vale;');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_actualizar_recibo_vale;');
 
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_compra_articulos;');
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_detalles_compra;');

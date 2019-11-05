@@ -21,6 +21,7 @@ class CreateTableRchEmpleados extends Migration
             $table->string('apellido_materno')->nullable();
             $table->string('nombre')->nullable();
             $table->boolean('estatus')->default(1);
+            $table->timestamps();
 
         });
     }

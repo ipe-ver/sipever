@@ -56,7 +56,23 @@
                 </div>
 
 
-            </div>    
+            </div>   
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="info-box" style="background: #E8DDCB;">
+                        <span class="info-box-icon" style="background: #45ADA8;"><img class="img" src="{!! url('') !!}/img_download/USERS/empleado.png"/></span>
+
+                        <div class="info-box-content">
+                            <a href="{!! url('') !!}/catalogos/empleados" style="color: #000000;"><h5 style="font-size: 36px;"><strong>Cátalogo de Empleados</strong></h5></a>
+                        </div>
+                    </div>
+                </div>
+
+            
+
+
+            </div>     
  		</div>
  	</div>
 </div>

@@ -91,6 +91,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'catalogos', 'as' => 'catalo
 	Route::get('/permisos', function() { return view('catalogos.permisos'); });
 	Route::get('/get_permisos','Catalogos\PermisosController@get_permisos');
 	Route::post('/add_permisos', 'Catalogos\PermisosController@store');
+
+	Route::get('/empleados', function() { return view('catalogos.empleado'); });
+	Route::get('/get_empleados','Catalogos\EmpleadoController@get_empleados');	
+	Route::get('/add_empleado', 'Catalogos\EmpleadoController@create');
+	Route::post('/empleado', 'Catalogos\EmpleadoController@store');
 	
 
 

@@ -54,6 +54,11 @@ class Empleado extends Model
 		
     }
 
+    public function getFechaIngresoAttribute($value)
+    {
+      return  \Carbon\Carbon::parse($value)->format('d/m/Y');
+    }
+
         
 
    

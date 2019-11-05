@@ -51,6 +51,42 @@ class CatEmpleadosTableSeeder extends Seeder
                 'nombre' => 'ANGEL LUIS',
 				'estatus' => 1,
             ),
+            array( // row #5
+                'id' => 5,
+                'no_personal' => 2307,
+                'fecha_ingreso' => '1999/08/03',
+                'apellido_paterno' => 'BALBOA',
+                'apellido_materno' => 'PEREDO',
+                'nombre' => 'ANTONIO',
+				'estatus' => 1,
+            ),
+            array( // row #5
+                'id' => 6,
+                'no_personal' => 1499,
+                'fecha_ingreso' => '1993/05/01',
+                'apellido_paterno' => 'LOPEZ',
+                'apellido_materno' => 'GARCIA',
+                'nombre' => 'VERONICA',
+				'estatus' => 1,
+            ),
+            array( // row #5
+                'id' => 7,
+                'no_personal' => 692,
+                'fecha_ingreso' => '1990/08/21',
+                'apellido_paterno' => 'MESA',
+                'apellido_materno' => 'CASTRO',
+                'nombre' => 'GUSTAVO',
+				'estatus' => 1,
+            ),
+            array( // row #5
+                'id' => 8,
+                'no_personal' => 2411,
+                'fecha_ingreso' => '2007/10/16',
+                'apellido_paterno' => 'VELAZQUEZ',
+                'apellido_materno' => 'GARCIA',
+                'nombre' => 'RITA BEATRIZ',
+				'estatus' => 1,
+            ),
 			
 		);
 

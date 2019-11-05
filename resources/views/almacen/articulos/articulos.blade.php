@@ -87,6 +87,14 @@
         </div>
     </div>
 </div>
+<div class="modal-loader" id="loader">
+    <div class="sp-box">
+        <div class="sp sp1"></div>
+        <div class="sp sp2"></div>
+        <div class="sp sp3"></div>
+        <div class="sp sp4"></div>
+    </div>
+</div>
 <div class="row" style="margin-top: 1%;">
     <div class="col-md-12">
         <div class=" col-sm-5 desc-cuenta text-center" style="width: 39%;">

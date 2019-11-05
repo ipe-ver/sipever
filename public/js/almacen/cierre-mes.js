@@ -23,7 +23,9 @@ for (i = 0; i < close.length; i++) {
  * Método para cargar las acciones del input de mes
  *
  */
-window.addEventListener("load", function(){
+$("#loader").show();
+$(document).ready(function(){
+	$("#loader").hide();
 	var btnMesIncrement=document.getElementById('mesIncrement');
 	var btnMesDecrement=document.getElementById('mesDecrement');
 	var input = document.getElementById('no_mes');

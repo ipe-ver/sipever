@@ -818,7 +818,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
          * Recibe como parametro el folio del vale y la fecha.
          */
         DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_get_articulos_vale
+            DROP PROCEDURE IF EXISTS sp_get_articulos_vale;
 
             CREATE PROCEDURE `sp_get_articulos_vale`(
                 IN `folio` VARCHAR(200),

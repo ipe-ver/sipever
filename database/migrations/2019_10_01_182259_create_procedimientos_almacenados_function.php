@@ -837,7 +837,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
          * Recibe como parametro el folio del vale y la fecha.
          */
         DB::unprepared('
-            DROP PROCEDURE IF EXISTS sp_get_articulos_vale;
+            DROP PROCEDURE IF EXISTS sp_get_articulos_vale
 
             CREATE PROCEDURE `sp_get_articulos_vale`(
                 IN `folio` VARCHAR(200),
@@ -852,14 +852,13 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @periodo := (SELECT c_pedido_consumo.id_periodo FROM c_pedido_consumo WHERE c_pedido_consumo.folio = folio AND c_pedido_consumo.fecha_movimiento = fecha);
 
                 IF @tipo_vale = 1 THEN
-                    SELECT articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD", 
-                        articulo.precio_unitario AS "PRECIO", pedido.cantidad AS "CANT."
+                    SELECT articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD", pedido.cantidad AS "CANT.", articulo.precio_unitario AS "PRECIO"
                     FROM cat_articulos articulo
                     INNER JOIN d_pedido_consumo pedido ON pedido.id_articulo = articulo.id
                     INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
                     WHERE pedido.id_pedido_consumo = (SELECT c_pedido_consumo.id_pedido_consumo FROM c_pedido_consumo WHERE c_pedido_consumo.folio = folio AND c_pedido_consumo.id_periodo = @periodo);
                 ELSE
-                    SELECT articulo.descripcion AS "DESCRIPCION", pedido.cantidad AS "CANT."
+                    SELECT ("N/A") AS "CODIF.", articulo.descripcion AS "DESCRIPCION", ("N/A") AS "UNIDAD", pedido.cantidad AS "CANT.", ("N/A") AS "PRECIO"
                     FROM cat_articulos_compra articulo
                     INNER JOIN d_pedido_compra pedido ON pedido.id_articulo = articulo.id
                     WHERE pedido.id_pedido_compra = (SELECT c_pedido_consumo.id_pedido_consumo FROM c_pedido_consumo WHERE c_pedido_consumo.folio = folio AND c_pedido_consumo.id_periodo = @periodo);

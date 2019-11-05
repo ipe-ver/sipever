@@ -171,7 +171,7 @@ function getDetalles(fecha, folio, button){
 	                closebtn.innerHTML="&times;";
 	                var info=document.createElement("p");
 	                info.innerHTML='Error al tratar de conectar con el servidor,' +
-	                	'\nPorfavor contacte al edpartamento de tecnologías de la información';
+	                	'\nPorfavor contacte al departamento de tecnologías de la información';
 	                alert.appendChild(closebtn);
 	                alert.appendChild(info);
 	                mensaje.appendChild(alert);

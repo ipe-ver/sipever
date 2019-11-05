@@ -40,7 +40,7 @@
             @endif
         </div>
     </div>
-    @if(Auth::user()->name == 'almacen_admin')
+    @if(Auth::user()->hasRole('almacen_admin'))
         <div class="row">
             <div class="col-sm-12 margin-tb header">
                 <h4 class="pull-left nombre-ventana">Vista de los vales enviados sin validar</h4>
@@ -67,7 +67,7 @@
     @endif
     <p></p>
 </div>
-@if(Auth::user()->name == 'almacen_admin')
+@if(Auth::user()->hasRole('almacen_admin'))
     <div class="row">
         <div class="col-md-12">
             <div class=" col-sm-2 desc-cuenta text-center">
@@ -111,8 +111,8 @@
                     </div>
                     @endif
 
-                    <div class="col-sm-3 text-center">{{$cabecera->fecha_recepcion}}</div>
-                    <div class="col-sm-5 desc-cuenta text-nowrap">{{$cabecera->departamento}}</div>
+                    <div class="col-sm-3 text-center">{{$cabecera->fecha}}</div>
+                    <div class="col-sm-5 desc-cuenta text-nowrap">{{$cabecera->oficina}}</div>
                     <div class="pull-right">
                         <button name="verVale" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse" data-target="#collapseVale" data-parent="#accordion" onclick="getDetalles('{{$cabecera->tipo}}', '{{$cabecera->folio}}', this)">
                             <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
@@ -129,6 +129,7 @@
                                     <tr>
                                         <th>Clave</th>
                                         <th width="400px">Descripcion</th>
+                                        <th>U.Medida</th>
                                         <th>Cantidad</th>
                                         <th>Precio</th>
                                     </tr>
@@ -195,6 +196,7 @@
                                     <tr>
                                         <th>Clave</th>
                                         <th>Descripcion</th>
+                                        <th>U.medida</th>
                                         <th>Cantidad</th>
                                         <th>Precio</th>
                                     </tr>
@@ -217,7 +219,7 @@
     </div>
 
     <script src="{{asset('js/almacen/vales.js')}}"></script>
-@elseif(Auth::user()->name != 'almacen_admin')
+@elseif(!Auth::user()->hasRole('almacen_admin'))
 @else
 @endif
 @endsection

@@ -40,6 +40,9 @@ class FacturaController extends Controller
         $precios = $request->precioArticulo;
         $cantidades = $request->cantidadArticulo;
         $articulos = $request->claveArticulo;
+        if(!$articulos){
+            return back()->with('warning','Porfavor ingrese al menos un artículo');
+        }
         $subtotal = $request->subtotal;
         $total_aux = 0;
         for ($i=0; $i < sizeof($articulos); $i++) {

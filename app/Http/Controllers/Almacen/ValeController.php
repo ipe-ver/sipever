@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Doctrine\DBAL\Driver\PDOConnection;
 use Exception;
+use Auth;
 use DB;
 
 class ValeController extends Controller
@@ -17,11 +18,24 @@ class ValeController extends Controller
      */
     public function index()
     {
-        $cabeceras = DB::select('call sp_get_vales()');
 
+        if(Auth::user()->hasRole('almacen_admin') || Auth::user()->hasRole('almacen_capturista')){
+            $cabeceras = DB::select('call sp_get_vales()');
         return view('almacen.vales', compact('cabeceras'));
+        }else if(Auth::user()->hasRole('almacen_oficinista')){
+            $partidas = DB::select("call sp_get_grupos");
+            return view('almacen.vales', compact('partidas'));
+        }else{
+            return view('almacen.index');
+        }  
     }
 
+    public function getArticulos(Request $request){
+        $nombrePartida = $request->input('partida');
+        $articulos = DB::select("call sp_obtener_articulos_grupo(?)", array($nombrePartida));
+        return json_encode($articulos);
+    }
+    
     public function getDetalles(Request $request){
         $fecha = $request->fecha;
         $folio = $request->folio;

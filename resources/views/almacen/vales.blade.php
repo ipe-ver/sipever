@@ -1,6 +1,6 @@
 @extends('almacen.index')
+@section('secciones_almacen')
 @if(Auth::user()->hasRole('almacen_admin') || Auth::user()->hasRole('almacen_capturista'))
-    @section('secciones_almacen')
     <link rel="stylesheet" type="text/css" href="{{asset('css/effects/modal.css')}}">
     <div class="container-fluid">
         <div class="row">
@@ -92,7 +92,7 @@
             <div class="sp sp4"></div>
         </div>
     </div>
-    <div class="panel-group menu-scroll" id="accordion" aria-multiselectable="true">
+    <div class="panel-group menu-scroll" id="accordion" aria-multiselectable="true" style="height: 35em;">
         @foreach ($cabeceras as $cabecera)
         <div class="panel panel-default panel-menu">
             <div class="panel-heading titulo-panel" style="background-color: transparent;">
@@ -218,9 +218,7 @@
 
     </div>
     <script src="{{asset('js/almacen/vales.js')}}"></script>
-    @endsection
 @else
-    @section('content')
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-5 margin-tb">
@@ -238,5 +236,5 @@
             </div>
             <p></p>
         </div>
-    @endsection
 @endif
+@endsection

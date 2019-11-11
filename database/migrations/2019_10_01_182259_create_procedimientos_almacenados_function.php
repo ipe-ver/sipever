@@ -777,7 +777,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 IN `fecha_facturacion` DATE,
                 IN `iva` DOUBLE,
                 IN `subtotal` DOUBLE,
-                IN `folio` VARCHAR(191),
                 OUT `clave` INT
             )
             LANGUAGE SQL
@@ -789,11 +788,11 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @periodo := (SELECT periodos.id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio AND estatus = 1);
                 SET @proveedor := (SELECT cat_proveedores.id FROM cat_proveedores WHERE cat_proveedores.nombre = nombre_proveedor);
 
-                INSERT INTO compras (id_periodo, id_proveedor, folio, fecha_movimiento, no_factura, fecha_factura, iva, total, created_at)
-                VALUES (@periodo, @proveedor, folio, fecha_movimiento, no_factura, fecha_facturacion, iva, 
+                INSERT INTO compras (id_periodo, id_proveedor, fecha_movimiento, no_factura, fecha_factura, iva, total, created_at)
+                VALUES (@periodo, @proveedor, fecha_movimiento, no_factura, fecha_facturacion, iva, 
                     (((iva/100)*subtotal)+subtotal), NOW());
 
-                SET clave := (SELECT id_compra FROM compras WHERE compras.folio = folio);
+                SET clave := (SELECT id_compra FROM compras WHERE compras.no_factura = no_factura);
             END
         ');
 
@@ -902,7 +901,6 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
                 IF @condicion1 = 0 THEN
 
-                    SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio);
                     SET @id_oficina := (SELECT id FROM cat_oficinas WHERE cat_oficinas.ubpp = ubpp AND cat_oficinas.descripcion = oficina);
                     SET @num_cuentas := (SELECT COUNT(sscta) FROM cat_cuentas_contables);
                     SET @aux := 1;
@@ -914,7 +912,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                             INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
                             INNER JOIN c_pedido_consumo pedido ON pedido.id_pedido_consumo = consumo.id_pedido_consumo
                             INNER JOIN periodos periodo ON periodo.id_periodo = consumo.id_periodo
-                            WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo AND pedido.id_oficina = @id_oficina) > 0, 1, 0));
+                            WHERE articulo.id_cuenta = @aux AND pedido.id_oficina = @id_oficina AND consumo.id_periodo BETWEEN @periodo_min AND @periodo_max) > 0, 1, 0));
                             
                         IF @condicion3 = 1 THEN
                             SELECT cuenta.sscta AS "PARTIDA", cuenta.nombre AS "NOMBRE" ,articulo.clave AS codificacion, articulo.descripcion AS descripcion, consumo.folio AS folio, 
@@ -927,7 +925,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                             INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
                             INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
                             INNER JOIN cat_cuentas_contables cuenta ON cuenta.id = articulo.id_cuenta
-                            WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo AND pedido.id_oficina = @id_oficina;
+                            WHERE articulo.id_cuenta = @aux AND pedido.id_oficina = @id_oficina AND consumo.id_periodo BETWEEN @periodo_min AND @periodo_max;
                             
                             SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS", 
                                         (SELECT SUM(FORMAT(detalles.cantidad * cat_articulos.precio_unitario, 2)) FROM detalles INNER JOIN cat_articulos ON
@@ -936,7 +934,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                             FROM consumos consumo
                             INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
                             INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
-                            WHERE articulo.id_cuenta = @aux AND consumo.id_periodo = @periodo AND consumo.id_oficina = @id_oficina;
+                            WHERE articulo.id_cuenta = @aux AND consumo.id_oficina = @id_oficina AND consumo.id_periodo BETWEEN @periodo_min AND @periodo_max;
                             
                         END IF;
                         SET @aux := @aux + 1;
@@ -945,11 +943,11 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS", 
                                 FORMAT((SELECT SUM(FORMAT(detalles.cantidad * cat_articulos.precio_unitario, 2)) FROM detalles INNER JOIN cat_articulos ON
                                 detalles.id_articulo = cat_articulos.id INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo 
-                                WHERE consumos.id_periodo = @periodo AND consumos.id_oficina = @id_oficina),2) AS "IMPORTE "
+                                WHERE consumos.id_oficina = @id_oficina AND consumos.id_periodo BETWEEN @periodo_min AND @periodo_max),2) AS "IMPORTE "
                     FROM consumos consumo
                     INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
                     INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
-                    WHERE consumo.id_periodo = @periodo AND consumo.id_oficina = @id_oficina;
+                    WHERE consumo.id_oficina = @id_oficina AND consumo.id_periodo BETWEEN @periodo_min AND @periodo_max;
                 END IF;
             END
         ');
@@ -961,7 +959,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             DROP PROCEDURE IF EXISTS sp_reporte_consumos_departamento;
 
             CREATE PROCEDURE `sp_reporte_consumos_departamento`(
-                IN `mes` INT,
+                IN `mes_inicio` INT,
+                IN `mes_fin` INT,
                 IN `anio` INT
             )
             LANGUAGE SQL
@@ -969,49 +968,81 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SET @periodo := (SELECT id_periodo FROM periodos WHERE no_mes = mes AND anio = anio);
-                SET @ubpp := (SELECT GROUP_CONCAT(DISTINCT(ubpp)) FROM cat_oficinas);
-                SET @num_ubpp := (SELECT COUNT(DISTINCT(ubpp)) FROM cat_oficinas);
-                SET @aux_ubpp := 1;
-                
-                WHILE @aux_ubpp <= @num_ubpp DO
-                    SET @ubpp_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@ubpp, ",", @aux_ubpp), ",", -1));
-                    SET @oficina := (SELECT GROUP_CONCAT(DISTINCT(descripcion)) FROM cat_oficinas WHERE ubpp = @ubpp_actual);
-                    SET @num_oficinas := (SELECT COUNT(id) FROM cat_oficinas WHERE ubpp = @ubpp_actual);
-                    SET @aux_oficina := 1;
+
+                SET @mes_min := mes_inicio;
+                SET @mes_max := mes_fin;
+                SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
+                SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
+                SET @aux_periodos := @periodo_min;
                     
-                    WHILE @aux_oficina <= @num_oficinas DO
-                        SET @oficina_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@oficina, ",", @aux_oficina), ",", -1));
-                        SET @id_oficina := (SELECT id FROM cat_oficinas WHERE descripcion = @oficina_actual);
-                        SET @condicion1 := (SELECT IF((SELECT COUNT(id_consumo) FROM consumos WHERE id_oficina = @id_oficina) > 0, 1, 0));
+                myloop: WHILE IFNULL(@periodo_min, 0) = 0 DO
+                    SET @mes_min := @mes_min + 1;
+                    IF @mes_min > @mes_max THEN
+                        LEAVE myloop;
+                    ELSE
+                        SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
+                    END IF;
+                END WHILE myloop;
+                
+                myloop: WHILE IFNULL(@periodo_max, 0) = 0 DO
+                    SET @mes_max := @mes_max - 1;
+                    IF @mes_max < @mes_min THEN
+                        LEAVE myloop;
+                    ELSE
+                        SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
+                    END IF;
+                END WHILE myloop;
+
+                SET @condicion1 := (SELECT IF(IFNULL(@periodo_min, 0) = 0,1,0));
+
+                IF @condicion1 = 0 THEN
+
+                    SET @ubpp := (SELECT GROUP_CONCAT(DISTINCT(ubpp)) FROM cat_oficinas);
+                    SET @num_ubpp := (SELECT COUNT(DISTINCT(ubpp)) FROM cat_oficinas);
+                    SET @aux_ubpp := 1;
+                    
+                    WHILE @aux_ubpp <= @num_ubpp DO
+                        SET @ubpp_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@ubpp, ",", @aux_ubpp), ",", -1));
+                        SET @oficina := (SELECT GROUP_CONCAT(DISTINCT(descripcion)) FROM cat_oficinas WHERE ubpp = @ubpp_actual);
+                        SET @num_oficinas := (SELECT COUNT(id) FROM cat_oficinas WHERE ubpp = @ubpp_actual);
+                        SET @aux_oficina := 1;
                         
-                        IF @condicion1 = 1 THEN
-                            SELECT @ubpp_actual AS "AREA", @oficina_actual AS "OFICINA";
-                            CALL sp_reporte_consumos_oficina(@ubpp_actual, @oficina_actual, mes, anio);
+                        WHILE @aux_oficina <= @num_oficinas DO
+                            SET @oficina_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@oficina, ",", @aux_oficina), ",", -1));
+                            SET @id_oficina := (SELECT id FROM cat_oficinas WHERE descripcion = @oficina_actual);
+                            SET @condicion2 := (SELECT IF((SELECT COUNT(id_consumo) FROM consumos WHERE id_oficina = @id_oficina AND id_periodo BETWEEN @periodo_min AND @periodo_max) > 0, 1, 0));
+                            
+                            IF @condicion2 = 1 THEN
+                                SELECT @ubpp_actual AS "AREA", (SELECT descripcion FROM cat_oficinas WHERE ubpp = @ubpp_actual AND oficina = 0) AS "DEPARTAMENTO", @oficina_actual AS "OFICINA";
+                                CALL sp_reporte_consumos_oficina(@ubpp_actual, @oficina_actual, @mes_min, @mes_max, anio);
+                            END IF;
+                            
+                            SET @aux_oficina := @aux_oficina + 1;
+                        END WHILE;
+                        
+                        SET @condicion3 := (SELECT IF((SELECT COUNT(id_consumo) FROM consumos 
+                                    INNER JOIN cat_oficinas ON cat_oficinas.id = consumos.id_oficina
+                                    WHERE cat_oficinas.ubpp = @ubpp_actual AND consumos.id_periodo BETWEEN @periodo_min AND @periodo_max) > 0, 1, 0));
+                        
+                        IF @condicion3 = 1 THEN
+                            SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS", 
+                                            FORMAT((SELECT SUM(FORMAT(detalles.cantidad * cat_articulos.precio_unitario, 2)) FROM detalles INNER JOIN cat_articulos ON
+                                            detalles.id_articulo = cat_articulos.id INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo INNER JOIN cat_oficinas
+                                            ON cat_oficinas.id = consumos.id_oficina
+                                            WHERE cat_oficinas.ubpp = @ubpp_actual AND consumos.id_periodo BETWEEN @periodo_min AND @periodo_max),2) AS "IMPORTE "
+                                FROM consumos consumo
+                                INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
+                                INNER JOIN cat_oficinas oficina ON oficina.id = consumo.id_oficina
+                                INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
+                                WHERE cat_oficinas.ubpp = @ubpp_actual AND consumos.id_periodo BETWEEN @periodo_min AND @periodo_max;
                         END IF;
                         
-                        SET @aux_oficina := @aux_oficina + 1;
+                        SET @aux_ubpp := @aux_ubpp + 1;
                     END WHILE;
-                    
-                    SET @condicion2 := (SELECT IF((SELECT COUNT(id_consumo) FROM consumos 
-						  		INNER JOIN cat_oficinas ON cat_oficinas.id = consumos.id_oficina
-								  WHERE cat_oficinas.ubpp = @ubpp_actual) > 0, 1, 0));
-                    
-                    IF @condicion2 = 1 THEN
-                  		SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS", 
-										FORMAT((SELECT SUM(FORMAT(detalles.cantidad * cat_articulos.precio_unitario, 2)) FROM detalles INNER JOIN cat_articulos ON
-										detalles.id_articulo = cat_articulos.id INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo INNER JOIN cat_oficinas
-										ON cat_oficinas.id = consumos.id_oficina
-										WHERE consumos.id_periodo = @periodo AND cat_oficinas.ubpp = @ubpp_actual),2) AS "IMPORTE "
-                			FROM consumos consumo
-                			INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
-                			INNER JOIN cat_oficinas oficina ON oficina.id = consumo.id_oficina
-                			INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
-                			WHERE consumo.id_periodo = @periodo AND oficina.ubpp = @ubpp_actual;
-                    END IF;
-                    
-                    SET @aux_ubpp := @aux_ubpp + 1;
-                END WHILE;
+
+
+
+                END IF;
             END
         ');
         
@@ -1776,8 +1807,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
         /** *************************************REPORTES*************************************************** */
 
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_oficina;');//Reporte - Individual
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_departamento;');//Reporte - Individual
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_oficina;');//Reporte - Rangos ☻
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_departamento;');//Reporte - Rangos ☻
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_partida;');//Reporte - Rangos - ☻
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_todo;');//Reporte - Rangos - ☻
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_existencias;');//Reporte - Rangos - ☻

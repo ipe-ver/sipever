@@ -143,6 +143,7 @@ class ValeController extends Controller
             $query->closeCursor();
             //accedemos al valor de retorno para regresar la vista correspondiente.
             $results = $db->query('SELECT @clave AS result')->fetch(PDOConnection::FETCH_ASSOC);
+            dd($results);
             if ($results) {
                 // Obtenemos la clave generada
                 $clave_generada = $results['result'];

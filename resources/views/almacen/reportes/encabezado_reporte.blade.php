@@ -39,16 +39,22 @@
       .table td {
         padding: 0.75rem;
         vertical-align: top;
-        border-top: 1px solid #dee2e6;
       }
 
       .table th{
-        font-size: 9px;
+        font-size: 11px;
+      }
+
+      .table tbody td{
+        font-size: 11px;
+      }
+
+      .table thead{
+         border-bottom: 2px solid #dee2e6;
       }
 
       .table thead th {
         vertical-align: bottom;
-        border-bottom: 2px solid #dee2e6;
       }
 
       .table tbody + tbody {
@@ -70,7 +76,7 @@
     </style>
     <header>
       <div class="header" style="text-align: center;">
-        <div class="row" style="height: 6%;">
+        <div class="row" style="height: 65px;">
           <img src="{{$logo_b64}}"  style="width: 40%; padding:2px; float: center;">
           <div style="margin-left:10%;">
             <h5>Instituto de pensiones del Estado</h5>
@@ -84,13 +90,6 @@
         </div>
           <h4 style="word-wrap: break-word; width: 50%; margin-left: 27%; padding:10px; ">{{$mensaje}}</h4>
       </div>
-      <table class="table">
-        <tr>
-          @foreach($headers as $header)
-            <th>{{$header}}</th>
-          @endforeach
-        </tr>
-      </table>
     </header>
     @yield('content')
   </body>

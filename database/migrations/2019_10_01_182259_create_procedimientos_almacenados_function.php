@@ -600,6 +600,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET clave := (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = 
                     (SELECT MAX(id_pedido_consumo) FROM c_pedido_consumo WHERE c_pedido_consumo.id_oficina = 
                     (SELECT id FROM cat_oficinas WHERE cat_oficinas.descripcion = descripcion_oficina)));
+
+                SELECT @clave;
             END
         ');
         
@@ -650,6 +652,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 VALUES (@oficina, @poliza, @periodo, id_pedido, @folio, NOW(), NOW());
 
                 SET @clave := (SELECT id_consumo FROM consumos WHERE consumos.id_pedido_consumo = id_pedido);
+
+                SELECT @clave;
             END
         ');
         
@@ -793,6 +797,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     (((iva/100)*subtotal)+subtotal), NOW());
 
                 SET clave := (SELECT id_compra FROM compras WHERE compras.no_factura = no_factura);
+
+                SELECT @clave;
             END
         ');
 

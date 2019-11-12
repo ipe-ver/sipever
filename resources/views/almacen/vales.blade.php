@@ -124,7 +124,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table class="table text-left" id="articulos_factura" name="detalle">
+                            <table class="table text-left" id="articulos_vale" name="detalle">
                                 <thead>
                                     <tr>
                                         <th>Clave</th>
@@ -282,7 +282,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <table class="table" id="articulos_factura">
+                    <table class="table" id="articulos_vale">
                         <tr>
                             <th>Clave</th>
                             <th width="300px">Descripcion</th>
@@ -307,7 +307,7 @@
                             </div>
                             <div class="form-check" style="display: flex;">
                                 <label class="check-container">Compra directa
-                                    <input type="radio" name="tipo" value="2">
+                                    <input type="radio" name="tipo" value="3">
                                     <span class="checkmark"></span>
                                 </label>
                             </div>

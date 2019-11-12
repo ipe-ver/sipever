@@ -36,7 +36,7 @@
 @endsection
 
 @section('script')
-<style type="text/css">
+	<style type="text/css">
 		#datos_buttom{
 			text-align: right;
 		}
@@ -94,7 +94,7 @@
 					$('#datos_buttom').append(espacio);	
 					$('#datos_buttom').append(imprimirBoton('btn-danger', 'btnCancelar', 'Cancelar'));
 				
-			}
+				}
 				
 			
 

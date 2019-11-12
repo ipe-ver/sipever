@@ -52,6 +52,66 @@ class UsersController extends Controller
         ]); 
     }
 
+    
+    public function edit($id)
+    {
+        $this->catRoles           = \App\Role::select('id as valor','name as descripcion')->orderBy('id')->get(); 
+
+        $this->catEmpleados       = \App\Model\Rhumanos\Empleado::where('estatus','1')->get()->sortBy('nombrecompleto');
+
+        foreach ($this->catEmpleados as $empleado) {            
+            $this->empleados[] = array('valor' => $empleado->id, 'descripcion' => $empleado->nombrecompleto );
+        } 
+
+         // instanciar objeto de equioi de acuerdo al id_equipo
+     
+         $usuario = User::find($id);
+         //dd($usuario);
+        
+         return view('catalogos.create',
+                     [
+                        'usuario' => $usuario,
+                        'catEmpleados' => $this->empleados, 
+                        'catRoles' => $this->catRoles,
+                         
+                     ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        //dd($request);
+        //$permiso = $request->input('id_permisos');
+        
+
+        //INSTANCIAR EL OBJETO EQUIPO
+        $usuario = User::find($id);
+      
+       // dd($usuario);
+
+        //RECIBIR LOS INPUT DEL FORMULARIO E INSERTARLOS EN LA TABLA CAT_EQUIPOS
+
+        $usuario->username                        = $request->input('username');
+        $usuario->email                           = $request->input('email');
+        $usuario->name                            = $request->input('username');
+        //$usuario->password                        = bcrypt($request->input('password'));
+        $usuario->id_empleado                     = $request->input('id_empleado');
+
+        $usuario->roles()->sync($request->input('id_role'));
+        $usuario->save();
+        
+                            
+        return response()->json([
+            "estatus" => true,
+            "tipo" => "success",
+            "mensaje" => "La información se agregó correctamente."
+        ]);
+
+    }
+
+    
+
+
+
 
     /*****************************************************************************************
 	            LISTADO DE USUARIOS

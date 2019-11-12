@@ -23,6 +23,8 @@ class User extends Authenticatable
         'name', 'username', 'email', 'password', 'id_empleado', 'id_role'  
     ];
 
+    protected $appends = [ 'ids_roles'];
+
     public function empleados(){
 		return $this->belongsTo('App\Model\Rhumanos\Empleado', 'id_empleado', 'id');
     }
@@ -92,6 +94,12 @@ class User extends Authenticatable
         }
         return false;
     }*/
+
+    public function getIdsRolesAttribute($value)
+    {
+        //dd($this->roles->pluck('id'));
+     return  $this->roles->pluck('id');
+    }
 
     
 }

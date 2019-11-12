@@ -42,6 +42,22 @@
 			var table = $('#table');
 			
 			
+
+			var formatTableActions = function(value, row, index) {				
+				
+				btn = '<button class="btn btn-info btn-xs edit"><i class="fa fa-edit"></i>&nbsp;Editar</button>';	
+					
+				return [btn].join('');
+			};
+
+			window.operateEvents = {
+				'click .edit': function (e, value, row, index) {
+					location.href = routeBase+'/catalogos/roles/edit/'+row.id;						
+				},
+
+			}
+			
+			
 				
 			table.bootstrapTable({
 				locale: 'es-MX',
@@ -78,8 +94,8 @@
 					filterControl: 'input',	
 				},  {
 					title: 'Acciones',
-					//formatter: formatTableActions,
-					//events: operateEvents
+					formatter: formatTableActions,
+					events: operateEvents
 				}]				
 			})	// FIN DE LA TABLA 
 

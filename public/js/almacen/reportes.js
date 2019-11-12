@@ -142,6 +142,7 @@ function unSoloMes(checkBox){
         selectYearFin.removeAttribute("required");
         selectYearFin.setAttribute("disabled", "true");
         selectYearFin.style.display = 'none';
+        checkbox.value=true;
     }else{
         lblYearInicio.innerHTML = "Año Inicio";
         lblMesInicio.innerHTML = "Mes Inicial";
@@ -155,6 +156,7 @@ function unSoloMes(checkBox){
         selectYearFin.removeAttribute("disabled");
         selectYearFin.setAttribute("required", "");
         selectYearFin.style.display = 'table';
+        checkbox.value=false;
     }
 
 }

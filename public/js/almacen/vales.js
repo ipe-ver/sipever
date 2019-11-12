@@ -5,7 +5,7 @@ $(document).ready(function(){
     var tablas = document.getElementsByClassName("table");
     for(var i = 0, length1 = tablas.length; i < length1; i++){
     	if(tablas[i].id != "detalleValidar"){
-    		tablas[i].id = `articulos_factura${i}`;
+    		tablas[i].id = `articulos_vale${i}`;
     	}
     }
 	var paneles = document.getElementsByClassName("panel-collapse");
@@ -225,7 +225,7 @@ function cerrarPaneles(panelExclude){
 }
 
 function llenarOrden (index) {
-	var tabla = document.getElementById(`articulos_factura${index}`);
+	var tabla = document.getElementById(`articulos_vale${index}`);
 	var detalles = tabla.children[1].children;
 	var tabla = document.getElementById("detalleValidar");
 	var tbody = tabla.children[1];

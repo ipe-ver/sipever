@@ -71,10 +71,10 @@
 td .check-container {
   display: block;
   position: relative;
-  padding-left: 20px;
+  padding-left: 23px;
   margin-bottom: 12px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 15px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -95,8 +95,8 @@ td .checkmark {
   position: absolute;
   top: 0;
   left: 0;
-  height: 15px;
-  width: 15px;
+  height: 20px;
+  width: 20px;
   border-style: solid;
   border-color: black;
   border-width: thin;
@@ -127,10 +127,10 @@ td .check-container  input:checked ~ .checkmark:after {
 
 /* Style the checkmark/indicator */
 td .check-container .checkmark:after {
-  left: 4px;
-  top: 0;
-  width: 6px;
-  height: 10px;
+  left: 6px;
+  top: 1px;
+  width: 7px;
+  height: 12px;
   border: solid black;
   border-width: 0 3px 3px 0;
   -webkit-transform: rotate(45deg);
@@ -280,6 +280,19 @@ section.content{
 }
 
 .reportes-box{
+  align-items: center;
+  width: 54%;
+  margin-left: 25%;
+  margin-top: 4%;
+  height: auto;
+  background-color: #FFFFFA;
+  border-radius: 5px;
+  -webkit-box-shadow: 7px 6px 7px 0px #777777;
+  box-shadow: 0px 6px 6px 0px #777777;
+  padding:10px;
+}
+
+.vale-box{
   align-items: center;
   width: 54%;
   margin-left: 25%;

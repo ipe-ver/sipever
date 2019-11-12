@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 
 use App\Http\Controllers\Controller;
+use Doctrine\DBAL\Driver\PDOConnection;
+use Exception;
 use File;
 use DB;
 use PDF;
@@ -55,9 +57,16 @@ class ReporteController extends Controller
         $yearInicio = $request->input('yearInicio');
         $periodo = $request->has('mesFin') && $request->has('yearFin') ? true : false;
         $mesIni = $this->nombre_mes($numMesInicio);
+        $depto = $request->has('depto') ? $request->depto : null;
+        $oficina = $request->has('oficina') ? $request->oficina : null;
         $ruta = "";
         $headers = [];
         $nombre_archivo="";
+        $db = DB::connection()->getPdo();
+        //Establecemos la conexión
+        $db->setAttribute(PDOConnection::ATTR_ERRMODE, PDOConnection::ERRMODE_EXCEPTION);
+        $db->setAttribute(PDOConnection::ATTR_EMULATE_PREPARES, true);
+        $query = null;
         if($periodo){
             $mesFin = $request->input('mesFin');
             $yearFin = $request->input('yearFin');
@@ -83,7 +92,7 @@ class ReporteController extends Controller
             $mensaje = 'Reporte final de existencias';
             $nombre_archivo="REPFINALEXIST";
             $ruta = "almacen.reportes.reporte_final_existencias";
-            $headers = ['CODIFICACIÓN', 'DESCRIPCIÓN', 'UNIDAD', 'CANT.', 'COSTO', 'IMPORTE'];
+            $headers = ['CODIF.', 'DESCRIPCIÓN', 'UNIDAD', 'CANT.', 'COSTO', 'IMPORTE'];
         }elseif ($consArticulo == "checked"){
             $mensaje = 'Concentrado de consumos por artículo';
             $nombre_archivo="CONCENTCONSARTI";
@@ -96,6 +105,9 @@ class ReporteController extends Controller
             $mensaje = 'Concentrado de existencias por artículo';
             $nombre_archivo="CONCENTEXISTART";
             $ruta = "almacen.reportes.existencias_p_articulo";
+            //Preparamos la llamada al procedimiento remoto
+            $query = $db->prepare('CALL sp_concentrado_existencias(?,?,?)');
+            $headers = ['CODIF.', 'DESCRIPCIÓN', 'UNIDAD', 'ENE. ', 'FEB. ', 'MAR. ', 'ABR. ', 'MAY. ', 'JUN. ', 'JUL. ', 'AGO. ', 'SEPT.', 'OCT.', 'NOV.','DIC.', 'TOT. DEL AÑO'];
         }elseif ($consAreaArt == "checked"){
             $mensaje = 'Concentrado de consumos por área y artículo';
             $nombre_archivo="CONCENTCONSAART";
@@ -110,6 +122,29 @@ class ReporteController extends Controller
             $mensaje = "{$mensaje} correspondiente al mes de {$mesIni} de {$yearInicio}";
         }
 
+        if($query){
+            //Hacemos un binding de los parámetros, así protegemos nuestra
+            //llamada de una posible inyección sql
+            $query->bindParam(1,$numMesInicio);
+            if ($periodo) {
+                $query->bindParam(2,$mesFin);
+            }else{
+                $query->bindParam(2,$numMesInicio);
+            }
+            $query->bindParam(3, $yearInicio);
+        }
+
+        if($query){
+            try {
+                $query->execute();
+                $query->closeCursor();
+                //accedemos al valor de retorno para regresar la vista correspondiente.
+                $results = $query->fetch(PDOConnection::FETCH_OBJ);
+            } catch (Exception $e) {
+                return back()->withErrors([$e->message]);
+            }
+        }
+
         date_default_timezone_set('America/Mexico_City');
         $fecha_nombre=date("Ymd");
         $hora_nombre=date("Hi");
@@ -120,7 +155,13 @@ class ReporteController extends Controller
         $logo_b64 = "data:image/png;base64,{$imagen_b64}";
         $fecha = date("d/M/Y");
         $hora = date("h:i a");
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView($ruta,compact('mensaje','fecha','hora','logo_b64', 'headers'));
+        $pdf = null;
+
+        if ($existArticulo) {
+            $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView($ruta,compact('mensaje','fecha','hora','logo_b64', 'headers'))->setPaper('legal', 'landscape');
+        }else{
+            $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView($ruta,compact('mensaje','fecha','hora','logo_b64', 'headers'))->setPaper('letter', 'portrait');
+        }
 
         return $pdf->stream($nombre_archivo);
     }

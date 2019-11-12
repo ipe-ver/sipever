@@ -28,7 +28,7 @@ class CreateTableCompras extends Migration
             $table->integer('id_pedido_compra')->unsigned()->nullable();
             $table->foreign('id_pedido_compra')->references('id_pedido_consumo')->on('c_pedido_consumo');
 
-            $table->string('folio');
+            $table->string('folio')->nullable();
             $table->date('fecha_movimiento')->nullable();
             $table->string('no_factura');
             $table->date('fecha_factura')->nullable();

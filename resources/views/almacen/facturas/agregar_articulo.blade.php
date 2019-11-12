@@ -34,9 +34,11 @@
                			<div class="col-md-6">
 	               			<input type="number" name="cantidad" class="form-control" min="0" placeholder="cantidad" required>
 	               		</div>
-	               		<div class="col-md-6">
-	               			<input type="text" name="precio" class="form-control" placeholder="Precio" required>
-	               		</div>
+               			@if(Auth::user()->hasRole('almacen_admin') || Auth::user()->hasRole('almacen_capturista'))
+		               		<div class="col-md-6">
+		               			<input type="text" name="precio" class="form-control" placeholder="Precio" required>
+		               		</div>
+		               	@endif
                		</div>
                </div>
 			</div>

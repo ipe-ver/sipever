@@ -141,7 +141,7 @@
                 <div id="reporteSingleton" style="margin-bottom: 5%; margin-top: 2%;">
                     <div class="form-check">
                         <label class="check-container">Generar reporte de un solo mes
-                          <input type="checkbox" type="checkbox" name="existArticulo" value="" id="chckMes">
+                          <input type="checkbox" type="checkbox" name="chckMes" value="" id="chckMes">
                           <span class="checkmark"></span>
                         </label>
                     </div>

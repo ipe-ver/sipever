@@ -38,14 +38,19 @@ $(document).ready(function(){
 		            $("#loaderLogin").show();
 		        },
 		        success: function(resultdata){
-		        	console.log(resultdata['officeCode']);
 		        	if(resultdata['code']==200){
-		        		document.cookie=`__office_session=${resultdata['officeCode']}`;
+		        		var now = new Date();
+						var time = now.getTime();
+						time += 1800 * 1000;
+						now.setTime(time);
+		        		document.cookie=`__office_session=${resultdata['officeCode']}; expires=${now.toUTCString()}; path=/`;
 		        		window.location.reload();
 		        	}else if(resultdata['code']==400){
 		        		alert('Código inválido');
+		        		$("#loaderLogin").hide();
 		        	}else if(resultdata['code']==505){
 		        		alert('Error de servidor o base de datos, porfavor contacte al departamento de tecnologías de la información.');
+		        		$("#loaderLogin").hide();
 		        	}
 		        },
 			});

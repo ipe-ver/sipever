@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Almacen;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use DB;
 
 class AlmacenController extends Controller
 {
@@ -85,10 +86,21 @@ class AlmacenController extends Controller
 
     public function loginOficina(Request $request){
         $codigo = $request->code;
-        $respuesta = array(
-            'code' => 200 ,
-            'officeCode' => $codigo, 
-        );
+        $result = DB::select('SELECT * FROM cat_oficinas WHERE login = ?', array($codigo));
+        $respuesta = null;
+        if($result){
+            $respuesta = array(
+                'code' => 200 ,
+                'officeCode' => $codigo,
+                'result' => $result,
+            );
+        }else{
+            $respuesta = array(
+                'code' => 400,
+                'officeCode' => null, 
+            );
+        }
+        
         return json_encode($respuesta);
     }
 }

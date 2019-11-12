@@ -33,9 +33,18 @@
 @endsection
 
 @section('script')
+	<style type="text/css">
+		#datos_buttom{
+			text-align: right;
+		}
+	</style>
 
+	<!-- Select2 bootstrap -->
+	
 	{!! HTML::script('components/select2/dist/js/select2.js') !!}	
 	{!! HTML::script('components/select2/dist/js/select2.min.js') !!}
+
+	
 
 <script type="text/javascript">
 		
@@ -44,8 +53,21 @@
 
 			
 			var table = $('#table');
-			
-			
+
+			var formatTableActions = function(value, row, index) {				
+				
+				btn = '<button class="btn btn-info btn-xs edit"><i class="fa fa-edit"></i>&nbsp;Editar</button>';	
+					
+				return [btn].join('');
+			};
+
+			window.operateEvents = {
+				'click .edit': function (e, value, row, index) {
+					location.href = routeBase+'/catalogos/usuarios/edit/'+row.id;						
+				},
+
+			}
+
 				
 			table.bootstrapTable({
 				locale: 'es-MX',
@@ -88,8 +110,8 @@
 					
 				},  {
 					title: 'Acciones',
-					//formatter: formatTableActions,
-					//events: operateEvents
+					formatter: formatTableActions,
+					events: operateEvents
 				}]				
 			})	// FIN DE LA TABLA 
 

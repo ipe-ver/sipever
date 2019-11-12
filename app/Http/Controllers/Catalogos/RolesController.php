@@ -28,17 +28,9 @@ class RolesController extends Controller
     //Muestra la vista del formulario para crear nuevo tarjetón
     public function create() 
     {        
-        /*foreach ($this->catEmpleados as $empleado) {            
-            $this->empleados[] = array('valor' => $empleado->id, 'descripcion' => $empleado->descripcionBusqueda );
-        }*/
-
-        /*foreach ($this->catEmpleados as $empleado) {            
-            $this->empleados[] = array('valor' => $empleado->id, 'descripcion' => $empleado->nombrecompleto );
-        }*/
-        
+                
         return view('catalogos.add_rol',
             [
-                //'catEmpleados' => $this->empleados,
                 'catPermisos' => $this->catPermisos,
                 
             ]);     
@@ -49,9 +41,9 @@ class RolesController extends Controller
     public function store(Request $request)
     {
         
-       // dd($request);
+      
         $permiso = $request->input('id_permisos');
-       //dd($permiso);
+       
 
         //INSTANCIAR EL OBJETO EQUIPO
         $roles = new Role;
@@ -65,14 +57,10 @@ class RolesController extends Controller
         $roles->save();
 
        
-
         $roles = Role::find($roles->id);
-        //dd($roles);
-        $roles->permisions()->attach($permiso);
-
         
-
-                          
+        $roles->permisions()->attach($permiso);
+              
         return response()->json([
             "estatus" => true,
             "tipo" => "success",
@@ -80,6 +68,52 @@ class RolesController extends Controller
         ]);
                
     }
+
+    public function edit($id)
+    {
+        $roles = Role::find($id);
+
+
+        foreach($roles->permisions as $permiso){
+            $this->permisos[] = array('valor' => $permiso->id, 'descripcion' => $permiso->name );
+        }
+
+        return view('catalogos.add_rol',
+                     [
+                         'roles' => $roles,
+                         'permisos' => $this->permisos,
+                         'catPermisos' => $this->catPermisos,
+                     ]);
+
+    }
+
+    public function update(Request $request, $id)
+    {
+     
+        $permiso = $request->input('id_permisos');
+        
+
+        //INSTANCIAR EL OBJETO EQUIPO
+        $roles = Role::find($id);
+      
+
+
+        //RECIBIR LOS INPUT DEL FORMULARIO E INSERTARLOS EN LA TABLA CAT_EQUIPOS
+
+        $roles->name                              = $request->input('name');
+        $roles->description                       = $request->input('description');
+        $roles->permisions()->sync($permiso);
+        $roles->save();
+
+                            
+        return response()->json([
+            "estatus" => true,
+            "tipo" => "success",
+            "mensaje" => "La información se agregó correctamente."
+        ]);
+
+    }
+    
 
 
     public function get_roles()

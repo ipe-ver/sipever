@@ -42,6 +42,51 @@ class PermisosController extends Controller
                
     }
 
+    public function edit($id)
+    {
+         // instanciar objeto de equioi de acuerdo al id_equipo
+     
+         $permisos = Permission::find($id);
+         $permisos = $permisos->name;
+
+        // dd($permisos);
+
+         return response()->json($permisos);
+        
+        /* return view('catalogos.permisos',
+                     [
+                         'permisos' => $permisos,
+                        
+                         
+                     ]);*/
+                   
+    }
+
+    public function update(Request $request, $id)
+    {
+       // $estatus = 1;
+       // dd($request);
+       $permisos = Permission::find($id);
+        //dd($empleado);
+        
+
+        $permisos->name                             = $request->input('name');
+        
+        $permisos->save();
+
+                          
+        return response()->json([
+            "estatus" => true,
+            "tipo" => "success",
+            "mensaje" => "La información se agregó correctamente."
+        ]);
+
+        
+                        
+
+
+    }
+
     public function get_permisos()
     {
 

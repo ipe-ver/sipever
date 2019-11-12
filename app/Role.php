@@ -7,6 +7,8 @@ use Spatie\Permission\Models\Permission;
 
 class Role extends Model
 {
+    protected $appends = [ 'ids_permisos'];
+
     public function users()
     {
         return $this->belongsToMany('App\User', 'role_user', 'role_id', 'user_id');
@@ -22,6 +24,14 @@ class Role extends Model
         return $this->name;
 		
     }*/
+
+    public function getIdsPermisosAttribute($value)
+    {
+       // dd($this->permisions->pluck('id'));
+     return  $this->permisions->pluck('id');
+    }
+
+    
 
 
     protected $attributes = ['guard_name' => 'web'];

@@ -56,8 +56,14 @@
 	***********************************************************************************************/
         	
             		           
-			var catPermisos		                = @json($catPermisos);
-
+			
+			var roles							= @if(isset($roles)) @json($roles); @else{}; @endif
+			var permisos						= @if(isset($permisos)) @json($permisos); @else{}; @endif
+			var catPermisos                     = @json($catPermisos);	
+			
+			//console.log(roles);
+			//console.log(permisos);
+		
 		 
 
 	/**********************************************************************************************
@@ -65,16 +71,15 @@
 	***********************************************************************************************/
 
 			campos1 = estilo_modal.mostrar([
-				{campo:'input', idCampo:'name', nameCampo:'Nombre:', typeCampo:'text', valorCampo: '', placeholder:'Nombre del rol', newClass:'', divSize:'12',datos:''},
-				{campo:'input', idCampo:'description', nameCampo:'Descripción:', typeCampo:'text', valorCampo: '', placeholder:'Descripción del rol', newClass:'', divSize:'12', datos:''},
-				{campo:'select',idCampo:'id_permisos',nameCampo:'Permisos:',typeCampo:'text',valorCampo: '',placeholder:'',newClass:'',divSize:'12',datos: catPermisos, defaultOption:false, extras:'multiple'},
+				{campo:'input', idCampo:'name', nameCampo:'Nombre:', typeCampo:'text', valorCampo: (Object.keys(roles).length)? roles.name: '', placeholder:'Nombre del rol', newClass:'', divSize:'12',datos:''},
+				{campo:'input', idCampo:'description', nameCampo:'Descripción:', typeCampo:'text', valorCampo: (Object.keys(roles).length)? roles.description: '', placeholder:'Descripción del rol', newClass:'', divSize:'12', datos:''},
+				{campo:'select',idCampo:'id_permisos',nameCampo:'Permisos:',typeCampo:'text',valorCampo: (Object.keys(roles).length)? roles.ids_permisos: '', placeholder:'',newClass:'',divSize:'12',datos: catPermisos, defaultOption:false, extras:'multiple'},
 				
 			]);
 
 
 			$('#datos_equipo').append(campos1);
-		
-			
+
 			$('#id_permisos').selectpicker();
 
            
@@ -83,15 +88,19 @@
 		BOTONES DE GUARDAR Y CANCELAR EN EL FORMULARIO DE EQUIPO
 	***********************************************************************************************/
 
-				espacio = document.createTextNode(' ');	
-				$('#datos_buttom').append(imprimirBoton('btn-success', 'btnGuardar', 'Guardar'));
+		espacio = document.createTextNode(' ');		
+		if(Object.keys(roles).length){
+				$('#datos_buttom').append(imprimirBoton('btn-success btn-flat', 'btnEditar', 'Editar'));
 				$('#datos_buttom').append(espacio);	
-				$('#datos_buttom').append(imprimirBoton('btn-danger', 'btnCancelar', 'Cancelar'));
-				
+				$('#datos_buttom').append(imprimirBoton('btn-danger btn-flat', 'btnCancelar', 'Cancelar'));
+			}else{
+				$('#datos_buttom').append(imprimirBoton('btn-success btn-flat', 'btnGuardar', 'Guardar'));
+				$('#datos_buttom').append(espacio);	
+				$('#datos_buttom').append(imprimirBoton('btn-danger btn-flat', 'btnCancelar', 'Cancelar'));				
+			}			
 			
+				
 
-
-	
 	/**********************************************************************************************
 		FUNCION PARA EL BOTON DE GUARDAR DEL FORMULARIO DE EQUIPO
 	***********************************************************************************************/
@@ -105,11 +114,10 @@
 				var dataString = {
 					name: $("#name").val(),	
 					description: $("#description").val(),	
-					id_permisos:  $("#id_permisos option:selected").val(),
                     id_permisos:  $('#id_permisos').val(),
                     guard_name: $guard_name,
 				}
-				console.log(dataString);
+				//console.log(dataString);
 
 					$.ajax({
 					type: 'POST',
@@ -156,23 +164,23 @@
 			$('#datos_buttom').on('click', '#btnEditar', function(){
 				//$('#btnGuardarNotacredito').attr("disabled", true);
 
-
 				var dataString = {
-					username: $("#username").val(),	
-					email: $("#email").val(),	
-					name:  $("#name option:selected").val(),
+					name: $("#name").val(),	
+					description: $("#description").val(),	
+                    id_permisos:  $('#id_permisos').val(),
+                   
 				}
 
-					
+				//console.log(dataString);	
 
-					/*$.ajax({
+					$.ajax({
 					type: 'PUT',
-					url: routeBase+'/recursos_fisicos/equipos/update/'+equipo.id,
+					url: routeBase+'/catalogos/update_rol/'+roles.id,
 					data: dataString,
 					dataType: 'json',
 					success: function(data) {										
 							messageToastr('success', data.message);						
-							window.location.replace(routeBase+'/recursos_fisicos/equipos');							
+							window.location.replace(routeBase+'/catalogos/roles');							
 					},
 					error: function(data) {
 						var errors = data.responseJSON;						
@@ -187,9 +195,10 @@
 						messageToastr('error', errors.message);
 						$('#datos_buttom').empty();
 						$('#datos_buttom').append(imprimirBoton('btn-success', 'btnEditar', 'Editar'));
+						$('#datos_buttom').append(espacio);	
 						$('#datos_buttom').append(imprimirBoton('btn-danger', 'btnCancelar', 'Cancelar'));
 					}
-				});*/
+				});
 
 
 			})	

@@ -45,6 +45,8 @@
 			var modal = $('#modal');
 			var table = $('#table');
 			
+			
+			
 
 			var limpiarModal = function(){
 				tituloModal.empty()
@@ -107,6 +109,85 @@
 				window.location.replace(routeBase+'/catalogos/permisos');	
 			})
 
+			var formatTableActions = function(value, row, index) {				
+				
+				btn = '<button class="btn btn-info btn-xs edit"><i class="fa fa-edit"></i>&nbsp;Editar</button>';	
+					
+				return [btn].join('');
+			};
+
+			window.operateEvents = {
+				'click .edit': function (e, value, row, index) {
+					var link = routeBase+'/catalogos/permisos/edit/'+row.id;	
+					//console.log(url);
+
+					$.ajax({
+						type: 'POST',
+						url: routeBase+'/catalogos/permisos/edit/'+row.id,
+						data: link,
+						dataType: 'json',
+						success: function(data) {						
+													
+							tituloModal.append('<i class="fa fa-plus"></i> Editar Permisos');
+
+							var dataCampos = [
+								
+								{campo:'input',idCampo:'name',nameCampo:'Descripción del permiso:',typeCampo:'text',valorCampo: data, placeholder:'Descripción del permiso',newClass:'',divSize:'12',datos:''},	
+								
+								
+							];
+
+							campos = estilo_modal.mostrar(dataCampos);
+
+							bodyModal.append(campos);
+							footerModal.append(imprimirBoton('btn-success', 'btnEditar', 'Editar'));
+							footerModal.append(imprimirBoton('btn-danger', 'btnCancelar', 'Cancelar'));
+							modal.modal('show');					
+															
+						}
+					});
+
+					footerModal.on('click', '#btnEditar', function(){
+						//$guard_name = 'web';
+						var dataString = {
+							name: $("#name").val(),
+							//guard_name: $guard_name,
+						}
+						//console.log(dataString);
+						
+						$.ajax({
+							type: 'PUT',
+							url: routeBase+'/catalogos/permisos/update/'+row.id,
+							data: dataString,
+							dataType: 'json',
+							success: function(data) {										
+									messageToastr('success', data.message);						
+									window.location.replace(routeBase+'/catalogos/permisos');							
+							},
+							error: function(data) {
+								var errors = data.responseJSON;						
+								$('.box-body div.has-error').removeClass('has-error');
+								$('.help-block').empty();
+								$.each(errors.errors, function(key, value){	
+
+									$('#div_'+key).addClass('has-error');
+									$('input#'+key).addClass('form-control-danger');
+									$('#error_'+key).append(value);						
+								});
+								messageToastr('error', errors.message);
+								$('#datos_buttom').empty();
+								$('#datos_buttom').append(imprimirBoton('btn-success', 'btnEditar', 'Editar'));
+								$('#datos_buttom').append(espacio);	
+								$('#datos_buttom').append(imprimirBoton('btn-danger', 'btnCancelar', 'Cancelar'));
+							}
+						});
+					})
+					
+
+				}, // Fin de edit
+
+			} // fin de window.operateEvents
+
 						
 				
 			table.bootstrapTable({
@@ -140,8 +221,8 @@
 					filterControl: 'input',	
 				},  {
 					title: 'Acciones',
-					//formatter: formatTableActions,
-					//events: operateEvents
+					formatter: formatTableActions,
+					events: operateEvents
 				}]				
 			})	// FIN DE LA TABLA 
 

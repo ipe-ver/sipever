@@ -33,13 +33,7 @@ Route::group(['middleware' => 'auth'], function () {
 //REGISTRAR UN USUARIO EN LA TABLA DE USER
 Route::post('registro', 'Auth\RegisterController@registro')->name('registro');
 
-/*Route::group(['middleware' => ['auth'], 'prefix' => 'admin', 'as' => 'admin.'], function() {
-    Route::get('/', function() { return view('admin.index'); })->name('index');
-	Route::get('/users', function () { return view('admin.user.index'); });
 
-
-
-});*/
 
 /*******************************************************************************************************
 											MIDDLEWARE DE ALMACÉN
@@ -87,17 +81,24 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'catalogos', 'as' => 'catalo
 	Route::get('/users', function() { return view('catalogos.user'); }); //Carga la vista de usuarios
 	Route::get('/get_users','Catalogos\UsersController@get_users'); //Obtiene los usuarios
 	Route::get('/add_user', 'Catalogos\UsersController@create'); //LLeva al formulario de Guardar
+	Route::get('/usuarios/edit/{id}','Catalogos\UsersController@edit'); //LLeva al formulario de Editar
+	Route::put('/usuarios/update/{id}', 'Catalogos\UsersController@update'); //Edita la información del empleado
 
 	// CATALOGO DE ROLES
 	Route::get('/roles', function() { return view('catalogos.roles'); }); //Carga la vista de roles
 	Route::get('/get_roles','Catalogos\RolesController@get_roles'); //Obtiene los roles
 	Route::get('/add_rol', 'Catalogos\RolesController@create'); //LLeva al formulario de Guardar 
 	Route::post('/save_rol', 'Catalogos\RolesController@store'); //Guarda la información del rol
+	Route::put('/update_rol/{id}', 'Catalogos\RolesController@update'); //Edita la información del empleado
+	Route::get('/roles/edit/{id}','Catalogos\RolesController@edit'); //LLeva al formulario de Editar
+	Route::put('/roles/update/{id}', 'Catalogos\RolesController@update'); //Edita la información del empleado
 
 	// CATALOGO DE PERMISOS
 	Route::get('/permisos', function() { return view('catalogos.permisos'); }); //Carga la vista de permisos
 	Route::get('/get_permisos','Catalogos\PermisosController@get_permisos'); //Obtiene los permisos
 	Route::post('/add_permisos', 'Catalogos\PermisosController@store'); //Guarda la información del permiso
+	Route::post('/permisos/edit/{id}','Catalogos\PermisosController@edit'); //LLeva al formulario de Editar
+	Route::put('/permisos/update/{id}', 'Catalogos\PermisosController@update'); //Edita la información del permiso
 
 	// CATALOGO DE EMPLEADOS	
 	Route::get('/empleados', function() { return view('catalogos.empleado'); }); //Carga la vista de empleados

@@ -28,6 +28,8 @@
 		<!-- HoldOn.js -->
 		{!! Html::style('components/hold-on/HoldOn.min.css') !!} 
 
+	
+
 		
 
 
@@ -328,6 +330,8 @@
 		<script src="{{ asset('components/moment/min/moment.min.js') }}"></script>
 		<script src="{{ asset('components/moment/locale/es.js') }}"></script>	
 
+		
+
 	
 			
 		<script type="text/javascript">
@@ -383,6 +387,8 @@
 				
 			
 			});
+
+		
 
 			
 

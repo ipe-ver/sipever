@@ -1267,95 +1267,172 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-            SET @mes_min := mes_inicio;
-            SET @mes_max := mes_fin;
-            SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
-            SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
-            SET @aux_periodos := @periodo_min;
+                SELECT tb1.sscta AS "SSCTA", tb1.partida AS "PARTIDA", tb1.cod AS "CODIF.", tb1.descripcion AS "DESCRIPCION", tb1.unidad AS "UNIDAD", tb2.ene, tb2.feb, tb2.mar, tb2.abr, tb2.may, tb2.jun,
+                    tb3.jul, tb3.agos, tb3.sept, tb3.octu, tb3.nov, tb3.dic
+                FROM 
+                (
+                    SELECT cat_cuentas_contables.id AS ide, cat_cuentas_contables.sscta AS sscta, cat_cuentas_contables.nombre AS partida, cat_articulos.clave AS cod, cat_articulos.descripcion AS descripcion, cat_unidades_almacen.descripcion AS unidad 
+                    FROM cat_articulos
+                    INNER JOIN cat_unidades_almacen ON cat_articulos.id_unidad = cat_unidades_almacen.id
+                    INNER JOIN cat_cuentas_contables ON cat_cuentas_contables.id = cat_articulos.id_cuenta
+                )tb1
+                INNER JOIN (
+                SELECT DISTINCT(com1.cod) AS clave, com1.ene, com1.feb, com1.mar, com1.abr, com1.may, com1.jun FROM
+                (
+                    SELECT tb1.cod AS cod, IFNULL(tb1.exis,0) AS ene, IFNULL(tb2.exis,0) AS feb, IFNULL(tb3.exis,0) AS mar, IFNULL(tb4.exis,0) AS abr, IFNULL(tb5.exis,0) AS may, IFNULL(tb6.exis,0) AS jun
+                    FROM
+                    (
+                        SELECT DISTINCT(cat_articulos.clave) AS cod,
+                        CASE 
+                            WHEN mes_inicio <= 1 AND 1 = MONTH(NOW()) AND mes_fin >= 1 THEN (SELECT cat_articulos.existencias)
+                            WHEN mes_inicio <= 1 AND 1 != MONTH(NOW()) AND mes_fin >= 1 THEN (SELECT inventario_inicial_final.existencias 
+                                WHERE inventario_inicial_final.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = 1 AND anio = anio))
+                            ELSE 0
+                        END AS exis, cat_articulos.id_cuenta AS ide
+                        FROM cat_articulos
+                        INNER JOIN inventario_inicial_final ON inventario_inicial_final.id_articulo = cat_articulos.id
+                    )tb1
+                    INNER JOIN 
+                    (
+                        SELECT DISTINCT(cat_articulos.clave) AS cod,
+                        CASE 
+                            WHEN mes_inicio <= 2 AND 2 = MONTH(NOW()) AND mes_fin >= 2 THEN (SELECT cat_articulos.existencias)
+                            WHEN mes_inicio <= 2 AND 2 != MONTH(NOW()) AND mes_fin >= 2 THEN (SELECT inventario_inicial_final.existencias 
+                                WHERE inventario_inicial_final.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = 2 AND anio = anio))
+                            ELSE 0
+                        END AS exis
+                        FROM cat_articulos
+                        INNER JOIN inventario_inicial_final ON inventario_inicial_final.id_articulo = cat_articulos.id
+                    ) tb2 ON tb1.cod = tb2.cod
+                    INNER JOIN 
+                    (
+                        SELECT DISTINCT(cat_articulos.clave) AS cod,
+                        CASE 
+                            WHEN mes_inicio <= 3 AND 3 = MONTH(NOW()) AND mes_fin >= 3 THEN (SELECT cat_articulos.existencias)
+                            WHEN mes_inicio <= 3 AND 3 != MONTH(NOW()) AND mes_fin >= 3 THEN (SELECT inventario_inicial_final.existencias 
+                                WHERE inventario_inicial_final.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = 3 AND anio = anio))
+                            ELSE 0
+                        END AS exis
+                        FROM cat_articulos
+                        INNER JOIN inventario_inicial_final ON inventario_inicial_final.id_articulo = cat_articulos.id
+                    ) tb3 ON tb1.cod = tb3.cod
+                    INNER JOIN (
+                        SELECT DISTINCT(cat_articulos.clave) AS cod,
+                        CASE 
+                            WHEN mes_inicio <= 4 AND 4 = MONTH(NOW()) AND mes_fin >= 4 THEN (SELECT cat_articulos.existencias)
+                            WHEN mes_inicio <= 4 AND 4 != MONTH(NOW()) AND mes_fin >= 4 THEN (SELECT inventario_inicial_final.existencias 
+                                WHERE inventario_inicial_final.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = 4 AND anio = anio))
+                            ELSE 0
+                        END AS exis, cat_articulos.id_cuenta AS ide
+                        FROM cat_articulos
+                        INNER JOIN inventario_inicial_final ON inventario_inicial_final.id_articulo = cat_articulos.id
+                    ) tb4 ON tb1.cod = tb4.cod
+                    INNER JOIN 
+                    (
+                        SELECT DISTINCT(cat_articulos.clave) AS cod,
+                        CASE 
+                            WHEN mes_inicio <= 5 AND 5 = MONTH(NOW()) AND mes_fin >= 5 THEN (SELECT cat_articulos.existencias)
+                            WHEN mes_inicio <= 5 AND 5 != MONTH(NOW()) AND mes_fin >= 5 THEN (SELECT inventario_inicial_final.existencias 
+                                WHERE inventario_inicial_final.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = 5 AND anio = anio))
+                            ELSE 0
+                        END AS exis
+                        FROM cat_articulos
+                        INNER JOIN inventario_inicial_final ON inventario_inicial_final.id_articulo = cat_articulos.id
+                    ) tb5 ON tb1.cod = tb5.cod
+                    INNER JOIN 
+                    (
+                        SELECT DISTINCT(cat_articulos.clave) AS cod,
+                        CASE 
+                            WHEN mes_inicio <= 6 AND 6 = MONTH(NOW()) AND mes_fin >= 6 THEN (SELECT cat_articulos.existencias)
+                            WHEN mes_inicio <= 6 AND 6 != MONTH(NOW()) AND mes_fin >= 6 THEN (SELECT inventario_inicial_final.existencias 
+                                WHERE inventario_inicial_final.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = 6 AND anio = anio))
+                            ELSE 0
+                        END AS exis
+                        FROM cat_articulos
+                        INNER JOIN inventario_inicial_final ON inventario_inicial_final.id_articulo = cat_articulos.id
+                    ) tb6 ON tb1.cod = tb6.cod
+                )com1
+                )tb2 ON tb2.clave = tb1.cod
+                INNER JOIN(
                 
-            myloop: WHILE IFNULL(@periodo_min, 0) = 0 DO
-                SET @mes_min := @mes_min + 1;
-                IF @mes_min > @mes_max THEN
-                    LEAVE myloop;
-                ELSE
-                    SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
-                END IF;
-            END WHILE myloop;
-            
-            myloop: WHILE IFNULL(@periodo_max, 0) = 0 DO
-                SET @mes_max := @mes_max - 1;
-                IF @mes_max < @mes_min THEN
-                    LEAVE myloop;
-                ELSE
-                    SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
-                END IF;
-            END WHILE myloop;
-            
-            SET @condicion1 := (SELECT IF(IFNULL(@periodo_min, 0) = 0,1,0));
-
-            IF @condicion1 = 0 THEN
-
-                SET @partidas := (SELECT GROUP_CONCAT(DISTINCT(nombre)) FROM cat_cuentas_contables);
-                SET @num_partidas := (SELECT COUNT(id) FROM cat_cuentas_contables);
-                SET @aux_partidas := 1;
-
-
-                    SET @aux_periodos := @periodo_min;
-                    SET @aux_mes := @mes_min;
-                    
-                    WHILE @aux_periodos <= @periodo_max DO
-                        SET @condicion1 := (SELECT IF((SELECT periodos.estatus FROM periodos WHERE periodos.id_periodo = @aux_periodos) = 1,1,0));
-
-                        IF @condicion1 = 1 THEN
-                              
-                              SELECT @aux_mes AS "MES", temp1.id AS "CUENTA", temp1.sscta, temp1.nombre, temp1.clave AS "CODIFICACION", temp2.descripcion AS "DESCRIPCION", temp1.unidad AS "UNIDAD", temp2.existencias AS "EXISTENCIAS" FROM (
-                                 SELECT partidas.id, partidas.sscta, partidas.nombre, articulos.clave, articulos.descripcion, unidades.descripcion AS unidad
-                                 FROM cat_articulos articulos 
-                                 INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
-                                 INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
-                                 GROUP BY articulos.clave ORDER BY articulos.id_cuenta
-                              )temp1
-                              LEFT JOIN (
-                                SELECT articulos.clave, articulos.descripcion, articulos.existencias, @aux_mes AS "MES", COUNT(*) AS "TIPOS DE ARTICULOS", SUM(articulos.existencias) AS "CANTIDAD DE ARTICULOS"
-                                FROM cat_articulos articulos 
-                                INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
-                                INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
-                                GROUP BY articulos.clave ORDER BY articulos.id_cuenta
-                            ) temp2
-                            ON temp1.clave = temp2.clave;
-                            
-                                              SELECT partidas.nombre AS "PARTIDAS", (SELECT COUNT(*) FROM cat_articulos WHERE cat_articulos.id_cuenta = partidas.id) AS "TIPOS DE ARTICULOS",
-                                              (SELECT SUM(cat_articulos.existencias) FROM cat_articulos WHERE cat_articulos.id_cuenta = partidas.id) AS "CANTIDAD DE ARTICULOS"
-                                              FROM cat_articulos articulos
-                                              INNER JOIN cat_cuentas_contables partidas ON partidas.id = articulos.id_cuenta GROUP BY partidas.id;
-        
-                        ELSE 
-                                       SELECT @aux_mes AS "MES", temp1.id AS "CUENTA", temp1.sscta, temp1.nombre, temp1.clave AS "CODIFICACION", IFNULL(temp2.descripcion,0) AS "DESCRIPCION", temp1.unidad AS "UNIDAD", temp2.existencias AS "EXISTENCIAS" FROM (
-                                 SELECT partidas.id, partidas.sscta, partidas.nombre, articulos.clave, articulos.descripcion, unidades.descripcion AS unidad
-                                 FROM cat_articulos articulos 
-                                 INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
-                                 INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
-                                 GROUP BY articulos.clave ORDER BY articulos.id_cuenta
-                              )temp1
-                              LEFT JOIN (
-                                SELECT articulos.clave, articulos.descripcion, inventario.existencias, @aux_mes AS "MES", COUNT(*) AS "TIPOS DE ARTICULOS", SUM(inventario.existencias) AS "CANTIDAD DE ARTICULOS"
-                                FROM cat_articulos articulos 
-                                INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
-                                INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
-                                INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
-                                INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
-                                WHERE periodo.id_periodo = @aux_periodos GROUP BY articulos.clave ORDER BY articulos.id_cuenta
-                              )temp2
-                              ON temp1.clave = temp2.clave;
-                              
-                        
-                        END IF;
-
-                        SET @aux_mes := @aux_mes + 1;
-                        SET @aux_periodos := @aux_periodos + 1;
-                    END WHILE;
-            END IF;
-        END
+                SELECT DISTINCT(com1.cod) AS clave, com1.jul, com1.agos, com1.sept, com1.octu, com1.nov, com1.dic FROM
+                (
+                    SELECT tb1.cod AS cod, IFNULL(tb1.exis,0) AS jul, IFNULL(tb2.exis,0) AS agos, IFNULL(tb3.exis,0) AS sept, IFNULL(tb4.exis,0) AS octu, IFNULL(tb5.exis,0) AS nov, IFNULL(tb6.exis,0) AS dic
+                    FROM
+                    (
+                        SELECT DISTINCT(cat_articulos.clave) AS cod,
+                        CASE 
+                            WHEN mes_inicio <= 7 AND 7 = MONTH(NOW()) AND mes_fin >= 7 THEN (SELECT cat_articulos.existencias)
+                            WHEN mes_inicio <= 7 AND 7 != MONTH(NOW()) AND mes_fin >= 7 THEN (SELECT inventario_inicial_final.existencias 
+                                WHERE inventario_inicial_final.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = 7 AND anio = anio))
+                            ELSE 0
+                        END AS exis, cat_articulos.id_cuenta AS ide
+                        FROM cat_articulos
+                        INNER JOIN inventario_inicial_final ON inventario_inicial_final.id_articulo = cat_articulos.id
+                    )tb1
+                    INNER JOIN 
+                    (
+                        SELECT DISTINCT(cat_articulos.clave) AS cod,
+                        CASE 
+                            WHEN mes_inicio <= 8 AND 8 = MONTH(NOW()) AND mes_fin >= 8 THEN (SELECT cat_articulos.existencias)
+                            WHEN mes_inicio <= 8 AND 8 != MONTH(NOW()) AND mes_fin >= 8 THEN (SELECT inventario_inicial_final.existencias 
+                                WHERE inventario_inicial_final.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = 8 AND anio = anio))
+                            ELSE 0
+                        END AS exis
+                        FROM cat_articulos
+                        INNER JOIN inventario_inicial_final ON inventario_inicial_final.id_articulo = cat_articulos.id
+                    ) tb2 ON tb1.cod = tb2.cod
+                    INNER JOIN 
+                    (
+                        SELECT DISTINCT(cat_articulos.clave) AS cod,
+                        CASE 
+                            WHEN mes_inicio <= 9 AND 9 = MONTH(NOW()) AND mes_fin >= 9 THEN (SELECT cat_articulos.existencias)
+                            WHEN mes_inicio <= 9 AND 9 != MONTH(NOW()) AND mes_fin >= 9 THEN (SELECT inventario_inicial_final.existencias 
+                                WHERE inventario_inicial_final.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = 9 AND anio = anio))
+                            ELSE 0
+                        END AS exis
+                        FROM cat_articulos
+                        INNER JOIN inventario_inicial_final ON inventario_inicial_final.id_articulo = cat_articulos.id
+                    ) tb3 ON tb1.cod = tb3.cod
+                    INNER JOIN (
+                        SELECT DISTINCT(cat_articulos.clave) AS cod,
+                        CASE 
+                            WHEN mes_inicio <= 10 AND 10 = MONTH(NOW()) AND mes_fin >= 10 THEN (SELECT cat_articulos.existencias)
+                            WHEN mes_inicio <= 10 AND 10 != MONTH(NOW()) AND mes_fin >= 10 THEN (SELECT inventario_inicial_final.existencias 
+                                WHERE inventario_inicial_final.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = 10 AND anio = anio))
+                            ELSE 0
+                        END AS exis, cat_articulos.id_cuenta AS ide
+                        FROM cat_articulos
+                        INNER JOIN inventario_inicial_final ON inventario_inicial_final.id_articulo = cat_articulos.id
+                    ) tb4 ON tb1.cod = tb4.cod
+                    INNER JOIN 
+                    (
+                        SELECT DISTINCT(cat_articulos.clave) AS cod,
+                        CASE 
+                            WHEN mes_inicio <= 11 AND 11 = MONTH(NOW()) AND mes_fin >= 11 THEN (SELECT cat_articulos.existencias)
+                            WHEN mes_inicio <= 11 AND 11 != MONTH(NOW()) AND mes_fin >= 11 THEN (SELECT inventario_inicial_final.existencias 
+                                WHERE inventario_inicial_final.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = 11 AND anio = anio))
+                            ELSE 0
+                        END AS exis
+                        FROM cat_articulos
+                        INNER JOIN inventario_inicial_final ON inventario_inicial_final.id_articulo = cat_articulos.id
+                    ) tb5 ON tb1.cod = tb5.cod
+                    INNER JOIN 
+                    (
+                        SELECT DISTINCT(cat_articulos.clave) AS cod,
+                        CASE 
+                            WHEN mes_inicio <= 12 AND 12 = MONTH(NOW()) AND mes_fin >= 12 THEN (SELECT cat_articulos.existencias)
+                            WHEN mes_inicio <= 12 AND 12 != MONTH(NOW()) AND mes_fin >= 12 THEN (SELECT inventario_inicial_final.existencias 
+                                WHERE inventario_inicial_final.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = 12 AND anio = anio))
+                            ELSE 0
+                        END AS exis
+                        FROM cat_articulos
+                        INNER JOIN inventario_inicial_final ON inventario_inicial_final.id_articulo = cat_articulos.id
+                    ) tb6 ON tb1.cod = tb6.cod
+                )com1
+                ) tb3 ON tb3.clave = tb1.cod
+                ORDER BY tb1.sscta ASC, tb1.descripcion ASC;
+            END
         ');
 
         /**Procedimiento almacenado para la obtención del reporte "CONCENTRADO DE CONSUMOS POR ARTICULO DEL MES DE X AL MES DE X

@@ -82,4 +82,13 @@ class AlmacenController extends Controller
     {
         //
     }
+
+    public function loginOficina(Request $request){
+        $codigo = $request->code;
+        $respuesta = array(
+            'code' => 200 ,
+            'officeCode' => $codigo, 
+        );
+        return json_encode($respuesta);
+    }
 }

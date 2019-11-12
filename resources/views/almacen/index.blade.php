@@ -78,6 +78,7 @@
 						</a>
 		           </div>
 		       @else
+		       		@include('almacen.login')
 		       		<div class="col-xs-2">
 						<a class="nombre_modulo" href="{!! route('almacen.vales.index') !!}">
 							<i class="fas fa-inbox"></i>
@@ -90,6 +91,7 @@
 						<span>Reportes</span>
 					</a>
 		           </div>
+		           <script type="text/javascript" src="{{asset('js/almacen/login_oficina.js')}}"></script>
 	           @endif
 	        </div>
 	    </div>

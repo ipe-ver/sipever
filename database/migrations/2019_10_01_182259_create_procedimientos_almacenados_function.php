@@ -518,12 +518,12 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     CALL sp_abrir_periodo;
                     CALL sp_inventario_inicial;
 
-                    SELECT @condicion1 + @condicion2 + @condicion3;
+                    SELECT @condicion1 + @condicion2 + @condicion3 AS result;
                 ELSE
-                    SELECT @condicion1 + @condicion2 + @condicion3;
+                    SELECT @condicion1 + @condicion2 + @condicion3 AS result;
                 END IF;
                 
-            END
+            END;
         ');
         
         /**Prodedimiento almacenado para obtener todas las oficinas de cierto departamento

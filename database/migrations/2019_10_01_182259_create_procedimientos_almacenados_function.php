@@ -2072,13 +2072,13 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
         /** *************************************REPORTES*************************************************** */
 
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_oficina;');//Reporte - Rangos ☻
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_departamento;');//Reporte - Rangos ☻
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_partida;');//Reporte - Rangos - ☻
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_todo;');//Reporte - Rangos - ☻
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_oficina;');//Reporte - Rangos
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_consumos_departamento;');//Reporte - Rangos
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_partida;');//Reporte - Rangos
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_todo;');//Reporte - Rangos
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_existencias;');//Reporte - Rangos - ☻
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_consumos_articulo;');//Reporte - Rangos - ☻
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_existencias_articulo;');//Reporte - Rangos - ☻
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_consumos_articulo;');//Reporte - Rangos
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_existencias_articulo;');//Reporte - Rangos
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_relacion_consumos_articulo;');//Reporte - Individual ** FALTA
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_auxiliar_almacen;');//Reporte - Individual
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_compras;');//Reporte - Rangos

@@ -45,6 +45,7 @@ class ReporteController extends Controller
      */
     public function generarReporte(Request $request){
         set_time_limit(0);
+        $office_code = $request->cookie('__office_session');
         $validConsumo = $request->input('validConsumo');
         $consDepto = $request->input('consDepto');
         $auxAlmacen = $request->input('auxAlmacen');

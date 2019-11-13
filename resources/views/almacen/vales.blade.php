@@ -301,13 +301,13 @@
                         <td style="display: inline-flex;">
                             <div class="form-check" style="display: flex;">
                                 <label class="check-container">Común
-                                    <input type="radio" name="tipo" value="1" required>
+                                    <input id="valeComun" type="radio" name="tipo" value="1" required>
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="form-check" style="display: flex;">
                                 <label class="check-container">Compra directa
-                                    <input type="radio" name="tipo" value="3">
+                                    <input id="valeCompra" type="radio" name="tipo" value="3">
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
@@ -317,7 +317,8 @@
             </div>
             <div class="row" style="padding-left:3%; padding-right:3%;">
                 <a id="btnAgregarArticulo" type="button" class="btn btn-agregar pull-left" data-toggle="modal" href="#agregarArticulo"> Agregar articulo</a>
-                <button id="btnNuevaFactura" type="submit" class="btn btn-submit pull-right">Guardar</button>
+                 <a id="btnAgregarArticuloCompra" type="button" class="btn btn-agregar pull-left" disabled style="display: none;"> Agregar articulo</a>
+                <button id="btnEnviarVale" type="button" class="btn btn-submit pull-right">Enviar solicitud</button>
             </div>
         </div>
     </div>

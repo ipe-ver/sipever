@@ -77,9 +77,11 @@
                             <button class = "btn btn-collapse btn-edit" id="btn_editar" disabled="true">
                                 <i class="fas fa-pen">  </i>
                             </button>
-                            <button class="btn btn-collapse btn-delete" id="btn_eliminar" data-toggle="modal" data-target="#eliminarPartida" disabled >
-                                <i class="fas fa-trash-alt">  </i>
-                            </button>
+                            @if(Auth::user()->hasRole('almacen_admin'))
+                                <button class="btn btn-collapse btn-delete" id="btn_eliminar" data-toggle="modal" data-target="#eliminarPartida" disabled >
+                                    <i class="fas fa-trash-alt">  </i>
+                                </button>
+                            @endif
                             <button id="verPartida" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapsePartida" data-parent="#accordion" aria-expanded="false">
                                 <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
                             </button>

@@ -139,9 +139,11 @@
                                 <button class = "btn btn-collapse btn-edit" id="btn_editar" disabled="true">
                                     <i class="fas fa-pen">  </i>
                                 </button>
-                                <button onclick="location.href='{{route('almacen.articulos.darBaja', $articulo->clave)}}'" class="btn btn-collapse btn-delete" id="btn_eliminar" disabled >
-                                    <i class="fas fa-trash-alt">  </i>
-                                </button>
+                                @if(Auth::user()->hasRole('almacen_admin'))
+                                    <button onclick="location.href='{{route('almacen.articulos.darBaja', $articulo->clave)}}'" class="btn btn-collapse btn-delete" id="btn_eliminar" disabled >
+                                        <i class="fas fa-trash-alt">  </i>
+                                    </button>
+                                @endif
                                 <button id="verArticulo" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapseArticulo">
                                     <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
                                 </button>

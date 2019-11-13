@@ -98,7 +98,7 @@ class PeriodoController extends Controller
             $result = DB::select('CALL sp_cerrar_periodo(?,?)', array($no_mes, $anio))[0]->result;
 
             if ($result==3) {
-                return redirect()->route('almacen.periodo.index')->with('success', 'Mes cerrado exitosamente');
+                return redirect()->route('almacen.polizas.index')->with('success', 'Mes cerrado exitosamente, favor de generar la poliza correspondiente');
             }elseif ($result ==2) {
                 return redirect()->route('almacen.periodo.index')->with('warning', "Error al generar nuevo mes, asgurese de que sea el mes y año correctos \nSi el problema persiste contacte al departamento de tegnologías de la información");
             }else{

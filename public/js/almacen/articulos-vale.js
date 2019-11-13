@@ -1,5 +1,6 @@
 $("#loader2").show();
 $(document).ready(function(){
+    cargarMetodo();
     $("#loader2").hide();
     var contador = 0;
     $('select[id="selectPartida"]').on('change', function(){
@@ -169,6 +170,75 @@ $(document).ready(function(){
         }
         $('table[id="articulos_vale"]').append(row_articulo);
     });
+
+    $('#btnEnviarVale').on('click', function(event){
+        var orden = document.getElementById("ordenSolicitud");
+        var tipo_mensaje = 0;
+        if(orden.checkValidity()){
+            var tabla = $('table[id="articulos_vale"]')[0].children[0].children;
+            if(tabla.length > 1){
+                var descripciones = $("input[name='cantidadArticulo[]']");
+                for (var i = 0; i < descripciones.length; i++) {
+                    if(parseInt(descripciones[i].value) == 0){
+                        tipo_mensaje = 3;
+                        break;
+                    }
+                }
+                if(tipo_mensaje != 3){
+                    return;
+                }
+            }else{
+                tipo_mensaje = 1;
+            }
+        }
+        event.preventDefault();
+
+        descripciones = $("input[name='descripcionArticulo[]']");
+        for (var i = 0; i < descripciones.length; i++) {
+            if(!descripciones[i].value.trim()){
+                tipo_mensaje = 2;
+                break;
+            }
+        }
+
+        var message = document.getElementById("messageCol");
+        var mensaje = document.createElement("div");
+        mensaje.setAttribute("class", "alert-container");
+        mensaje.setAttribute("id", "contenedor-alert");
+        var alert = document.createElement("div");
+        alert.setAttribute("class", "alert warning");
+        var closebtn = document.createElement("span");
+        closebtn.setAttribute("class","closebtn");
+        closebtn.innerHTML="&times;";
+        var info=document.createElement("p");
+        if(tipo_mensaje == 0){
+            
+        }else{
+            
+        }
+        switch (tipo_mensaje) {
+            case 0:
+                info.innerHTML="Por favor seleccione el tipo de solicitud";
+                break;
+            case 1:
+                info.innerHTML="Por favor agregue por lo menos un artículo a la solicitud";
+                break;
+            case 2:
+                info.innerHTML="Porfavor ingrese la descripción de todos los artículos";
+                break;
+            case 3:
+                info.innerHTML="Porfavor ingrese una cantidad real";
+                break;
+            default:
+                break;
+        }
+        alert.appendChild(closebtn);
+        alert.appendChild(info);
+        mensaje.appendChild(alert);
+        message.appendChild(mensaje);
+        cargarMetodo();
+    });
+
 });
 
 function clrscr(){
@@ -192,5 +262,67 @@ function clearTabla(){
 
     while(tabla.length > 1){
         tabla[tabla.length-1].remove();
+    }
+}
+
+function llenarOrden (index) {
+    var tabla_art = document.getElementById(`articulos_vale${index}`);
+    var detalles = tabla_art.children[1].children;
+    var tabla = document.getElementById("detalleValidar");
+    var tbody = tabla.children[1];
+    for(var i = 0; i < detalles.length; i++){
+        var tr = document.createElement("tr");
+        var articulo_aux = detalles[i].children;
+        for(var j = 0; j < articulo_aux.length; j++){
+            var td = document.createElement("td");
+            var input = document.createElement("input");
+            input.setAttribute("name",`${j}[]`);
+            if(j!=3){
+                input.setAttribute("type","text");
+                input.setAttribute("value", `${articulo_aux[j].innerHTML}`);
+                input .setAttribute("readonly", "");
+            }else{
+                input.setAttribute("type","number");
+                input.setAttribute("value", `${articulo_aux[j].innerHTML}`);
+                input.setAttribute("min", "0");
+                input.setAttribute("max", `${articulo_aux[j].innerHTML}`);
+            }
+            td.appendChild(input);
+            tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+    }
+    var encabezado = document.getElementById(`encabezado${index}`).children;
+    var parent = tabla.parentNode;
+    for(var i = 0, length1 = encabezado.length; i < length1-1; i++){
+        var input = document.createElement("input");
+        input.setAttribute("type", "hidden");
+        input .setAttribute("name", "encabezado[]");
+        input.setAttribute("value", `${encabezado[i].innerHTML.trim()}`);
+        parent.appendChild(input);
+    }
+
+}
+
+function cargarMetodo(){
+    var close = document.getElementsByClassName("closebtn");
+    var i;
+    /*
+     * Con esta función se carga el funcionamiento de las notificaciones
+    */
+    for (i = 0; i < close.length; i++) {
+        close[i].onclick = function(){
+            var div = this.parentElement;
+            div.style.opacity = "0";
+            //Despues de 600 milisegundos despues de activar el boton de cierre la notificacion desaparecerá
+            setTimeout(function(){ div.style.display = "none"; }, 600);
+            //Despues de 1 segundo la notificaicon desaparecerá del html
+            setTimeout(function(){
+                var alertContainer=document.getElementById("contenedor-alert");
+                if(alertContainer!=null){
+                    alertContainer.remove();
+                }
+            }, 1000);
+        }
     }
 }

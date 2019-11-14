@@ -82,6 +82,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'catalogos', 'as' => 'catalo
 	Route::get('/add_user', 'Catalogos\UsersController@create'); //LLeva al formulario de Guardar
 	Route::get('/usuarios/edit/{id}','Catalogos\UsersController@edit'); //LLeva al formulario de Editar
 	Route::put('/usuarios/update/{id}', 'Catalogos\UsersController@update'); //Edita la información del empleado
+	Route::post('/usuario/cambiar_password', 'Catalogos\UsersController@changePassword');
 
 	// CATALOGO DE ROLES
 	Route::get('/roles', function() { return view('catalogos.roles'); }); //Carga la vista de roles

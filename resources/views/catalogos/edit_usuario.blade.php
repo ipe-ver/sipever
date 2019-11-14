@@ -8,7 +8,7 @@
 <div class="col-md-12">
 	<div class="box" id="div_empleado">
 		<div class="box-header">	
-			<h3 class="box-title pull-right">Agregar nuevo usuario</h3>
+			<h3 class="box-title pull-right">Editar usuario</h3>
 		</div>
 	<form autocomplete="off">
 		<div class="box box-primary">
@@ -70,11 +70,10 @@
 	***********************************************************************************************/
 
 			campos1 = estilo_modal.mostrar([
-				{campo:'input', idCampo:'username', nameCampo:'Username:', typeCampo:'text', valorCampo: '', placeholder:'Nombre del equipo', newClass:'mayuscula', divSize:'12',datos:''},
-				{campo:'input', idCampo:'email', nameCampo:'Correo Electrónico:', typeCampo:'text', valorCampo: '', placeholder:'Estado situacional', newClass:'', divSize:'12', datos:''},
-				{campo:'input', idCampo:'password',nameCampo:'Password:',typeCampo:'password',valorCampo:  '', placeholder:'',newClass:'',divSize:'12',datos: ''},
-				{campo:'select',idCampo:'id_role',nameCampo:'Rol:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: catRoles },	
-				{campo:'select',idCampo:'id_empleado',nameCampo:'Empleado:',typeCampo:'',valorCampo:  '', placeholder:'',newClass:'',divSize:'12',datos: catEmpleados },	
+				{campo:'input', idCampo:'username', nameCampo:'Username:', typeCampo:'text', valorCampo: (Object.keys(usuario).length)? usuario.username: '', placeholder:'Nombre del equipo', newClass:'mayuscula', divSize:'12',datos:''},
+				{campo:'input', idCampo:'email', nameCampo:'Correo Electrónico:', typeCampo:'text', valorCampo: (Object.keys(usuario).length)? usuario.email: '', placeholder:'Estado situacional', newClass:'', divSize:'12', datos:''},
+				{campo:'select',idCampo:'id_role',nameCampo:'Rol:',typeCampo:'',valorCampo: (Object.keys(usuario).length)? usuario.ids_roles: '', placeholder:'',newClass:'',divSize:'12',datos: catRoles },	
+				{campo:'select',idCampo:'id_empleado',nameCampo:'Empleado:',typeCampo:'',valorCampo:  (Object.keys(usuario).length)? usuario.id_empleado: '', placeholder:'',newClass:'',divSize:'12',datos: catEmpleados },	
 				
 			]);
 
@@ -112,7 +111,7 @@
 			
 	//INICIO DE LA FUNCIÓN JAVASCRIPT DEL BOTON DE GUARDAR  DATOS DEL EQUIPO
 
-			$('#datos_buttom').on('click', '#btnGuardar', function(){
+			/*$('#datos_buttom').on('click', '#btnGuardar', function(){
 				//$('#btnGuardarNotacredito').attr("disabled", true);
 				
 
@@ -155,7 +154,7 @@
 					}
 				});
 
-			})	
+			})	*/
 
 
 			
@@ -167,7 +166,7 @@
 		FUNCION PARA EL BOTON DE EDITAR DEL FORMULARIO DE EQUIPO
 	***********************************************************************************************/
 
-		/*	$('#datos_buttom').on('click', '#btnEditar', function(){
+			$('#datos_buttom').on('click', '#btnEditar', function(){
 				//$('#btnGuardarNotacredito').attr("disabled", true);
 
 
@@ -209,7 +208,7 @@
 				});
 
 
-			})	*/
+			})	
 
 	
 	/**********************************************************************************************

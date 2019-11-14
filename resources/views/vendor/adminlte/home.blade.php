@@ -22,7 +22,19 @@
                 <div class="panel-body">
 
                     <div class="box box-widget widget-user-2" style="background-color: #F3EFE0;">
-
+                       
+                            <!-- Opciones de cambiar contraseña -->
+                        <div class="btn-group pull-right">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-bars"></i> Opciones <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#" id="btnEditPassword"><i class="fas fa-caret-right"></i> Cambiar contraseña</a>
+                                </li>
+                            </ul>
+                        </div>
+                   
                         <!--CABECERA -->
                         <div class="widget-user-header bg-default">
                             <div class="widget-user-image">
@@ -58,10 +70,85 @@
     <div class="col-md-1"></div> <!-- ./ col-md-1 -->
 </div> <!-- ./ row -->
 
+@include('adminlte::layouts.partials.modal_gral')
 
 @endsection
 
+
+
 @section('script')
+<script>
+    $(function (){
+        var user = @json($user);
+       // console.log(user);
+
+        var tituloModal = $('#modal-titulo');
+		var bodyModal = $('.modal-body');
+		var footerModal = $('.modal-footer');
+		var modal = $('#modal');
+		
+
+		var limpiarModal = function(){
+			tituloModal.empty()
+			bodyModal.empty()
+			footerModal.empty()
+		}
+        
+        $('#btnEditPassword').click(function(e){
+            e.preventDefault();
+            limpiarModal();
+            tituloModal.append('<i class="fa fa-plus"></i> Cambiar contraseña');
+
+
+            let dataCampos1 = [
+                {campo:'input',idCampo:'id_user',nameCampo:'',typeCampo:'hidden',valorCampo: user.id, placeholder:'',newClass:'',divSize:'12',datos: ''},
+                {campo:'input',idCampo:'current_password',nameCampo:'Contraseña actual:',typeCampo:'password',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: ''},
+                {campo:'input',idCampo:'password',nameCampo:'Nueva Contraseña:',typeCampo:'password',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: ''},    
+            ];
+
+            bodyModal.append(estilo_modal.mostrar(dataCampos1));
+
+            footerModal.append(imprimirBoton('btn-success', 'btnUpdatePassword', 'Guardar'));
+
+            modal.modal('show');
+        })
+
+        footerModal.on('click', '#btnUpdatePassword', function(){
+				
+                var dataString = {
+                    id_user: $("#id_user").val(),
+					current_password: $("#current_password").val(),
+					password: $("#password").val(),
+				}
+				console.log(dataString);				
+				$.ajax({
+					type: 'POST',
+					url: routeBase+'/catalogos/usuario/cambiar_password',
+					data: dataString,
+					dataType: 'json',
+					success: function(data) {				
+                        modal.modal('hide');
+                        messageToastr(data.tipo, data.mensaje);
+                        //table.bootstrapTable('refresh');
+																
+					},
+					error: function(data) {
+						var errors = data.responseJSON;						
+						$('.modal-body div.has-error').removeClass('has-error');
+						$('.help-block').empty();
+						$.each(errors.errors, function(key, value){
+							$('#div_'+key).addClass('has-error');
+							$('input#'+key).addClass('form-control-danger');
+							$('#error_'+key).append(value);						
+						});
+						footerModal.empty();
+						footerModal.append(imprimirBoton('btn-success', 'btnUpdatePassword', 'Guardar'));
+					}
+				});
+			})
+
+    })
+</script>
 
 @endsection
 

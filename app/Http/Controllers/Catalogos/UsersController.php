@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 use App\User;
 use App\Role;
@@ -66,34 +68,32 @@ class UsersController extends Controller
          // instanciar objeto de equioi de acuerdo al id_equipo
      
          $usuario = User::find($id);
-         //dd($usuario);
-        
-         return view('catalogos.create',
+         
+
+         return view('catalogos.edit_usuario',
                      [
                         'usuario' => $usuario,
                         'catEmpleados' => $this->empleados, 
                         'catRoles' => $this->catRoles,
-                         
                      ]);
+
     }
 
     public function update(Request $request, $id)
     {
-        //dd($request);
-        //$permiso = $request->input('id_permisos');
         
-
+    
         //INSTANCIAR EL OBJETO EQUIPO
         $usuario = User::find($id);
       
-       // dd($usuario);
-
+        //$password = $usuario->password;    
+       
         //RECIBIR LOS INPUT DEL FORMULARIO E INSERTARLOS EN LA TABLA CAT_EQUIPOS
 
         $usuario->username                        = $request->input('username');
         $usuario->email                           = $request->input('email');
         $usuario->name                            = $request->input('username');
-        //$usuario->password                        = bcrypt($request->input('password'));
+        //$usuario->password                        = Crypt::encrypt($request->input('password'));
         $usuario->id_empleado                     = $request->input('id_empleado');
 
         $usuario->roles()->sync($request->input('id_role'));
@@ -110,9 +110,6 @@ class UsersController extends Controller
 
     
 
-
-
-
     /*****************************************************************************************
 	            LISTADO DE USUARIOS
 	*****************************************************************************************/          
@@ -122,6 +119,39 @@ class UsersController extends Controller
            
         return response()->json($items);
     } 
+
+
+     /*****************************************************************************************
+	            CAMBIAR CONTRASEÑA DE LOS USUARIOS
+    *****************************************************************************************/  
+    
+    public function changePassword(Request $request)  
+    {       
+       
+       /* \Validator::extend('isCurrentPassword',function ($attribute, $value, $parameters, $validator){            
+            $user = auth()->user();
+            if(\Hash::check($value, $user->password)){
+                return true;
+            }
+            return false;
+        }); */
+        
+        //Validation:  
+        $this->validate($request, [
+            'password'     => 'required|min:6',  
+        ]);       
+        
+        $request->user()->fill([  
+            'password' => \Hash::make($request->password)
+        ])->save();
+        
+        return response()->json([
+            "estatus" => true,
+            "tipo" => "success",
+            "mensaje" => "Tu contraseña ha sido actualizada exitosamente."
+        ]);
+        
+    }
 
    
 

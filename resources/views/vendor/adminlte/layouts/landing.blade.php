@@ -28,10 +28,6 @@
 		<!-- HoldOn.js -->
 		{!! Html::style('components/hold-on/HoldOn.min.css') !!} 
 
-	
-
-		
-
 
 		<style>
 			.user-body{

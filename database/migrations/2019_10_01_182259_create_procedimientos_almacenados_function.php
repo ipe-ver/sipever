@@ -1637,7 +1637,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SET @mes_min := mes_inicio;
+							
+				SET @mes_min := mes_inicio;
                 SET @mes_max := mes_fin;
                 SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                 SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
@@ -1660,73 +1661,227 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     END IF;
                 END WHILE myloop;
                 
-                SET @condicion1 := (SELECT IF(IFNULL(@periodo_min, 0) = 0,1,0));
-
-                IF @condicion1 = 0 THEN
-
-                    SET @num_articulos_consumidos := (SELECT COUNT(articulo.id)
-                    FROM cat_articulos articulo
-                    INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
-                    INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
-                    INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
-                    WHERE consumo.id_periodo BETWEEN @periodo_min AND @periodo_max);
-
-                    SET @articulos_consumidos := (SELECT GROUP_CONCAT(DISTINCT(articulo.id))
-                    FROM cat_articulos articulo
-                    INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
-                    INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
-                    INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
-                    WHERE consumo.id_periodo BETWEEN @periodo_min AND @periodo_max);
-
-                    SELECT articulo.clave AS "CODIF.", articulo.descripcion AS "DESCRIPCION", unidad.descripcion AS "UNIDAD", 
-                        (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
-                        AND consumo.id_periodo BETWEEN @periodo_min AND @periodo_max) AS "TOTAL DEL AÑO"
-                    FROM cat_articulos articulo
-                    INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
-                    INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
-                    INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
-                    WHERE consumo.id_periodo BETWEEN @periodo_min AND @periodo_max;
-                    
-                	SET @aux_periodos := @periodo_min;
-                	SET @aux_mes := @mes_min;
-
-                    WHILE @aux_periodos <= @periodo_max DO
-
-                        SELECT @aux_mes AS "MES", IFNULL((SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
-                            AND consumo.id_periodo = @aux_periodos),0) AS "CONSUMO"
-                        FROM cat_articulos articulo
-                        INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
-                        INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
-                        INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
-                        WHERE consumo.id_periodo BETWEEN @periodo_min AND @periodo_max;
-                        
-                        SELECT @aux_mes AS "MES", IFNULL(SUM(detalles.cantidad),0) AS "TOTAL POR MES" FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo WHERE consumos.id_periodo = @aux_periodos;
-
-							   SET @aux_mes := @aux_mes + 1;
-                        SET @aux_periodos := @aux_periodos + 1;
-                    END WHILE;
-
-                    SET @primer_semestre := 0;
+                    SELECT DISTINCT(tb1.clave) AS "CODIF.", tb1.descripcion AS "DESCRIPCION", tb1.descripcion AS "UNIDAD", tb2.ene AS "ENE.", tb3.feb AS "FEB", tb4.mar AS "MAR", tb5.abr AS "ABR",
+                    	tb6.may AS "MAY", tb7.jun AS "JUN", tb8.jul AS "JUL", tb9.agos AS "AGOS", tb10.sept AS "SEPT", tb11.octu AS "OCT", tb12.nov AS "NOV", tb13.dic AS "DIC", tb14.total AS "TOTAL"
+                    FROM (
+						  	SELECT articulo.clave AS clave, articulo.descripcion AS descripcion, unidad.descripcion AS unidad
+						  	FROM cat_articulos articulo
+	                  INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
+	                  INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+	                  INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+						  )tb1 INNER JOIN
+						  (
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
+							  	WHEN (1 >= mes_inicio AND 1 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                           AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 1 AND periodos.anio = anio))
+							  	ELSE 0
+							  END),0) AS ene
+                     FROM cat_articulos articulo
+                     INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                     INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+						  )tb2 ON tb1.clave = tb2.cod INNER JOIN
+						  (
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
+							  	WHEN (2 >= mes_inicio AND 2 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                           AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 2 AND periodos.anio = anio))
+							  	ELSE 0
+							  END),0) AS feb
+                     FROM cat_articulos articulo
+                     INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                     INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+						  )tb3 ON tb1.clave = tb3.cod INNER JOIN
+						  (
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
+							  	WHEN (3 >= mes_inicio AND 3 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                           AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 3 AND periodos.anio = anio))
+							  	ELSE 0
+							  END),0) AS mar
+                     FROM cat_articulos articulo
+                     INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                     INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+						  )tb4 ON tb1.clave = tb4.cod INNER JOIN
+						  (
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
+							  	WHEN (4 >= mes_inicio AND 4 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                           AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 4 AND periodos.anio = anio))
+							  	ELSE 0
+							  END),0) AS abr
+                     FROM cat_articulos articulo
+                     INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                     INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+						  )tb5 ON tb1.clave = tb5.cod INNER JOIN
+						  (
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
+							  	WHEN (5 >= mes_inicio AND 5 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                           AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 5 AND periodos.anio = anio))
+							  	ELSE 0
+							  END),0) AS may
+                     FROM cat_articulos articulo
+                     INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                     INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+						  )tb6 ON tb1.clave = tb6.cod INNER JOIN
+						  (
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
+							  	WHEN (6 >= mes_inicio AND 6 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                           AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 6 AND periodos.anio = anio))
+							  	ELSE 0
+							  END),0) AS jun
+                     FROM cat_articulos articulo
+                     INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                     INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+						  )tb7 ON tb1.clave = tb7.cod INNER JOIN
+						  (
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
+							  	WHEN (7 >= mes_inicio AND 7 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                           AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 7 AND periodos.anio = anio))
+							  	ELSE 0
+							  END),0) AS jul
+                     FROM cat_articulos articulo
+                     INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                     INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+						  )tb8 ON tb1.clave = tb8.cod INNER JOIN
+						  (
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
+							  	WHEN (8 >= mes_inicio AND 8 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                           AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 8 AND periodos.anio = anio))
+							  	ELSE 0
+							  END),0) AS agos
+                     FROM cat_articulos articulo
+                     INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                     INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+						  )tb9 ON tb1.clave = tb9.cod INNER JOIN
+						  (
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
+							  	WHEN (9 >= mes_inicio AND 9 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                           AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 9 AND periodos.anio = anio))
+							  	ELSE 0
+							  END),0) AS sept
+                     FROM cat_articulos articulo
+                     INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                     INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+						  )tb10 ON tb1.clave = tb10.cod INNER JOIN
+						  (
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
+							  	WHEN (10 >= mes_inicio AND 10 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                           AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 10 AND periodos.anio = anio))
+							  	ELSE 0
+							  END),0) AS octu
+                     FROM cat_articulos articulo
+                     INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                     INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+						  )tb11 ON tb1.clave = tb11.cod INNER JOIN
+						  (
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
+							  	WHEN (11 >= mes_inicio AND 11 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                           AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 11 AND periodos.anio = anio))
+							  	ELSE 0
+							  END),0) AS nov
+                     FROM cat_articulos articulo
+                     INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                     INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+						  )tb12 ON tb1.clave = tb12.cod INNER JOIN
+						  (
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
+							  	WHEN (12 >= mes_inicio AND 12 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                           AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 12 AND periodos.anio = anio))
+							  	ELSE 0
+							  END),0) AS dic
+                     FROM cat_articulos articulo
+                     INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                     INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+						  )tb13 ON tb1.clave = tb13.cod INNER JOIN
+						  (
+						  	SELECT DISTINCT(articulo.clave) AS cod, (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                        AND consumo.id_periodo BETWEEN @periodo_min AND @periodo_max) AS total
+                     FROM cat_articulos articulo
+                     INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
+                     INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
+						  )tb14 ON tb1.clave = tb14.cod
+						  ORDER BY tb1.descripcion ASC;
+						  
+						  SET @primer_semestre := 0;
                     SET @segundo_semestre := 0;
                     SET @mes_aux := 1;
 
                     WHILE @mes_aux <=6 DO
+                        IF (@mes_aux + 6) >= mes_inicio AND (@mes_aux + 6) <= mes_fin THEN
                         SET @primer_semestre := @primer_semestre + IFNULL((SELECT SUM(detalles.cantidad) 
                             FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
                             WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = @mes_aux AND anio = anio)),0);
+                     	END IF;
+                            
+                        IF (@mes_aux + 6) >= mes_inicio AND (@mes_aux + 6) <= mes_fin THEN
                         SET @segundo_semestre := @segundo_semestre + IFNULL((SELECT SUM(detalles.cantidad) 
                             FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
                             WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = @mes_aux + 6 AND anio = anio)),0);
+                     	END IF;
                         SET @mes_aux := @mes_aux + 1;
                     END WHILE;
 
-                    SELECT @num_articulos_consumidos AS "TIPOS DE ARTICULOS", 
-                        @primer_semestre AS "TOTAL DEL PRIMER SEMESTRE",
-                        @segundo_semestre  AS "TOTAL DEL SEGUNDO SEMESTRE",
-                        (SELECT SUM(detalles.cantidad)
-                        FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
-                        WHERE consumos.id_periodo BETWEEN @periodo_min AND @periodo_max) AS "TOTAL";
-                END IF;
+            SELECT @num_articulos_consumidos AS "TIPOS DE ARTICULOS", @primer_semestre AS "TOTAL DEL PRIMER SEMESTRE", 
+    		  	@segundo_semestre AS "TOTAL DEL SEGUNDO SEMESTRE", 
+    			  IFNULL((SELECT CASE 
+    			  	WHEN (1 >= mes_inicio AND 1 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
+    				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 1 AND periodos.anio = anio))
+    			  	ELSE 0
+    			  END),0) AS "ENE",
+    			  IFNULL((SELECT CASE 
+    			  	WHEN (2 >= mes_inicio AND 2 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
+    				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 2 AND periodos.anio = anio))
+    			  	ELSE 0
+    			  END),0) AS "FEB",
+    			  IFNULL((SELECT CASE 
+    			  	WHEN (3 >= mes_inicio AND 3 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
+    				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 3 AND periodos.anio = anio))
+    			  	ELSE 0
+    			  END),0) AS "MAR",
+    			  IFNULL((SELECT CASE 
+    			  	WHEN (4 >= mes_inicio AND 4 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
+    				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 4 AND periodos.anio = anio))
+    			  	ELSE 0
+    			  END),0) AS "ABR",
+    			  IFNULL((SELECT CASE 
+    			  	WHEN (5 >= mes_inicio AND 5 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
+    				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 5 AND periodos.anio = anio))
+    			  	ELSE 0
+    			  END),0) AS "MAY",
+    			  IFNULL((SELECT CASE 
+    			  	WHEN (6 >= mes_inicio AND 6 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
+    				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 6 AND periodos.anio = anio))
+    			  	ELSE 0
+    			  END),0) AS "JUN",
+    			  IFNULL((SELECT CASE 
+    			  	WHEN (7 >= mes_inicio AND 7 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
+    				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 7 AND periodos.anio = anio))
+    			  	ELSE 0
+    			  END),0) AS "JUL",
+    			  IFNULL((SELECT CASE 
+    			  	WHEN (8 >= mes_inicio AND 8 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
+    				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 8 AND periodos.anio = anio))
+    			  	ELSE 0
+    			  END),0) AS "AGOS",
+    			  IFNULL((SELECT CASE 
+    			  	WHEN (9 >= mes_inicio AND 9 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
+    				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 9 AND periodos.anio = anio))
+    			  	ELSE 0
+    			  END),0) AS "SEPT",
+    			  IFNULL((SELECT CASE 
+    			  	WHEN (10 >= mes_inicio AND 10 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
+    				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 10 AND periodos.anio = anio))
+    			  	ELSE 0
+    			  END),0) AS "OCT",
+    			  IFNULL((SELECT CASE 
+    			  	WHEN (11 >= mes_inicio AND 11 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
+    				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 11 AND periodos.anio = anio))
+    			  	ELSE 0
+    			  END),0) AS "NOV",
+    			  IFNULL((SELECT CASE 
+    			  	WHEN (12 >= mes_inicio AND 12 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
+    				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 12 AND periodos.anio = anio))
+    			  	ELSE 0
+    			  END),0) AS "DIC",
+    			  FORMAT(SUM(@primer_semestre + @segundo_semestre),0) AS "TOTAL";
+                            
             END
         ');
 
@@ -1790,57 +1945,58 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-            SELECT tb1.sscta AS "SSCTA", tb1.nombre AS "PARTIDA", tb2.clave AS "COD.", tb2.descripcion AS "DESCRIPCION", tb2.unidad AS "UNIDAD", tb2.canti AS "CANT.", 
-	    		  	FORMAT(tb2.costo,2) AS "COSTO UNIT.", FORMAT(tb2.importe,2) AS "IMPORTE", FORMAT(tb2.inversion,2) AS "INV. FIN." FROM
-	    		  (
-	    		  	SELECT cat_cuentas_contables.sscta AS sscta, cat_cuentas_contables.nombre AS nombre, cat_cuentas_contables.id AS cod
-	    		  	FROM cat_cuentas_contables
-	    		  )tb1 INNER JOIN 
-	    		  (
-	    		  	SELECT DISTINCT(articulo.clave) AS clave, articulo.id_cuenta AS cod, articulo.descripcion AS descripcion, unidad.descripcion AS unidad,
-	    		  		IFNULL((SELECT CASE
-	    				  	WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE arti.id = articulo.id)
-	    				  	ELSE (SELECT inven.existencias FROM inventario_inicial_final inven INNER JOIN cat_articulos ON cat_articulos.id = inven.id_articulo 
-	    					WHERE inven.id_articulo = articulo.id AND inven.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = mes AND anio = anio))
-	    				END),0) AS canti,
-	    				IFNULL((SELECT CASE
-	    					WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT arti.precio_unitario FROM cat_articulos arti WHERE arti.id = articulo.id)
-	    					ELSE (SELECT inven.precio_promedio FROM inventario_inicial_final inven INNER JOIN cat_articulos ON cat_articulos.id = inven.id_articulo
-	    					WHERE inven.id_articulo = articulo.id AND inven.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = mes AND anio = anio))
-	    				END),0) AS costo,
-	    				IFNULL((SELECT CASE
-	    					WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT arti.existencias * arti.precio_unitario FROM cat_articulos arti WHERE arti.id = articulo.id)
-	    					ELSE (SELECT inven.precio_promedio * inven.existencias FROM inventario_inicial_final inven INNER JOIN cat_articulos ON cat_articulos.id = inven.id_articulo
-	    					WHERE inven.id_articulo = articulo.id AND inven.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = mes AND anio = anio))
-	    				END),0) AS importe,
-	    				IFNULL((SELECT CASE
-	    					WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT arti.existencias * arti.precio_unitario FROM cat_articulos arti WHERE arti.id = articulo.id)
-	    					ELSE (SELECT inven.precio_promedio * inven.existencias FROM inventario_inicial_final inven INNER JOIN cat_articulos ON cat_articulos.id = inven.id_articulo
-	    					WHERE inven.id_articulo = articulo.id AND inven.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = mes AND anio = anio))
-	    				END),0) AS inversion
-             FROM cat_articulos articulo
-             INNER JOIN inventario_inicial_final inventario ON inventario.id_articulo = articulo.id
-             INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
-             INNER JOIN cat_cuentas_contables cuenta ON cuenta.id = articulo.id_cuenta
-	    		  )tb2 ON tb1.cod = tb2.cod
-	    		  ORDER BY tb1.sscta ASC, tb2.descripcion AS    
-	    		  SELECT tb1.articulos AS "ARTICULOS", FORMAT(tb1.importes,2) AS "IMPORTES", FORMAT(tb1.invent,2) AS "INVENTARIO" FROM
-	    		  (
-	    		  	  SELECT IFNULL((SELECT CASE
-	    			  	WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT SUM(articulo.existencias) FROM cat_articulos articulo)
-	    			  	ELSE (SELECT SUM(inventario.existencias) FROM inventario_inicial_final inventario WHERE inventario.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = mes AND anio = anio))
-	    			  END),0) AS articulos,
-	    			  IFNULL((SELECT CASE
-	    			  	WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT SUM(articulo.existencias * articulo.precio_unitario) FROM cat_articulos articulo)
-	    			  	ELSE (SELECT SUM(inventario.existencias * inventario.precio_promedio) FROM inventario_inicial_final inventario WHERE inventario.id_periodo = (SELECT id_periodo FROM periodos 
-	    				  WHERE no_mes = mes AND anio = anio))
-	    			  END),0) AS importes,
-	    			  IFNULL((SELECT CASE
-	    			  	WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT SUM(articulo.existencias * articulo.precio_unitario) FROM cat_articulos articulo)
-	    			  	ELSE (SELECT SUM(inventario.existencias * inventario.precio_promedio) FROM inventario_inicial_final inventario WHERE inventario.id_periodo = (SELECT id_periodo FROM periodos 
-	    				  WHERE no_mes = mes AND anio = anio))
-	    			  END),0) AS invent
-	    		  )tb1;
+                SELECT tb1.sscta AS "SSCTA", tb1.nombre AS "PARTIDA", tb2.clave AS "COD.", tb2.descripcion AS "DESCRIPCION", tb2.unidad AS "UNIDAD", tb2.canti AS "CANT.", 
+					  	FORMAT(tb2.costo,2) AS "COSTO UNIT.", FORMAT(tb2.importe,2) AS "IMPORTE", FORMAT(tb2.inversion,2) AS "INV. FIN." FROM
+					  (
+					  	SELECT cat_cuentas_contables.sscta AS sscta, cat_cuentas_contables.nombre AS nombre, cat_cuentas_contables.id AS cod
+					  	FROM cat_cuentas_contables
+					  )tb1 INNER JOIN 
+					  (
+					  	SELECT DISTINCT(articulo.clave) AS clave, articulo.id_cuenta AS cod, articulo.descripcion AS descripcion, unidad.descripcion AS unidad,
+					  		IFNULL((SELECT CASE
+							  	WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE arti.id = articulo.id)
+							  	ELSE (SELECT inven.existencias FROM inventario_inicial_final inven INNER JOIN cat_articulos ON cat_articulos.id = inven.id_articulo 
+								WHERE inven.id_articulo = articulo.id AND inven.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = mes AND anio = anio))
+							END),0) AS canti,
+							IFNULL((SELECT CASE
+								WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT arti.precio_unitario FROM cat_articulos arti WHERE arti.id = articulo.id)
+								ELSE (SELECT inven.precio_promedio FROM inventario_inicial_final inven INNER JOIN cat_articulos ON cat_articulos.id = inven.id_articulo
+								WHERE inven.id_articulo = articulo.id AND inven.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = mes AND anio = anio))
+							END),0) AS costo,
+							IFNULL((SELECT CASE
+								WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT arti.existencias * arti.precio_unitario FROM cat_articulos arti WHERE arti.id = articulo.id)
+								ELSE (SELECT inven.precio_promedio * inven.existencias FROM inventario_inicial_final inven INNER JOIN cat_articulos ON cat_articulos.id = inven.id_articulo
+								WHERE inven.id_articulo = articulo.id AND inven.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = mes AND anio = anio))
+							END),0) AS importe,
+							IFNULL((SELECT CASE
+								WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT arti.existencias * arti.precio_unitario FROM cat_articulos arti WHERE arti.id = articulo.id)
+								ELSE (SELECT inven.precio_promedio * inven.existencias FROM inventario_inicial_final inven INNER JOIN cat_articulos ON cat_articulos.id = inven.id_articulo
+								WHERE inven.id_articulo = articulo.id AND inven.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = mes AND anio = anio))
+							END),0) AS inversion
+                 FROM cat_articulos articulo
+                 INNER JOIN inventario_inicial_final inventario ON inventario.id_articulo = articulo.id
+                 INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
+                 INNER JOIN cat_cuentas_contables cuenta ON cuenta.id = articulo.id_cuenta
+					  )tb2 ON tb1.cod = tb2.cod
+					  ORDER BY tb1.sscta ASC, tb2.descripcion ASC;
+
+				  SELECT tb1.articulos AS "ARTICULOS", FORMAT(tb1.importes,2) AS "IMPORTES", FORMAT(tb1.invent,2) AS "INVENTARIO" FROM
+				  (
+				  	  SELECT IFNULL((SELECT CASE
+					  	WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT SUM(articulo.existencias) FROM cat_articulos articulo)
+					  	ELSE (SELECT SUM(inventario.existencias) FROM inventario_inicial_final inventario WHERE inventario.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = mes AND anio = anio))
+					  END),0) AS articulos,
+					  IFNULL((SELECT CASE
+					  	WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT SUM(articulo.existencias * articulo.precio_unitario) FROM cat_articulos articulo)
+					  	ELSE (SELECT SUM(inventario.existencias * inventario.precio_promedio) FROM inventario_inicial_final inventario WHERE inventario.id_periodo = (SELECT id_periodo FROM periodos 
+						  WHERE no_mes = mes AND anio = anio))
+					  END),0) AS importes,
+					  IFNULL((SELECT CASE
+					  	WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT SUM(articulo.existencias * articulo.precio_unitario) FROM cat_articulos articulo)
+					  	ELSE (SELECT SUM(inventario.existencias * inventario.precio_promedio) FROM inventario_inicial_final inventario WHERE inventario.id_periodo = (SELECT id_periodo FROM periodos 
+						  WHERE no_mes = mes AND anio = anio))
+					  END),0) AS invent
+				  )tb1;
             END
         ');
 
@@ -1984,9 +2140,9 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_partida;');//Reporte - Rangos
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_final_existencias_todo;');//Reporte - Rangos
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_existencias;');//Reporte - Rangos - ☻
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_consumos_articulo;');//Reporte - Rangos
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_consumos_articulo;');//Reporte - Rangos - ☻
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_relacion_consumos_articulo;');//Reporte - Individual ** FALTA
-        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_auxiliar_almacen;');//Reporte - Individual
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reporte_auxiliar_almacen;');//Reporte - Individual - ☻
         DB::unprepared('DROP PROCEDURE IF EXISTS sp_concentrado_compras;');//Reporte - Rangos
     }
 }

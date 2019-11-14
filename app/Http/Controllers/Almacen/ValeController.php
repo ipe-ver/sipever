@@ -44,6 +44,68 @@ class ValeController extends Controller
         
     }
 
+    public function generarVale(Request $request){
+        $codigo_oficina = $request->cookie('__office_session');
+        $result = DB::select('SELECT descripcion FROM cat_oficinas WHERE login = ?', array($codigo_oficina));
+        $descripcion_oficina = $result[0]->descripcion;
+        $tipo = $request->tipo;
+        $claves = $request->claveArticulo;
+        $cantidades = $request->cantidadArticulo;
+        $articulos = $request->descripcionArticulo;
+        date_default_timezone_set('America/Mexico_City');
+        $fecha_nombre=date("dmY");
+        $hora_nombre=date("His");
+        $nombre = '';
+        if($tipo == 1){
+            $nombre = 'CONS';
+        }elseif($tipo == 3){
+            $nombre = 'COMP';
+        }
+        $folio = "{$nombre}{$fecha_nombre}{$hora_nombre}";
+
+        $db = DB::connection()->getPdo();
+        //Establecemos la conexión
+        $db->setAttribute(PDOConnection::ATTR_ERRMODE, PDOConnection::ERRMODE_EXCEPTION);
+        $db->setAttribute(PDOConnection::ATTR_EMULATE_PREPARES, true);
+        $query = $db->prepare('CALL sp_vale_consumo(?,?,?,@clave)');
+        $query->bindParam(1,$descripcion_oficina);
+        $query->bindParam(2,$tipo);
+        $query->bindParam(3,$folio);
+
+        try{
+            $query->execute();
+            $query->closeCursor();
+            $query=$db->query('SELECT @clave as result');
+            //accedemos al valor de retorno para regresar la vista correspondiente.
+            $results = $query->fetch(PDOConnection::FETCH_OBJ);
+            $id_generado = $results->result;
+            $query->closeCursor();
+            for ($i=0; $i < sizeof($articulos); $i++) { 
+                if($tipo == 1){
+                    $query = $db->prepare('CALL sp_pedido_articulos(?,?,?)');
+                    $query->bindParam(1,$id_generado);
+                    $query->bindParam(2,$claves[$i]);
+                    $query->bindParam(3,$cantidades[$i]);
+                    $query->execute();
+                    $query->closeCursor();
+                }elseif($tipo == 3){
+                    $query = $db->prepare('CALL sp_compra_articulos(?,?,?)');
+                    $query->bindParam(1,$id_generado);
+                    $query->bindParam(2,$articulos[$i]);
+                    $query->bindParam(3,$cantidades[$i]);
+                    $query->execute();
+                    $query->closeCursor();
+                }
+            }
+            return redirect()->route('almacen.vales.index')->with('success','Orden registrada correctamente');
+        }catch(Exception $e){
+            return back()->withErrors([$e->message(),'Error al accesar a la base de datos, porfavor contacte al departamento de tecnologías de la información']);
+        }
+
+        dd($request->all());
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *

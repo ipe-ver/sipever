@@ -1,7 +1,6 @@
+@extends('almacen.index')
+@section('secciones_almacen')
 @if(Auth::user()->hasRole('almacen_admin') || Auth::user()->hasRole('almacen_capturista'))
-    @extends('almacen.index')
-
-    @section('secciones_almacen')
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-5 margin-tb">
@@ -78,9 +77,11 @@
                             <button class = "btn btn-collapse btn-edit" id="btn_editar" disabled="true">
                                 <i class="fas fa-pen">  </i>
                             </button>
-                            <button class="btn btn-collapse btn-delete" id="btn_eliminar" data-toggle="modal" data-target="#eliminarPartida" disabled >
-                                <i class="fas fa-trash-alt">  </i>
-                            </button>
+                            @if(Auth::user()->hasRole('almacen_admin'))
+                                <button class="btn btn-collapse btn-delete" id="btn_eliminar" data-toggle="modal" data-target="#eliminarPartida" disabled >
+                                    <i class="fas fa-trash-alt">  </i>
+                                </button>
+                            @endif
                             <button id="verPartida" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse"  data-target="#collapsePartida" data-parent="#accordion" aria-expanded="false">
                                 <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
                             </button>
@@ -161,5 +162,22 @@
     </div>
     <script type="text/javascript" src="{{ asset('js/almacen/partidas.js') }}"></script>
 @else
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-5 margin-tb">
+                <div class="row">
+                    <h2 class=" col-sm-1 text-center text-nowrap fas fa-box-open">
+                        <span style="font-family: 'Roboto';">Sin acceso</span>
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 margin-tb header">
+                <h3 class="pull-left nombre-ventana">Porfavor inicie sesión con una cuenta autorizada para tener acceso a este módulo</h3>
+            </div>
+        </div>
+        <p></p>
+    </div>
 @endif
 @endsection

@@ -95,45 +95,16 @@ class PeriodoController extends Controller
         $no_mes = $request->input('numMes');
         $anio = $request->input('year');
         
-        $mensaje="";
-        if($no_mes < 10){
-            $mensaje = "0{$no_mes} - {$anio}";
-        }else{
-            $mensaje = "{$no_mes} - {$anio}";
-        }
+            $result = DB::select('CALL sp_cerrar_periodo(?,?)', array($no_mes, $anio))[0]->result;
 
-        return back()->with('success', $mensaje);
-        /*
-        //Obtenemos los datos de la conexión con la base de datos
-        $db = DB::connection()->getPdo();
-        //Establecemos la conexión
-        $db->setAttribute(PDOConnection::ATTR_ERRMODE, PDOConnection::ERRMODE_EXCEPTION);
-        $db->setAttribute(PDOConnection::ATTR_EMULATE_PREPARES, true);
-
-        //Preparamos la llamada al procedimiento remoto
-        $query = $db->prepare('CALL sp_cerrar_periodo(?,?,@result)');
-        //Hacemos un binding de los parámetros, así protegemos nuestra 
-        //llamada de una posible inyección sql
-        $query->bindParam(1,$no_mes);
-        $query->bindParam(2,$anio);
-
-        try {
-            //Ejecutamos el procedimiento
-            $query->execute();
-            $query->closeCursor();
-            //accedemos al valor de retorno para regresar la vista correspondiente.
-            $result = $db->query('SELECT @result AS result')->fetch(PDOConnection::FETCH_ASSOC);
-
-            if ($result==1) {
-                return redirect('almacen.cerrar_mes')->with('success', 'Mes cerrado exitosamente');
-            }elseif ($result ==0) {
-                return redirect('almacen.cerrar_mes')->with('warning', "Error al generar nuevo mes, intente de nuevo mas tarde \nSi el problema persiste contacte al departamento de tegnologías de la información");
+            if ($result==3) {
+                return redirect()->route('almacen.polizas.index')->with('success', 'Mes cerrado exitosamente, favor de generar la poliza correspondiente');
+            }elseif ($result ==2) {
+                return redirect()->route('almacen.periodo.index')->with('warning', "Error al generar nuevo mes, asgurese de que sea el mes y año correctos \nSi el problema persiste contacte al departamento de tegnologías de la información");
             }else{
-                return redirect('almacen.cerrar_mes')->withErrors(['msg', "Error de base de datos \n Contacte al departamento de tecnologías de la información"]);
+                return redirect()->route('almacen.periodo.index')->withErrors(['msg', "Error de base de datos \n Contacte al departamento de tecnologías de la información"]);
             }
-        } catch (Exception $e) {
-            return redirect('almacen.cerrar_mes')->withErrors(['msg',$e->getMessage()+"\n Contacte al departamento de tecnologías de la información"]);
-        }*/
+        
     }
 
 }

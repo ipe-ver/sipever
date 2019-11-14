@@ -1,7 +1,7 @@
-@if(Auth::user()->hasRole('almacen_admin') || Auth::user()->hasRole('almacen_capturista'))
-    @extends('almacen.index')
+@extends('almacen.index')
 
-    @section('secciones_almacen')
+@section('secciones_almacen')
+@if(Auth::user()->hasRole('almacen_admin') || Auth::user()->hasRole('almacen_capturista'))
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-5 margin-tb">
@@ -139,9 +139,11 @@
                                 <button class = "btn btn-collapse btn-edit" id="btn_editar" disabled="true">
                                     <i class="fas fa-pen">  </i>
                                 </button>
-                                <button onclick="location.href='{{route('almacen.articulos.darBaja', $articulo->clave)}}'" class="btn btn-collapse btn-delete" id="btn_eliminar" disabled >
-                                    <i class="fas fa-trash-alt">  </i>
-                                </button>
+                                @if(Auth::user()->hasRole('almacen_admin'))
+                                    <button onclick="location.href='{{route('almacen.articulos.darBaja', $articulo->clave)}}'" class="btn btn-collapse btn-delete" id="btn_eliminar" disabled >
+                                        <i class="fas fa-trash-alt">  </i>
+                                    </button>
+                                @endif
                                 <button id="verArticulo" type="button" class="btn btn-left btn-collapse collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapseArticulo">
                                     <i id="iconoDesplegar" class="fas fa-caret-square-down desplegar"></i>
                                 </button>
@@ -165,7 +167,7 @@
                                 <div class="row">
                                     <input name="clave" type="text" class="col-sm-1 colm-form form-control" id="articuloClave" placeholder="Clave" value="{{$articulo->clave}}" disabled="true" required>
                                     <input name="descripcion" type="text" class="col-md-6 colm-form form-control" id="articuloDescripcion" placeholder="Descripcion" value="{{$articulo->descripcion}}" disabled="true">
-                                    <input name="existencias" type="text" class="col-sm-1 colm-form-md form-control" id="articuloExistencias" placeholder="Descripcion" value="{{$articulo->existencias}}" disabled="true" required>
+                                    <input name="existencias" type="text" class="col-sm-1 colm-form-md form-control" id="articuloExistencias" placeholder="Descripcion" value="{{$articulo->existencias}}" disabled="true" required readonly>
                                     <select name="unidad" class="col-sm-2 colm-form form-control" dir="ltr" id="articuloUnidad" disabled required>
                                         <option>{{$articulo->descripcion_u_medida}}</option>
                                         @foreach($unidades as $unidad)
@@ -182,14 +184,18 @@
                                     <label class="col-sm-2 colm-form-md text-center" for="articuloGrupo">Grupo</label>
                                 </div>
                                 <div class="row">
-                                    <input name="stock_minimo" type="text" class="col-md-2 colm-form-md form-control" id="articuloStock" placeholder="Descripcion" value="{{$articulo->stock_minimo}}" disabled="true" required>
+                                    @if(Auth::user()->hasRole('almacen_admin'))
+                                        <input name="stock_minimo" type="text" class="col-md-2 colm-form-md form-control" id="articuloStock" placeholder="Descripcion" value="{{$articulo->stock_minimo}}" disabled="true" required>
+                                    @else
+                                        <input name="stock_minimo" type="text" class="col-md-2 colm-form-md form-control" id="articuloStock" placeholder="Descripcion" value="{{$articulo->stock_minimo}}" disabled="true" required readonly>
+                                    @endif
                                     <input name="precio_unitario" type="text" class="col-sm-1 colm-form-md form-control" id="articuloPrecio" placeholder="Descripcion" value="{{$articulo->precio_unitario}}" readonly required>
                                     @if($articulo->estatus == 0)
-                                        <input type="text" class="col-sm-2 colm-form-md form-control" id="articuloEstatus" value="De baja" placeholder="Existencias" disabled="true">
+                                        <input type="text" class="col-sm-2 colm-form-md form-control" id="articuloEstatus" value="De baja" placeholder="Existencias" disabled="true" readonly>
                                     @elseif($articulo->existencias > $articulo->stock_minimo)
-                                        <input type="text" class="col-sm-2 colm-form-md form-control" name="" id="articuloEstatus" value="En stock" placeholder="Existencias" disabled="true">
+                                        <input type="text" class="col-sm-2 colm-form-md form-control" name="" id="articuloEstatus" value="En stock" placeholder="Existencias" disabled="true" readonly>
                                     @elseif($articulo->existencias == $articulo->stock_minimo)
-                                        <input type="text" class="col-sm-2 colm-form-md form-control" name="" id="articuloEstatus" value="Stock bajo" placeholder="Existencias" disabled="true">
+                                        <input type="text" class="col-sm-2 colm-form-md form-control" name="" id="articuloEstatus" value="Stock bajo" placeholder="Existencias" disabled="true" readonly>
                                     @endif
                                     <select name="partida" class="col-sm-6 colm-form form-control" dir="ltr" id="articuloGrupo" required disabled>
                                         <option value="{{$articulo->descripcion_cuenta}}">{{$articulo->descripcion_cuenta}}</option>
@@ -226,6 +232,23 @@
         @endif
     </div>
     <script type="text/javascript" src="{{ asset('js/almacen/articulos.js') }}"></script>
-    @endsection
 @else
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-5 margin-tb">
+                <div class="row">
+                    <h2 class=" col-sm-1 text-center text-nowrap fas fa-box-open">
+                        <span style="font-family: 'Roboto';">Sin acceso</span>
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 margin-tb header">
+                <h3 class="pull-left nombre-ventana">Porfavor inicie sesión con una cuenta autorizada para tener acceso a este módulo</h3>
+            </div>
+        </div>
+        <p></p>
+    </div>
 @endif
+@endsection

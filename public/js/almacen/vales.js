@@ -225,8 +225,8 @@ function cerrarPaneles(panelExclude){
 }
 
 function llenarOrden (index) {
-	var tabla = document.getElementById(`articulos_vale${index}`);
-	var detalles = tabla.children[1].children;
+	var tabla_art = document.getElementById(`articulos_vale${index}`);
+	var detalles = tabla_art.children[1].children;
 	var tabla = document.getElementById("detalleValidar");
 	var tbody = tabla.children[1];
 	for(var i = 0; i < detalles.length; i++){

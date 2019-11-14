@@ -59,6 +59,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.
     Route::post('/vales/getDetalles', 'Almacen\ValeController@getDetalles');
     Route::post('/vales/validarOrden', 'Almacen\ValeController@validarOrden')->name('vales.validarOrden');
     Route::post('/vales/buscarArticulo','Almacen\ValeController@getArticulos');
+    Route::post('/oficinas/login','Almacen\AlmacenController@loginOficina');
+    Route::post('/oficinas/solicitud', 'Almacen\ValeController@generarVale')->name('vales.solicitar');
     Route::resource('periodo','Almacen\PeriodoController');
     Route::resource('articulos', 'Almacen\ArticuloController');
     Route::resource('partidas', 'Almacen\PartidaController');

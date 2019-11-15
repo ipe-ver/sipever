@@ -91,7 +91,9 @@
                         <div class="container-fluid" style="display: inline-block; text-align-last: center;vertical-align: middle;">
                             <select name="year"class="spinner" style="text-align-last: right;" required>
                             <option value="" dir="ltr">Año...</option>
-                            <option value="2019" dir="ltr">2019</option>
+                            @foreach($years as $year)
+                                <option value="{{ $year->anio }}" dir="ltr">{{$year->anio}}</option>
+                            @endforeach
                         </select>
                         </div>
                     </div>

@@ -100,7 +100,9 @@
                         <label class="text-nowrap col-sm-6">Año</label>
                         <select name="year" class="input-group spinner col-sm-6" style="width: 50%; text-align-last: right;" required>
                             <option value="" dir="rtl">Año...</option>
-                            <option value="2019" dir="rtl">2019</option>
+                            @foreach($years as $year)
+                                <option value="{{ $year->anio }}" dir="ltr">{{$year->anio}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>

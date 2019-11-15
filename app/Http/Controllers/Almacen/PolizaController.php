@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Almacen;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use PDF;
-
+use DB;
 class PolizaController extends Controller
 {
     /**
@@ -15,7 +15,8 @@ class PolizaController extends Controller
      */
     public function index()
     {
-        return view('almacen.polizas');
+        $years = DB::select('SELECT DISTINCT anio FROM periodos');
+        return view('almacen.polizas', compact('years'));
     }
 
     /**

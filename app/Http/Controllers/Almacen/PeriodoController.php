@@ -16,7 +16,8 @@ class PeriodoController extends Controller
      */
     public function index()
     {
-        return view('almacen.cierre_mes');
+        $years = DB::select('SELECT DISTINCT anio FROM periodos');
+        return view('almacen.cierre_mes', compact('years'));
     }
 
     /**

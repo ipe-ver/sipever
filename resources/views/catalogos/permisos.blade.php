@@ -46,8 +46,6 @@
 			var table = $('#table');
 			
 			
-			
-
 			var limpiarModal = function(){
 				tituloModal.empty()
 				bodyModal.empty()

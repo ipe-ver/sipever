@@ -164,9 +164,10 @@
                             <label id="lblYearInicio" class="col-lg-7 text-left" style="padding-right: 50px;">Año inicio</label>
                             <select id="selectYearInicio" name="yearInicio" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%; text-align-last: right;" required>
                                 <option value="" dir="ltr">Año...</option>
-                                <option value="2019" dir="rtl">2019</option>
+                                @foreach($years as $year)
+                                <option value="{{ $year->anio }}" dir="ltr">{{$year->anio}}</option>
+                            @endforeach
                             </select>
-
                         </div>
                         <div class="col-md-6">
                             <label id="lblMesFin" class="col-lg-7 text-left" style="padding-right: 50px;">Mes fin</label>
@@ -184,7 +185,9 @@
                             <label id="lblYearFin" class="col-lg-7 text-left" style="padding-right: 50px;">Año fin</label>
                             <select id="selectYearFin"  name="yearFin" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%; text-align-last: right;">
                                 <option value="" dir="ltr">Año...</option>
-                                <option value="2019" dir="rtl">2019</option>
+                                @foreach($years as $year)
+                                <option value="{{ $year->anio }}" dir="ltr">{{$year->anio}}</option>
+                            @endforeach
                             </select>
                         </div>
                     </div>
@@ -287,7 +290,9 @@
                             <label id="lblYearInicio" class="col-lg-7 text-left" style="padding-right: 50px;">Año inicio</label>
                             <select id="selectYearInicio" name="yearInicio" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%; text-align-last: right;" required>
                                 <option value="" dir="ltr">Año...</option>
-                                <option value="2019" dir="rtl">2019</option>
+                                @foreach($years as $year)
+                                    <option value="{{ $year->anio }}" dir="ltr">{{$year->anio}}</option>
+                                @endforeach
                             </select>
 
                         </div>
@@ -307,7 +312,9 @@
                             <label id="lblYearFin" class="col-lg-7 text-left" style="padding-right: 50px;">Año fin</label>
                             <select id="selectYearFin"  name="yearFin" class="input-group spinner col-md-5" style="margin-left: 20%; width: 39.5%; text-align-last: right;">
                                 <option value="" dir="ltr">Año...</option>
-                                <option value="2019" dir="rtl">2019</option>
+                                @foreach($years as $year)
+                                    <option value="{{ $year->anio }}" dir="ltr">{{$year->anio}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>

@@ -381,14 +381,14 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                DECLARE id_referencia INT DEFAULT (SELECT periodos.id_periodo 
+                DECLARE id_referencia INT DEFAULT (SELECT periodos.id_periodo
                     FROM periodos WHERE estatus = 1);
 
                 DECLARE i INT DEFAULT 1;
-                
+
                 WHILE i <= (SELECT COUNT(id_periodo) FROM inventario_inicial_final WHERE inventario_inicial_final.id_periodo = id_referencia) DO
-                    UPDATE inventario_inicial_final as t1 INNER JOIN cat_articulos ON t1.id_articulo = cat_articulos.id SET t1.updated_at = NOW(), 
-                        t1.existencias = cat_articulos.existencias, 
+                    UPDATE inventario_inicial_final as t1 INNER JOIN cat_articulos ON t1.id_articulo = cat_articulos.id SET t1.updated_at = NOW(),
+                        t1.existencias = cat_articulos.existencias,
                         t1.estatus = cat_articulos.estatus,
                         t1.precio_promedio = cat_articulos.precio_unitario
                     WHERE t1.id_periodo = id_referencia AND cat_articulos.id = i;
@@ -434,16 +434,16 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             BEGIN
                 INSERT INTO polizas (id_periodo, poliza, numero_poliza, estatus, created_at)
                     VALUES ((SELECT periodos.id_periodo FROM periodos WHERE periodos.estatus = 1), poliza, numero_poliza, estatus, NOW());
-                
-                UPDATE consumos SET consumos.id_poliza = 
-                    (SELECT polizas.id_poliza FROM polizas WHERE polizas.id_periodo = 
-                    (SELECT periodos.id_periodo FROM periodos WHERE periodos.estatus = 1)), 
+
+                UPDATE consumos SET consumos.id_poliza =
+                    (SELECT polizas.id_poliza FROM polizas WHERE polizas.id_periodo =
+                    (SELECT periodos.id_periodo FROM periodos WHERE periodos.estatus = 1)),
                     updated_at = NOW()
                 WHERE consumos.id_periodo = (SELECT periodos.id_periodo FROM periodos WHERE periodos.estatus = 1);
-                    
-                UPDATE compras SET compras.id_poliza = 
-                    (SELECT polizas.id_poliza FROM polizas WHERE polizas.id_periodo = 
-                    (SELECT periodos.id_periodo FROM periodos WHERE periodos.estatus = 1)), 
+
+                UPDATE compras SET compras.id_poliza =
+                    (SELECT polizas.id_poliza FROM polizas WHERE polizas.id_periodo =
+                    (SELECT periodos.id_periodo FROM periodos WHERE periodos.estatus = 1)),
                     updated_at = NOW()
                 WHERE compras.id_periodo = (SELECT periodos.id_periodo FROM periodos WHERE periodos.estatus = 1);
             END
@@ -470,16 +470,16 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
                 IF @condicion1 = 1 THEN
                     SELECT cuenta.nombre as grupo, articulo.descripcion as descripcion, inventario.cant_inicial as cantidad_inicial,
-                        articulo.existencias as existencias_actuales, periodo.no_mes as mes, periodo.anio as anio 
-                    FROM inventario_inicial_final inventario 
+                        articulo.existencias as existencias_actuales, periodo.no_mes as mes, periodo.anio as anio
+                    FROM inventario_inicial_final inventario
                     INNER JOIN cat_articulos articulo ON inventario.id_articulo = articulo.id
                     INNER JOIN cat_cuentas_contables cuenta ON articulo.id_cuenta = cuenta.id
                     INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
                     WHERE periodo.no_mes = mes AND periodo.anio = anio AND cuenta.nombre = grupo;
-                ELSE 
+                ELSE
                     SELECT cuenta.nombre as grupo, articulo.descripcion as descripcion, inventario.cant_inicial as cantidad_inicial,
-                        inventario.existencias as existencias_actuales, periodo.no_mes as mes, periodo.anio as anio 
-                    FROM inventario_inicial_final inventario 
+                        inventario.existencias as existencias_actuales, periodo.no_mes as mes, periodo.anio as anio
+                    FROM inventario_inicial_final inventario
                     INNER JOIN cat_articulos articulo ON inventario.id_articulo = articulo.id
                     INNER JOIN cat_cuentas_contables cuenta ON articulo.id_cuenta = cuenta.id
                     INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
@@ -522,10 +522,10 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 ELSE
                     SELECT @condicion1 + @condicion2 + @condicion3 AS result;
                 END IF;
-                
+
             END;
         ');
-        
+
         /**Prodedimiento almacenado para obtener todas las oficinas de cierto departamento
          * Recibe como parametro la ubpp del departamento
          */
@@ -540,15 +540,15 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SELECT cat_oficinas.ubpp, cat_oficinas.oficina, cat_oficinas.descripcion, cat_oficinas.subdir 
-                FROM cat_oficinas 
+                SELECT cat_oficinas.ubpp, cat_oficinas.oficina, cat_oficinas.descripcion, cat_oficinas.subdir
+                FROM cat_oficinas
                 WHERE oficina > 0
                 AND ubpp = ubpp_oficina;
             END
         ');
 
         /**Prodedimiento almacenado para obtener todos los departamentos
-         * 
+         *
          */
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_obtener_departamentos;
@@ -584,7 +584,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 IN `descripcion_oficina` VARCHAR(191),
                 IN `tipo_movimiento` INT,
                 IN `folio` VARCHAR(191),
-                OUT `clave` INT 
+                OUT `clave` INT
             )
             LANGUAGE SQL
             NOT DETERMINISTIC
@@ -594,15 +594,15 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.estatus = 1);
 
                 INSERT INTO c_pedido_consumo (id_oficina, id_periodo, folio, tipo_movimiento, fecha_movimiento, created_at) VALUES
-                    ((SELECT id FROM cat_oficinas WHERE cat_oficinas.descripcion = descripcion_oficina), 
+                    ((SELECT id FROM cat_oficinas WHERE cat_oficinas.descripcion = descripcion_oficina),
                     @periodo, folio, tipo_movimiento, CURDATE(), NOW());
 
-                SET clave := (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = 
-                    (SELECT MAX(id_pedido_consumo) FROM c_pedido_consumo WHERE c_pedido_consumo.id_oficina = 
+                SET clave := (SELECT id_pedido_consumo FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo =
+                    (SELECT MAX(id_pedido_consumo) FROM c_pedido_consumo WHERE c_pedido_consumo.id_oficina =
                     (SELECT id FROM cat_oficinas WHERE cat_oficinas.descripcion = descripcion_oficina)));
             END
         ');
-        
+
         /**Procedimiento almacenado para el almacenamiento de los articulos de cada pedido. Este paso va despúes de la generación del vale
          * Recibe como parametros el id del pedido generado (obtenido del sp_vale_consumo), la clave del articulo y la cantidad solicitada
          * Se pueden almacenar diversos articulos de diversas partidas con el mismo id del pedido
@@ -620,12 +620,12 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                INSERT INTO d_pedido_consumo (id_pedido_consumo, id_articulo, cantidad, no_folio, created_at) VALUES 
-                    (id_pedido, (SELECT id FROM cat_articulos WHERE cat_articulos.clave = clave), cantidad, 
+                INSERT INTO d_pedido_consumo (id_pedido_consumo, id_articulo, cantidad, no_folio, created_at) VALUES
+                    (id_pedido, (SELECT id FROM cat_articulos WHERE cat_articulos.clave = clave), cantidad,
                     (SELECT folio FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido), NOW());
             END
         ');
-        
+
         /**Procedimiento almacenado que almacena el consumo hacia almacen. Es el primer paso para validar un vale
          * Recibe como parametro el id del vale generado.
          */
@@ -646,15 +646,15 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @poliza := (SELECT id_poliza FROM polizas WHERE id_periodo = @periodo);
                 SET @folio := (SELECT folio FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido);
 
-                INSERT INTO consumos (id_oficina, id_poliza, id_periodo, id_pedido_consumo, folio, fecha_movimiento, created_at) 
+                INSERT INTO consumos (id_oficina, id_poliza, id_periodo, id_pedido_consumo, folio, fecha_movimiento, created_at)
                 VALUES (@oficina, @poliza, @periodo, id_pedido, @folio, NOW(), NOW());
 
                 SET clave := (SELECT id_consumo FROM consumos WHERE consumos.id_pedido_consumo = id_pedido);
             END
         ');
-        
+
         /**Procedimiento almacenado para el registro de los detalles sobre los artículos que se van a entregar. Esta es la validación del vale.
-         * Recibe como parametros el id del consumo generado (obtenido del sp_consumo), la clave del artículo y la cantidad que se va a entregar. 
+         * Recibe como parametros el id del consumo generado (obtenido del sp_consumo), la clave del artículo y la cantidad que se va a entregar.
          */
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_detalles_consumo;
@@ -669,12 +669,12 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                
+
                 SET @id_articulo := (SELECT id FROM cat_articulos WHERE cat_articulos.clave = clave);
                 SET @nombre_articulo := (SELECT descripcion FROM cat_articulos WHERE cat_articulos.id = @id_articulo);
                 SET @precio := (SELECT precio_unitario FROM cat_articulos WHERE cat_articulos.id = @id_articulo);
 
-                INSERT INTO detalles (id_consumo, id_articulo, tipo_movimiento, descripcion, cantidad, precio_unitario, subtotal, created_at) 
+                INSERT INTO detalles (id_consumo, id_articulo, tipo_movimiento, descripcion, cantidad, precio_unitario, subtotal, created_at)
                 VALUES (id_consumo, @id_articulo, 1, @nombre_articulo, cantidad, @precio, cantidad * @precio, NOW());
 
                 SET @existencias := (SELECT cat_articulos.existencias FROM cat_articulos WHERE cat_articulos.id = @id_articulo);
@@ -682,7 +682,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 UPDATE cat_articulos SET cat_articulos.existencias = (@existencias-cantidad) WHERE cat_articulos.id = @id_articulo;
             END
         ');
-        
+
         /**Procedimiento almacenado para el almacenamiento de los articulos de cada pedido. Este paso va despúes de guardar los articulos a comprar.
          * Este es para la parte de las compras directas
          * Recibe como parametros el id del pedido generado (obtenido del sp_vale_consumo), la clave del articulo y la cantidad solicitada
@@ -703,36 +703,37 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             BEGIN
                 INSERT INTO cat_articulos_compra (descripcion) VALUES (descripcion);
 
-                INSERT INTO d_pedido_compra (id_pedido_compra, id_articulo, cantidad, no_folio, created_at) VALUES 
-                    (id_pedido, (SELECT MAX(id) FROM cat_articulos_compra WHERE cat_articulos_compra.descripcion = descripcion), cantidad, 
+                INSERT INTO d_pedido_compra (id_pedido_compra, id_articulo, cantidad, no_folio, created_at) VALUES
+                    (id_pedido, (SELECT MAX(id) FROM cat_articulos_compra WHERE cat_articulos_compra.descripcion = descripcion), cantidad,
                     (SELECT folio FROM c_pedido_consumo WHERE c_pedido_consumo.id_pedido_consumo = id_pedido), NOW());
             END
         ');
 
         /**Procedimiento almacenado para actualizar el estado genral de un vale, si se recibió o no
-         * 
+         *
          */
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_actualizar_recibo_vale;
 
             CREATE PROCEDURE `sp_actualizar_recibo_vale`(
-                IN `id_pedido` INT
+                IN `id_pedido` INT,
+                IN `extemporaneo` INT
             )
             LANGUAGE SQL
             NOT DETERMINISTIC
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                UPDATE c_pedido_consumo SET recibido = 1, fecha_recepcion = NOW() WHERE c_pedido_consumo.id_pedido_consumo = id_pedido;
+                UPDATE c_pedido_consumo SET recibido = 1, extemporaneo = extemporaneo, fecha_recepcion = NOW() WHERE c_pedido_consumo.id_pedido_consumo = id_pedido;
             END
         ');
-        
+
         /**Procedimiento almacenado para los detalles de la compra
          * Recibe como parametros la clave de la compra, la descripción del artículo comprado, cantidad comprada y precio unitario.
          */
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_detalles_compra;
-            
+
             CREATE PROCEDURE `sp_detalles_compra`(
                 IN `clave` INT,
                 IN `descripcion` VARCHAR(191),
@@ -746,14 +747,14 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             BEGIN
                 SET @i := (SELECT cat_articulos.id FROM cat_articulos WHERE cat_articulos.descripcion = descripcion);
                 SET @iva := (SELECT iva FROM compras WHERE compras.id_compra = clave);
-                    
-                INSERT INTO detalles (id_compra, id_articulo, tipo_movimiento, descripcion, cantidad, precio_unitario, subtotal, total, created_at) 
-                VALUES (clave, @i, 3, descripcion, cantidad, precio_unitario, cantidad * precio_unitario, 
+
+                INSERT INTO detalles (id_compra, id_articulo, tipo_movimiento, descripcion, cantidad, precio_unitario, subtotal, total, created_at)
+                VALUES (clave, @i, 3, descripcion, cantidad, precio_unitario, cantidad * precio_unitario,
                 (((@iva / 100) * (cantidad * precio_unitario)) + (cantidad * precio_unitario)), NOW());
 
                 SET @existencias := (SELECT cat_articulos.existencias FROM cat_articulos WHERE cat_articulos.id = @i);
                 SET @precio_unitario := (SELECT cat_articulos.precio_unitario FROM cat_articulos WHERE cat_articulos.id = @i);
-                
+
                 UPDATE cat_articulos SET cat_articulos.precio_unitario = (((@existencias*@precio_unitario)+(cantidad*precio_unitario))/(@existencias+cantidad)),
                     cat_articulos.existencias = (@existencias+cantidad) WHERE cat_articulos.id = @i;
             END
@@ -789,7 +790,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @proveedor := (SELECT cat_proveedores.id FROM cat_proveedores WHERE cat_proveedores.nombre = nombre_proveedor);
 
                 INSERT INTO compras (id_periodo, id_proveedor, fecha_movimiento, no_factura, fecha_factura, iva, total, created_at)
-                VALUES (@periodo, @proveedor, fecha_movimiento, no_factura, fecha_facturacion, iva, 
+                VALUES (@periodo, @proveedor, fecha_movimiento, no_factura, fecha_facturacion, iva,
                     (((iva/100)*subtotal)+subtotal), NOW());
 
                 SET clave := (SELECT id_compra FROM compras WHERE compras.no_factura = no_factura);
@@ -801,15 +802,16 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
          */
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_get_vales;
-            
+
             CREATE PROCEDURE `sp_get_vales`()
             LANGUAGE SQL
             NOT DETERMINISTIC
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SELECT folio AS "folio", tipo_movimiento AS "tipo", (SELECT cat_oficinas.descripcion FROM cat_oficinas WHERE cat_oficinas.id = c_pedido_consumo.id_oficina) AS "oficina", 
-                    fecha_movimiento AS "fecha" FROM c_pedido_consumo;
+                SELECT folio AS "folio", tipo_movimiento AS "tipo", (SELECT cat_oficinas.descripcion FROM cat_oficinas WHERE cat_oficinas.id = c_pedido_consumo.id_oficina) AS "oficina",
+                    fecha_movimiento AS "fecha" FROM c_pedido_consumo
+                    WHERE c_pedido_consumo.recibido = 0;
             END
         ');
 
@@ -850,7 +852,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
 
         /** *******************************REPORTES********************************************* */
-        
+
 
 
         /**Procedimiento almacenado para obtener el reporte "REPORTE DE CONSUMOS POR DEPARTAMENTO CORRESPONDIENTE AL MES DE X DEL X"
@@ -878,7 +880,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                 SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
                 SET @aux_periodos := @periodo_min;
-                    
+
                 myloop: WHILE IFNULL(@periodo_min, 0) = 0 DO
                     SET @mes_min := @mes_min + 1;
                     IF @mes_min > @mes_max THEN
@@ -887,7 +889,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                     END IF;
                 END WHILE myloop;
-                
+
                 myloop: WHILE IFNULL(@periodo_max, 0) = 0 DO
                     SET @mes_max := @mes_max - 1;
                     IF @mes_max < @mes_min THEN
@@ -904,18 +906,18 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     SET @id_oficina := (SELECT id FROM cat_oficinas WHERE cat_oficinas.ubpp = ubpp AND cat_oficinas.descripcion = oficina);
                     SET @num_cuentas := (SELECT COUNT(sscta) FROM cat_cuentas_contables);
                     SET @aux := 1;
-                    
+
                     WHILE @aux <= @num_cuentas DO
-                        SET @condicion3 := (SELECT IF ((SELECT COUNT(articulo.clave) 
+                        SET @condicion3 := (SELECT IF ((SELECT COUNT(articulo.clave)
                             FROM cat_articulos articulo
                             INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
                             INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
                             INNER JOIN c_pedido_consumo pedido ON pedido.id_pedido_consumo = consumo.id_pedido_consumo
                             INNER JOIN periodos periodo ON periodo.id_periodo = consumo.id_periodo
                             WHERE articulo.id_cuenta = @aux AND pedido.id_oficina = @id_oficina AND consumo.id_periodo BETWEEN @periodo_min AND @periodo_max) > 0, 1, 0));
-                            
+
                         IF @condicion3 = 1 THEN
-                            SELECT cuenta.sscta AS "PARTIDA", cuenta.nombre AS "NOMBRE" ,articulo.clave AS codificacion, articulo.descripcion AS descripcion, consumo.folio AS folio, 
+                            SELECT cuenta.sscta AS "PARTIDA", cuenta.nombre AS "NOMBRE" ,articulo.clave AS codificacion, articulo.descripcion AS descripcion, consumo.folio AS folio,
                                 unidad.descripcion AS unidad, detalle.cantidad AS cantidad, FORMAT(articulo.precio_unitario, 2) AS costo,
                                 FORMAT(detalle.cantidad * articulo.precio_unitario, 2) AS importe
                             FROM consumos consumo
@@ -926,23 +928,23 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                             INNER JOIN cat_unidades_almacen unidad ON unidad.id = articulo.id_unidad
                             INNER JOIN cat_cuentas_contables cuenta ON cuenta.id = articulo.id_cuenta
                             WHERE articulo.id_cuenta = @aux AND pedido.id_oficina = @id_oficina AND consumo.id_periodo BETWEEN @periodo_min AND @periodo_max;
-                            
-                            SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS", 
+
+                            SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS",
                                         (SELECT SUM(FORMAT(detalles.cantidad * cat_articulos.precio_unitario, 2)) FROM detalles INNER JOIN cat_articulos ON
-                                        detalles.id_articulo = cat_articulos.id INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo 
+                                        detalles.id_articulo = cat_articulos.id INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
                                         WHERE cat_articulos.id_cuenta = @aux AND consumos.id_periodo = @periodo AND consumos.id_oficina = @id_oficina) AS "IMPORTE"
                             FROM consumos consumo
                             INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
                             INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
                             WHERE articulo.id_cuenta = @aux AND consumo.id_oficina = @id_oficina AND consumo.id_periodo BETWEEN @periodo_min AND @periodo_max;
-                            
+
                         END IF;
                         SET @aux := @aux + 1;
                     END WHILE;
-                    
-                    SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS", 
+
+                    SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS",
                                 FORMAT((SELECT SUM(FORMAT(detalles.cantidad * cat_articulos.precio_unitario, 2)) FROM detalles INNER JOIN cat_articulos ON
-                                detalles.id_articulo = cat_articulos.id INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo 
+                                detalles.id_articulo = cat_articulos.id INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
                                 WHERE consumos.id_oficina = @id_oficina AND consumos.id_periodo BETWEEN @periodo_min AND @periodo_max),2) AS "IMPORTE "
                     FROM consumos consumo
                     INNER JOIN detalles detalle ON detalle.id_consumo = consumo.id_consumo
@@ -974,7 +976,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                 SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
                 SET @aux_periodos := @periodo_min;
-                    
+
                 myloop: WHILE IFNULL(@periodo_min, 0) = 0 DO
                     SET @mes_min := @mes_min + 1;
                     IF @mes_min > @mes_max THEN
@@ -983,7 +985,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                     END IF;
                 END WHILE myloop;
-                
+
                 myloop: WHILE IFNULL(@periodo_max, 0) = 0 DO
                     SET @mes_max := @mes_max - 1;
                     IF @mes_max < @mes_min THEN
@@ -1000,32 +1002,32 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     SET @ubpp := (SELECT GROUP_CONCAT(DISTINCT(ubpp)) FROM cat_oficinas);
                     SET @num_ubpp := (SELECT COUNT(DISTINCT(ubpp)) FROM cat_oficinas);
                     SET @aux_ubpp := 1;
-                    
+
                     WHILE @aux_ubpp <= @num_ubpp DO
                         SET @ubpp_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@ubpp, ",", @aux_ubpp), ",", -1));
                         SET @oficina := (SELECT GROUP_CONCAT(DISTINCT(descripcion)) FROM cat_oficinas WHERE ubpp = @ubpp_actual);
                         SET @num_oficinas := (SELECT COUNT(id) FROM cat_oficinas WHERE ubpp = @ubpp_actual);
                         SET @aux_oficina := 1;
-                        
+
                         WHILE @aux_oficina <= @num_oficinas DO
                             SET @oficina_actual := (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(@oficina, ",", @aux_oficina), ",", -1));
                             SET @id_oficina := (SELECT id FROM cat_oficinas WHERE descripcion = @oficina_actual);
                             SET @condicion2 := (SELECT IF((SELECT COUNT(id_consumo) FROM consumos WHERE id_oficina = @id_oficina AND id_periodo BETWEEN @periodo_min AND @periodo_max) > 0, 1, 0));
-                            
+
                             IF @condicion2 = 1 THEN
                                 SELECT @ubpp_actual AS "AREA", (SELECT descripcion FROM cat_oficinas WHERE ubpp = @ubpp_actual AND oficina = 0) AS "DEPARTAMENTO", @oficina_actual AS "OFICINA";
                                 CALL sp_reporte_consumos_oficina(@ubpp_actual, @oficina_actual, @mes_min, @mes_max, anio);
                             END IF;
-                            
+
                             SET @aux_oficina := @aux_oficina + 1;
                         END WHILE;
-                        
-                        SET @condicion3 := (SELECT IF((SELECT COUNT(id_consumo) FROM consumos 
+
+                        SET @condicion3 := (SELECT IF((SELECT COUNT(id_consumo) FROM consumos
                                     INNER JOIN cat_oficinas ON cat_oficinas.id = consumos.id_oficina
                                     WHERE cat_oficinas.ubpp = @ubpp_actual AND consumos.id_periodo BETWEEN @periodo_min AND @periodo_max) > 0, 1, 0));
-                        
+
                         IF @condicion3 = 1 THEN
-                            SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS", 
+                            SELECT COUNT(articulo.id) AS "CONSUMOS", SUM(detalle.cantidad) AS "ARTICULOS",
                                             FORMAT((SELECT SUM(FORMAT(detalles.cantidad * cat_articulos.precio_unitario, 2)) FROM detalles INNER JOIN cat_articulos ON
                                             detalles.id_articulo = cat_articulos.id INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo INNER JOIN cat_oficinas
                                             ON cat_oficinas.id = consumos.id_oficina
@@ -1036,7 +1038,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                                 INNER JOIN cat_articulos articulo ON articulo.id = detalle.id_articulo
                                 WHERE cat_oficinas.ubpp = @ubpp_actual AND consumos.id_periodo BETWEEN @periodo_min AND @periodo_max;
                         END IF;
-                        
+
                         SET @aux_ubpp := @aux_ubpp + 1;
                     END WHILE;
 
@@ -1045,7 +1047,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 END IF;
             END
         ');
-        
+
         /**Procedimiento almacenado para la obtención de datos sobre el reporte "REPORTE FINAL DE EXISTENCIAS CORRESPONDIENTE AL MES DE X DEL X"
          * Recibe como parametros el mes, el año y la partida a la cual se desee obtener el reporte final de existencias.
          */
@@ -1069,7 +1071,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                 SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
                 SET @aux_periodos := @periodo_min;
-                    
+
                 myloop: WHILE IFNULL(@periodo_min, 0) = 0 DO
                     SET @mes_min := @mes_min + 1;
                     IF @mes_min > @mes_max THEN
@@ -1078,7 +1080,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                     END IF;
                 END WHILE myloop;
-                
+
                 myloop: WHILE IFNULL(@periodo_max, 0) = 0 DO
                     SET @mes_max := @mes_max - 1;
                     IF @mes_max < @mes_min THEN
@@ -1098,34 +1100,34 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         SET @condicion2 := (SELECT IF((SELECT periodos.estatus FROM periodos WHERE periodos.no_mes = @aux_mes AND periodos.anio = anio) = 1,1,0));
 
                         IF @condicion2 = 1 THEN
-                            
-                            SELECT partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", articulos.clave AS "CODIFICACION", articulos.descripcion AS "DESCRIPCION", 
+
+                            SELECT partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", articulos.clave AS "CODIFICACION", articulos.descripcion AS "DESCRIPCION",
                                 unidades.descripcion AS "UNIDAD", articulos.existencias AS "CANT.",
                                 articulos.precio_unitario AS "COSTO", articulos.precio_unitario * articulos.existencias AS "IMPORTE"
-                            FROM cat_articulos articulos 
+                            FROM cat_articulos articulos
                             INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
                             INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
                             WHERE partidas.nombre = partida;
-                        
-                            SELECT @aux_mes AS "MES", partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", COUNT(*) AS "CODIFICACIONES", 
-                                SUM(articulos.existencias) AS "CANTIDAD DE ARTICULOS", SUM(articulos.precio_unitario * articulos.existencias) AS "SUBTOTAL" 
+
+                            SELECT @aux_mes AS "MES", partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", COUNT(*) AS "CODIFICACIONES",
+                                SUM(articulos.existencias) AS "CANTIDAD DE ARTICULOS", SUM(articulos.precio_unitario * articulos.existencias) AS "SUBTOTAL"
                             FROM cat_articulos articulos
                             INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
                             WHERE partidas.nombre = partida;
 
-                        ELSE 
-                            
-                            SELECT partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", articulos.clave AS "CODIFICACION", articulos.descripcion AS "DESCRIPCION", 
+                        ELSE
+
+                            SELECT partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", articulos.clave AS "CODIFICACION", articulos.descripcion AS "DESCRIPCION",
                                 unidades.descripcion AS "UNIDAD", inventario.existencias AS "CANT.",
                                 inventario.precio_promedio AS COSTO, inventario.precio_promedio * inventario.existencias AS "IMPORTE"
-                            FROM cat_articulos articulos 
+                            FROM cat_articulos articulos
                             INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
                             INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
                             INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
                             INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
                             WHERE periodo.no_mes = @aux_mes AND periodo.anio = anio AND partidas.nombre = partida;
-                        
-                            SELECT @aux_mes AS "MES", partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", COUNT(*) AS "CODIFICACIONES", 
+
+                            SELECT @aux_mes AS "MES", partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", COUNT(*) AS "CODIFICACIONES",
                                 SUM(inventario.existencias) AS "CANTIDAD DE ARTICULOS", SUM(inventario.precio_promedio * inventario.existencias) AS "SUBTOTAL"
                             FROM cat_articulos articulos
                             INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
@@ -1163,7 +1165,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                 SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
                 SET @aux_periodos := @periodo_min;
-                    
+
                 myloop: WHILE IFNULL(@periodo_min, 0) = 0 DO
                     SET @mes_min := @mes_min + 1;
                     IF @mes_min > @mes_max THEN
@@ -1172,7 +1174,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                     END IF;
                 END WHILE myloop;
-                
+
                 myloop: WHILE IFNULL(@periodo_max, 0) = 0 DO
                     SET @mes_max := @mes_max - 1;
                     IF @mes_max < @mes_min THEN
@@ -1198,20 +1200,20 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
                             WHILE @i <= @limite DO
 
-                                SELECT partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", articulos.clave AS CODIFICACION, articulos.descripcion AS DESCRIPCION, 
+                                SELECT partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", articulos.clave AS CODIFICACION, articulos.descripcion AS DESCRIPCION,
                                     unidades.descripcion AS UNIDAD, articulos.existencias AS CANT,
                                     articulos.precio_unitario AS COSTO, articulos.precio_unitario * articulos.existencias AS IMPORTE
-                                FROM cat_articulos articulos 
+                                FROM cat_articulos articulos
                                 INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
                                 INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
                                 WHERE partidas.id = @i;
-                            
-                                SELECT @aux_mes AS "MES", partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", COUNT(*) AS "CODIFICACIONES", SUM(articulos.existencias) AS "CANTIDAD DE ARTICULOS", 
-                                    SUM(articulos.precio_unitario * articulos.existencias) AS "SUBTOTAL" 
+
+                                SELECT @aux_mes AS "MES", partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", COUNT(*) AS "CODIFICACIONES", SUM(articulos.existencias) AS "CANTIDAD DE ARTICULOS",
+                                    SUM(articulos.precio_unitario * articulos.existencias) AS "SUBTOTAL"
                                 FROM cat_articulos articulos
                                 INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
                                 WHERE partidas.id = @i;
-                                
+
                                 SET @i = @i + 1;
                             END WHILE;
                             SELECT COUNT(*) AS "CODIFICACIONES", SUM(articulos.existencias) AS "CANTIDAD DE ARTICULOS", SUM(articulos.precio_unitario * articulos.existencias) AS "SUBTOTAL"
@@ -1221,26 +1223,26 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 
                             WHILE @i <= @limite DO
 
-                                SELECT partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", articulos.clave AS "CODIFICACION", articulos.descripcion AS "DESCRIPCION", unidades.descripcion AS "UNIDAD", 
+                                SELECT partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", articulos.clave AS "CODIFICACION", articulos.descripcion AS "DESCRIPCION", unidades.descripcion AS "UNIDAD",
                                     inventario.existencias AS "CANT.", inventario.precio_promedio AS "COSTO", inventario.precio_promedio * inventario.existencias AS "IMPORTE"
-                                FROM cat_articulos articulos 
+                                FROM cat_articulos articulos
                                 INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
                                 INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
                                 INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
                                 INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
                                 WHERE periodo.no_mes = @aux_mes AND periodo.anio = anio AND partidas.id = @i;
-                            
-                                SELECT @aux_mes AS "MES", partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", COUNT(*) AS "CODIFICACIONES", SUM(inventario.existencias) AS "CANTIDAD DE ARTICULOS", 
-                                    SUM(inventario.precio_promedio * inventario.existencias) AS "SUBTOTAL" 
+
+                                SELECT @aux_mes AS "MES", partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", COUNT(*) AS "CODIFICACIONES", SUM(inventario.existencias) AS "CANTIDAD DE ARTICULOS",
+                                    SUM(inventario.precio_promedio * inventario.existencias) AS "SUBTOTAL"
                                 FROM cat_articulos articulos
                                 INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
                                 INNER JOIN periodos periodo ON inventario.id_periodo = periodo.id_periodo
                                 INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
                                 WHERE periodo.no_mes = @aux_mes AND periodo.anio = anio AND partidas.id = @i;
-                                
+
                                 SET @i = @i + 1;
                             END WHILE;
-                            SELECT @aux_mes AS "MES", COUNT(*) AS "CODIFICACIONES", SUM(inventario.existencias) AS "CANTIDAD DE ARTICULOS", 
+                            SELECT @aux_mes AS "MES", COUNT(*) AS "CODIFICACIONES", SUM(inventario.existencias) AS "CANTIDAD DE ARTICULOS",
                                 SUM(inventario.precio_promedio * inventario.existencias) AS "SUBTOTAL"
                             FROM inventario_inicial_final inventario
                             WHERE inventario.id_periodo = (SELECT periodos.id_periodo FROM periodos WHERE periodos.no_mes = @aux_mes AND periodos.anio = anio);
@@ -1269,19 +1271,19 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             BEGIN
                 SELECT tb1.sscta AS "SSCTA", tb1.partida AS "PARTIDA", tb1.cod AS "CODIF.", tb1.descripcion AS "DESCRIPCION", tb1.unidad AS "UNIDAD", tb2.ene AS "ENE", tb3.feb AS "FEB",
                     tb4.mar AS "MAR", tb5.abr AS "ABR", tb6.may AS "MAY", tb7.jun AS "JUN", tb8.jul AS "JUL", tb9.agos AS "AGOS", tb10.sept AS "SEPT", tb11.octu AS "OCT", tb12.nov AS "NOV", tb13.dic AS "DIC"
-                FROM 
+                FROM
                 (
-                    SELECT cat_cuentas_contables.sscta AS sscta, cat_cuentas_contables.nombre AS partida, cat_articulos.clave AS cod, cat_articulos.descripcion AS descripcion, 
-                        cat_unidades_almacen.descripcion AS unidad 
+                    SELECT cat_cuentas_contables.sscta AS sscta, cat_cuentas_contables.nombre AS partida, cat_articulos.clave AS cod, cat_articulos.descripcion AS descripcion,
+                        cat_unidades_almacen.descripcion AS unidad
                     FROM cat_articulos
                     INNER JOIN cat_unidades_almacen ON cat_articulos.id_unidad = cat_unidades_almacen.id
                     INNER JOIN cat_cuentas_contables ON cat_cuentas_contables.id = cat_articulos.id_cuenta
-                )tb1 INNER JOIN 
+                )tb1 INNER JOIN
                 (
-                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion, 
+                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion,
                         IFNULL((SELECT CASE
                             WHEN (1 >= mes_inicio AND 1 <= mes_fin) AND 1 = MONTH(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE articulo.id = arti.id)
-                            WHEN (1 >= mes_inicio AND 1 <= mes_fin) AND 1 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo = 
+                            WHEN (1 >= mes_inicio AND 1 <= mes_fin) AND 1 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo =
                                 (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 1 AND periodos.anio = anio) AND invi.id_articulo = inv.id_articulo)
                             ELSE 0
                         END),0) AS ene
@@ -1291,10 +1293,10 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
                 )tb2 ON tb1.cod = tb2.clave INNER JOIN
                 (
-                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion, 
+                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion,
                         IFNULL((SELECT CASE
                             WHEN (2 >= mes_inicio AND 2 <= mes_fin) AND 2 = MONTH(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE articulo.id = arti.id)
-                            WHEN (2 >= mes_inicio AND 2 <= mes_fin) AND 2 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo = 
+                            WHEN (2 >= mes_inicio AND 2 <= mes_fin) AND 2 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo =
                                 (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 2 AND periodos.anio = anio) AND invi.id_articulo = inv.id_articulo)
                             ELSE 0
                         END),0) AS feb
@@ -1304,10 +1306,10 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
                 )tb3 ON tb1.cod = tb3.clave INNER JOIN
                 (
-                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion, 
+                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion,
                         IFNULL((SELECT CASE
                             WHEN (3 >= mes_inicio AND 3 <= mes_fin) AND 3 = MONTH(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE articulo.id = arti.id)
-                            WHEN (3 >= mes_inicio AND 3 <= mes_fin) AND 3 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo = 
+                            WHEN (3 >= mes_inicio AND 3 <= mes_fin) AND 3 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo =
                                 (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 3 AND periodos.anio = anio) AND invi.id_articulo = inv.id_articulo)
                             ELSE 0
                         END),0) AS mar
@@ -1315,12 +1317,12 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_unidades_almacen unidad ON articulo.id_unidad = unidad.id
                     INNER JOIN inventario_inicial_final inv ON articulo.id = inv.id_articulo
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
-                )tb4 ON tb1.cod = tb4.clave INNER JOIN 
+                )tb4 ON tb1.cod = tb4.clave INNER JOIN
                 (
-                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion, 
+                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion,
                         IFNULL((SELECT CASE
                             WHEN (4 >= mes_inicio AND 4 <= mes_fin) AND 4 = MONTH(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE articulo.id = arti.id)
-                            WHEN (4 >= mes_inicio AND 4 <= mes_fin) AND 4 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo = 
+                            WHEN (4 >= mes_inicio AND 4 <= mes_fin) AND 4 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo =
                                 (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 4 AND periodos.anio = anio) AND invi.id_articulo = inv.id_articulo)
                             ELSE 0
                         END),0) AS abr
@@ -1330,10 +1332,10 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
                 )tb5 ON tb1.cod = tb5.clave INNER JOIN
                 (
-                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion, 
+                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion,
                         IFNULL((SELECT CASE
                             WHEN (5 >= mes_inicio AND 5 <= mes_fin) AND 5 = MONTH(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE articulo.id = arti.id)
-                            WHEN (5 >= mes_inicio AND 5 <= mes_fin) AND 5 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo = 
+                            WHEN (5 >= mes_inicio AND 5 <= mes_fin) AND 5 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo =
                                 (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 5 AND periodos.anio = anio) AND invi.id_articulo = inv.id_articulo)
                             ELSE 0
                         END),0) AS may
@@ -1343,10 +1345,10 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
                 )tb6 ON tb1.cod = tb6.clave INNER JOIN
                 (
-                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion, 
+                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion,
                         IFNULL((SELECT CASE
                             WHEN (6 >= mes_inicio AND 6 <= mes_fin) AND 6 = MONTH(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE articulo.id = arti.id)
-                            WHEN (6 >= mes_inicio AND 6 <= mes_fin) AND 6 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo = 
+                            WHEN (6 >= mes_inicio AND 6 <= mes_fin) AND 6 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo =
                                 (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 6 AND periodos.anio = anio) AND invi.id_articulo = inv.id_articulo)
                             ELSE 0
                         END),0) AS jun
@@ -1354,12 +1356,12 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_unidades_almacen unidad ON articulo.id_unidad = unidad.id
                     INNER JOIN inventario_inicial_final inv ON articulo.id = inv.id_articulo
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
-                )tb7 ON tb1.cod = tb7.clave INNER JOIN 
+                )tb7 ON tb1.cod = tb7.clave INNER JOIN
                 (
-                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion, 
+                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion,
                         IFNULL((SELECT CASE
                             WHEN (7 >= mes_inicio AND 7 <= mes_fin) AND 7 = MONTH(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE articulo.id = arti.id)
-                            WHEN (7 >= mes_inicio AND 7 <= mes_fin) AND 7 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo = 
+                            WHEN (7 >= mes_inicio AND 7 <= mes_fin) AND 7 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo =
                                 (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 7 AND periodos.anio = anio) AND invi.id_articulo = inv.id_articulo)
                             ELSE 0
                         END),0) AS jul
@@ -1369,10 +1371,10 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
                 )tb8 ON tb1.cod = tb8.clave INNER JOIN
                 (
-                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion, 
+                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion,
                         IFNULL((SELECT CASE
                             WHEN (8 >= mes_inicio AND 8 <= mes_fin) AND 8 = MONTH(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE articulo.id = arti.id)
-                            WHEN (8 >= mes_inicio AND 8 <= mes_fin) AND 8 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo = 
+                            WHEN (8 >= mes_inicio AND 8 <= mes_fin) AND 8 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo =
                                 (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 8 AND periodos.anio = anio) AND invi.id_articulo = inv.id_articulo)
                             ELSE 0
                         END),0) AS agos
@@ -1382,10 +1384,10 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
                 )tb9 ON tb1.cod = tb9.clave INNER JOIN
                 (
-                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion, 
+                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion,
                         IFNULL((SELECT CASE
                             WHEN (9 >= mes_inicio AND 9 <= mes_fin) AND 9 = MONTH(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE articulo.id = arti.id)
-                            WHEN (9 >= mes_inicio AND 9 <= mes_fin) AND 9 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo = 
+                            WHEN (9 >= mes_inicio AND 9 <= mes_fin) AND 9 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo =
                                 (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 9 AND periodos.anio = anio) AND invi.id_articulo = inv.id_articulo)
                             ELSE 0
                         END),0) AS sept
@@ -1393,12 +1395,12 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_unidades_almacen unidad ON articulo.id_unidad = unidad.id
                     INNER JOIN inventario_inicial_final inv ON articulo.id = inv.id_articulo
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
-                )tb10 ON tb1.cod = tb10.clave INNER JOIN 
+                )tb10 ON tb1.cod = tb10.clave INNER JOIN
                 (
-                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion, 
+                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion,
                         IFNULL((SELECT CASE
                             WHEN (10 >= mes_inicio AND 10 <= mes_fin) AND 10 = MONTH(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE articulo.id = arti.id)
-                            WHEN (10 >= mes_inicio AND 10 <= mes_fin) AND 10 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo = 
+                            WHEN (10 >= mes_inicio AND 10 <= mes_fin) AND 10 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo =
                                 (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 10 AND periodos.anio = anio) AND invi.id_articulo = inv.id_articulo)
                             ELSE 0
                         END),0) AS octu
@@ -1408,10 +1410,10 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
                 )tb11 ON tb1.cod = tb11.clave INNER JOIN
                 (
-                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion, 
+                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion,
                         IFNULL((SELECT CASE
                             WHEN (11 >= mes_inicio AND 11 <= mes_fin) AND 11 = MONTH(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE articulo.id = arti.id)
-                            WHEN (11 >= mes_inicio AND 11 <= mes_fin) AND 11 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo = 
+                            WHEN (11 >= mes_inicio AND 11 <= mes_fin) AND 11 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo =
                                 (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 11 AND periodos.anio = anio) AND invi.id_articulo = inv.id_articulo)
                             ELSE 0
                         END),0) AS nov
@@ -1421,10 +1423,10 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
                 )tb12 ON tb1.cod = tb12.clave INNER JOIN
                 (
-                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion, 
+                    SELECT DISTINCT(articulo.clave) AS clave, partida.nombre, articulo.descripcion,
                         IFNULL((SELECT CASE
                             WHEN (12 >= mes_inicio AND 12 <= mes_fin) AND 12 = MONTH(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE articulo.id = arti.id)
-                            WHEN (12 >= mes_inicio AND 12 <= mes_fin) AND 12 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo = 
+                            WHEN (12 >= mes_inicio AND 12 <= mes_fin) AND 12 != MONTH(NOW()) THEN (SELECT invi.existencias FROM inventario_inicial_final invi WHERE invi.id_periodo =
                                 (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 12 AND periodos.anio = anio) AND invi.id_articulo = inv.id_articulo)
                             ELSE 0
                         END),0) AS dic
@@ -1434,24 +1436,24 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
                 )tb13 ON tb1.cod = tb13.clave
                 ORDER BY tb1.sscta ASC, tb1.descripcion ASC;
-                
-                
-                
+
+
+
                 SELECT DISTINCT(tb1.cod) AS "SSCTA", tb1.partida AS "PARTIDA", tb2.ene AS "ENE", tb3.feb AS "FEB",
                     tb4.mar AS "MAR", tb5.abr AS "ABR", tb6.may AS "MAY", tb7.jun AS "JUN", tb8.jul AS "JUL", tb9.agos AS "AGOS", tb10.sept AS "SEPT", tb11.octu AS "OCT", tb12.nov AS "NOV", tb13.dic AS "DIC"
-                FROM 
+                FROM
                 (
                     SELECT cat_cuentas_contables.sscta AS cod, cat_cuentas_contables.nombre AS partida
                     FROM cat_articulos
                     INNER JOIN cat_unidades_almacen ON cat_articulos.id_unidad = cat_unidades_almacen.id
                     INNER JOIN cat_cuentas_contables ON cat_cuentas_contables.id = cat_articulos.id_cuenta
-                )tb1 INNER JOIN 
+                )tb1 INNER JOIN
                 (
                     SELECT DISTINCT(partida.sscta) AS clave,
                         IFNULL((SELECT CASE
                             WHEN (1 >= mes_inicio AND 1 <= mes_fin) AND 1 = MONTH(NOW()) THEN (SELECT SUM(arti.existencias) FROM cat_articulos arti WHERE partida.id = arti.id_cuenta)
-                            WHEN (1 >= mes_inicio AND 1 <= mes_fin) AND 1 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi 
-                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos 
+                            WHEN (1 >= mes_inicio AND 1 <= mes_fin) AND 1 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi
+                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos
                                 WHERE periodos.no_mes = 1 AND periodos.anio = anio) AND partida.id = arti.id_cuenta)
                             ELSE 0
                         END),0) AS ene
@@ -1464,8 +1466,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     SELECT DISTINCT(partida.sscta) AS clave,
                         IFNULL((SELECT CASE
                             WHEN (2 >= mes_inicio AND 2 <= mes_fin) AND 2 = MONTH(NOW()) THEN (SELECT SUM(arti.existencias) FROM cat_articulos arti WHERE partida.id = arti.id_cuenta)
-                            WHEN (2 >= mes_inicio AND 2 <= mes_fin) AND 2 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi 
-                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos 
+                            WHEN (2 >= mes_inicio AND 2 <= mes_fin) AND 2 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi
+                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos
                                 WHERE periodos.no_mes = 2 AND periodos.anio = anio) AND partida.id = arti.id_cuenta)
                             ELSE 0
                         END),0) AS feb
@@ -1478,8 +1480,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     SELECT DISTINCT(partida.sscta) AS clave,
                         IFNULL((SELECT CASE
                             WHEN (3 >= mes_inicio AND 3 <= mes_fin) AND 3 = MONTH(NOW()) THEN (SELECT SUM(arti.existencias) FROM cat_articulos arti WHERE partida.id = arti.id_cuenta)
-                            WHEN (3 >= mes_inicio AND 3 <= mes_fin) AND 3 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi 
-                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos 
+                            WHEN (3 >= mes_inicio AND 3 <= mes_fin) AND 3 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi
+                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos
                                 WHERE periodos.no_mes = 3 AND periodos.anio = anio) AND partida.id = arti.id_cuenta)
                             ELSE 0
                         END),0) AS mar
@@ -1487,13 +1489,13 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_unidades_almacen unidad ON articulo.id_unidad = unidad.id
                     INNER JOIN inventario_inicial_final inv ON articulo.id = inv.id_articulo
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
-                )tb4 ON tb1.cod = tb4.clave INNER JOIN 
+                )tb4 ON tb1.cod = tb4.clave INNER JOIN
                 (
                     SELECT DISTINCT(partida.sscta) AS clave,
                         IFNULL((SELECT CASE
                             WHEN (4 >= mes_inicio AND 4 <= mes_fin) AND 4 = MONTH(NOW()) THEN (SELECT SUM(arti.existencias) FROM cat_articulos arti WHERE partida.id = arti.id_cuenta)
-                            WHEN (4 >= mes_inicio AND 4 <= mes_fin) AND 4 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi 
-                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos 
+                            WHEN (4 >= mes_inicio AND 4 <= mes_fin) AND 4 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi
+                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos
                                 WHERE periodos.no_mes = 4 AND periodos.anio = anio) AND partida.id = arti.id_cuenta)
                             ELSE 0
                         END),0) AS abr
@@ -1506,8 +1508,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     SELECT DISTINCT(partida.sscta) AS clave,
                         IFNULL((SELECT CASE
                             WHEN (5 >= mes_inicio AND 5 <= mes_fin) AND 5 = MONTH(NOW()) THEN (SELECT SUM(arti.existencias) FROM cat_articulos arti WHERE partida.id = arti.id_cuenta)
-                            WHEN (5 >= mes_inicio AND 5 <= mes_fin) AND 5 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi 
-                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos 
+                            WHEN (5 >= mes_inicio AND 5 <= mes_fin) AND 5 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi
+                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos
                                 WHERE periodos.no_mes = 5 AND periodos.anio = anio) AND partida.id = arti.id_cuenta)
                             ELSE 0
                         END),0) AS may
@@ -1520,8 +1522,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     SELECT DISTINCT(partida.sscta) AS clave,
                         IFNULL((SELECT CASE
                             WHEN (6 >= mes_inicio AND 6 <= mes_fin) AND 6 = MONTH(NOW()) THEN (SELECT SUM(arti.existencias) FROM cat_articulos arti WHERE partida.id = arti.id_cuenta)
-                            WHEN (6 >= mes_inicio AND 6 <= mes_fin) AND 6 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi 
-                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos 
+                            WHEN (6 >= mes_inicio AND 6 <= mes_fin) AND 6 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi
+                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos
                                 WHERE periodos.no_mes = 6 AND periodos.anio = anio) AND partida.id = arti.id_cuenta)
                             ELSE 0
                         END),0) AS jun
@@ -1529,13 +1531,13 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_unidades_almacen unidad ON articulo.id_unidad = unidad.id
                     INNER JOIN inventario_inicial_final inv ON articulo.id = inv.id_articulo
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
-                )tb7 ON tb1.cod = tb7.clave INNER JOIN 
+                )tb7 ON tb1.cod = tb7.clave INNER JOIN
                 (
                     SELECT DISTINCT(partida.sscta) AS clave,
                         IFNULL((SELECT CASE
                             WHEN (7 >= mes_inicio AND 7 <= mes_fin) AND 7 = MONTH(NOW()) THEN (SELECT SUM(arti.existencias) FROM cat_articulos arti WHERE partida.id = arti.id_cuenta)
-                            WHEN (7 >= mes_inicio AND 7 <= mes_fin) AND 7 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi 
-                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos 
+                            WHEN (7 >= mes_inicio AND 7 <= mes_fin) AND 7 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi
+                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos
                                 WHERE periodos.no_mes = 7 AND periodos.anio = anio) AND partida.id = arti.id_cuenta)
                             ELSE 0
                         END),0) AS jul
@@ -1548,8 +1550,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     SELECT DISTINCT(partida.sscta) AS clave,
                         IFNULL((SELECT CASE
                             WHEN (8 >= mes_inicio AND 8 <= mes_fin) AND 8 = MONTH(NOW()) THEN (SELECT SUM(arti.existencias) FROM cat_articulos arti WHERE partida.id = arti.id_cuenta)
-                            WHEN (8 >= mes_inicio AND 8 <= mes_fin) AND 8 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi 
-                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos 
+                            WHEN (8 >= mes_inicio AND 8 <= mes_fin) AND 8 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi
+                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos
                                 WHERE periodos.no_mes = 8 AND periodos.anio = anio) AND partida.id = arti.id_cuenta)
                             ELSE 0
                         END),0) AS agos
@@ -1562,8 +1564,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     SELECT DISTINCT(partida.sscta) AS clave,
                         IFNULL((SELECT CASE
                             WHEN (9 >= mes_inicio AND 9 <= mes_fin) AND 9 = MONTH(NOW()) THEN (SELECT SUM(arti.existencias) FROM cat_articulos arti WHERE partida.id = arti.id_cuenta)
-                            WHEN (9 >= mes_inicio AND 9 <= mes_fin) AND 9 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi 
-                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos 
+                            WHEN (9 >= mes_inicio AND 9 <= mes_fin) AND 9 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi
+                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos
                                 WHERE periodos.no_mes = 9 AND periodos.anio = anio) AND partida.id = arti.id_cuenta)
                             ELSE 0
                         END),0) AS sept
@@ -1571,13 +1573,13 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_unidades_almacen unidad ON articulo.id_unidad = unidad.id
                     INNER JOIN inventario_inicial_final inv ON articulo.id = inv.id_articulo
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
-                )tb10 ON tb1.cod = tb10.clave INNER JOIN 
+                )tb10 ON tb1.cod = tb10.clave INNER JOIN
                 (
                     SELECT DISTINCT(partida.sscta) AS clave,
                         IFNULL((SELECT CASE
                             WHEN (10 >= mes_inicio AND 10 <= mes_fin) AND 10 = MONTH(NOW()) THEN (SELECT SUM(arti.existencias) FROM cat_articulos arti WHERE partida.id = arti.id_cuenta)
-                            WHEN (10 >= mes_inicio AND 10 <= mes_fin) AND 10 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi 
-                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos 
+                            WHEN (10 >= mes_inicio AND 10 <= mes_fin) AND 10 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi
+                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos
                                 WHERE periodos.no_mes = 10 AND periodos.anio = anio) AND partida.id = arti.id_cuenta)
                             ELSE 0
                         END),0) AS octu
@@ -1587,11 +1589,11 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     INNER JOIN cat_cuentas_contables partida ON articulo.id_cuenta = partida.id
                 )tb11 ON tb1.cod = tb11.clave INNER JOIN
                 (
-                SELECT DISTINCT(partida.sscta) AS clave, partida.nombre, articulo.descripcion, 
+                SELECT DISTINCT(partida.sscta) AS clave, partida.nombre, articulo.descripcion,
                         IFNULL((SELECT CASE
                             WHEN (11 >= mes_inicio AND 11 <= mes_fin) AND 11 = MONTH(NOW()) THEN (SELECT SUM(arti.existencias) FROM cat_articulos arti WHERE partida.id = arti.id_cuenta)
-                            WHEN (11 >= mes_inicio AND 11 <= mes_fin) AND 11 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi 
-                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos 
+                            WHEN (11 >= mes_inicio AND 11 <= mes_fin) AND 11 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi
+                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos
                                 WHERE periodos.no_mes = 11 AND periodos.anio = anio) AND partida.id = arti.id_cuenta)
                             ELSE 0
                         END),0) AS nov
@@ -1604,8 +1606,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     SELECT DISTINCT(partida.sscta) AS clave,
                         IFNULL((SELECT CASE
                             WHEN (12 >= mes_inicio AND 12 <= mes_fin) AND 12 = MONTH(NOW()) THEN (SELECT SUM(arti.existencias) FROM cat_articulos arti WHERE partida.id = arti.id_cuenta)
-                            WHEN (12 >= mes_inicio AND 12 <= mes_fin) AND 12 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi 
-                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos 
+                            WHEN (12 >= mes_inicio AND 12 <= mes_fin) AND 12 != MONTH(NOW()) THEN (SELECT SUM(invi.existencias) FROM inventario_inicial_final invi
+                                INNER JOIN cat_articulos arti ON arti.id = invi.id_articulo WHERE invi.id_periodo = (SELECT id_periodo FROM periodos
                                 WHERE periodos.no_mes = 12 AND periodos.anio = anio) AND partida.id = arti.id_cuenta)
                             ELSE 0
                         END),0) AS dic
@@ -1621,7 +1623,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
         /**Procedimiento almacenado para la obtención del reporte "CONCENTRADO DE CONSUMOS POR ARTICULO DEL MES DE X AL MES DE X
          * DEL X"
          * Recibe como parametros los meses que e desean obtener (ej. del 1 al 6) y el año.
-         * 
+         *
          * Checar el UNION para combinar los resultados
          */
         DB::unprepared('
@@ -1637,12 +1639,12 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-							
+
 				SET @mes_min := mes_inicio;
                 SET @mes_max := mes_fin;
                 SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                 SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
-                    
+
                 myloop: WHILE IFNULL(@periodo_min, 0) = 0 DO
                     SET @mes_min := @mes_min + 1;
                     IF @mes_min > @mes_max THEN
@@ -1651,7 +1653,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                     END IF;
                 END WHILE myloop;
-                
+
                 myloop: WHILE IFNULL(@periodo_max, 0) = 0 DO
                     SET @mes_max := @mes_max - 1;
                     IF @mes_max < @mes_min THEN
@@ -1660,7 +1662,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
                     END IF;
                 END WHILE myloop;
-                
+
                     SELECT DISTINCT(tb1.clave) AS "CODIF.", tb1.descripcion AS "DESCRIPCION", tb1.descripcion AS "UNIDAD", tb2.ene AS "ENE.", tb3.feb AS "FEB", tb4.mar AS "MAR", tb5.abr AS "ABR",
                     	tb6.may AS "MAY", tb7.jun AS "JUN", tb8.jul AS "JUL", tb9.agos AS "AGOS", tb10.sept AS "SEPT", tb11.octu AS "OCT", tb12.nov AS "NOV", tb13.dic AS "DIC", tb14.total AS "TOTAL"
                     FROM (
@@ -1671,8 +1673,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 	                  INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
 						  )tb1 INNER JOIN
 						  (
-						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
-							  	WHEN (1 >= mes_inicio AND 1 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE
+							  	WHEN (1 >= mes_inicio AND 1 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                            AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 1 AND periodos.anio = anio))
 							  	ELSE 0
 							  END),0) AS ene
@@ -1681,8 +1683,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                      INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
 						  )tb2 ON tb1.clave = tb2.cod INNER JOIN
 						  (
-						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
-							  	WHEN (2 >= mes_inicio AND 2 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE
+							  	WHEN (2 >= mes_inicio AND 2 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                            AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 2 AND periodos.anio = anio))
 							  	ELSE 0
 							  END),0) AS feb
@@ -1691,8 +1693,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                      INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
 						  )tb3 ON tb1.clave = tb3.cod INNER JOIN
 						  (
-						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
-							  	WHEN (3 >= mes_inicio AND 3 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE
+							  	WHEN (3 >= mes_inicio AND 3 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                            AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 3 AND periodos.anio = anio))
 							  	ELSE 0
 							  END),0) AS mar
@@ -1701,8 +1703,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                      INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
 						  )tb4 ON tb1.clave = tb4.cod INNER JOIN
 						  (
-						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
-							  	WHEN (4 >= mes_inicio AND 4 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE
+							  	WHEN (4 >= mes_inicio AND 4 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                            AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 4 AND periodos.anio = anio))
 							  	ELSE 0
 							  END),0) AS abr
@@ -1711,8 +1713,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                      INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
 						  )tb5 ON tb1.clave = tb5.cod INNER JOIN
 						  (
-						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
-							  	WHEN (5 >= mes_inicio AND 5 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE
+							  	WHEN (5 >= mes_inicio AND 5 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                            AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 5 AND periodos.anio = anio))
 							  	ELSE 0
 							  END),0) AS may
@@ -1721,8 +1723,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                      INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
 						  )tb6 ON tb1.clave = tb6.cod INNER JOIN
 						  (
-						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
-							  	WHEN (6 >= mes_inicio AND 6 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE
+							  	WHEN (6 >= mes_inicio AND 6 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                            AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 6 AND periodos.anio = anio))
 							  	ELSE 0
 							  END),0) AS jun
@@ -1731,8 +1733,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                      INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
 						  )tb7 ON tb1.clave = tb7.cod INNER JOIN
 						  (
-						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
-							  	WHEN (7 >= mes_inicio AND 7 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE
+							  	WHEN (7 >= mes_inicio AND 7 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                            AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 7 AND periodos.anio = anio))
 							  	ELSE 0
 							  END),0) AS jul
@@ -1741,8 +1743,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                      INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
 						  )tb8 ON tb1.clave = tb8.cod INNER JOIN
 						  (
-						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
-							  	WHEN (8 >= mes_inicio AND 8 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE
+							  	WHEN (8 >= mes_inicio AND 8 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                            AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 8 AND periodos.anio = anio))
 							  	ELSE 0
 							  END),0) AS agos
@@ -1751,8 +1753,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                      INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
 						  )tb9 ON tb1.clave = tb9.cod INNER JOIN
 						  (
-						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
-							  	WHEN (9 >= mes_inicio AND 9 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE
+							  	WHEN (9 >= mes_inicio AND 9 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                            AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 9 AND periodos.anio = anio))
 							  	ELSE 0
 							  END),0) AS sept
@@ -1761,8 +1763,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                      INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
 						  )tb10 ON tb1.clave = tb10.cod INNER JOIN
 						  (
-						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
-							  	WHEN (10 >= mes_inicio AND 10 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE
+							  	WHEN (10 >= mes_inicio AND 10 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                            AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 10 AND periodos.anio = anio))
 							  	ELSE 0
 							  END),0) AS octu
@@ -1771,8 +1773,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                      INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
 						  )tb11 ON tb1.clave = tb11.cod INNER JOIN
 						  (
-						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
-							  	WHEN (11 >= mes_inicio AND 11 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE
+							  	WHEN (11 >= mes_inicio AND 11 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                            AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 11 AND periodos.anio = anio))
 							  	ELSE 0
 							  END),0) AS nov
@@ -1781,8 +1783,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                      INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
 						  )tb12 ON tb1.clave = tb12.cod INNER JOIN
 						  (
-						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE 
-							  	WHEN (12 >= mes_inicio AND 12 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+						  	SELECT DISTINCT(articulo.clave) AS cod, IFNULL((SELECT CASE
+							  	WHEN (12 >= mes_inicio AND 12 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                            AND consumo.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 12 AND periodos.anio = anio))
 							  	ELSE 0
 							  END),0) AS dic
@@ -1791,97 +1793,97 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                      INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
 						  )tb13 ON tb1.clave = tb13.cod INNER JOIN
 						  (
-						  	SELECT DISTINCT(articulo.clave) AS cod, (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+						  	SELECT DISTINCT(articulo.clave) AS cod, (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                         AND consumo.id_periodo BETWEEN @periodo_min AND @periodo_max) AS total
                      FROM cat_articulos articulo
                      INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
                      INNER JOIN consumos consumo ON consumo.id_consumo = detalle.id_consumo
 						  )tb14 ON tb1.clave = tb14.cod
 						  ORDER BY tb1.descripcion ASC;
-						  
+
 						  SET @primer_semestre := 0;
                     SET @segundo_semestre := 0;
                     SET @mes_aux := 1;
 
                     WHILE @mes_aux <=6 DO
                         IF (@mes_aux + 6) >= mes_inicio AND (@mes_aux + 6) <= mes_fin THEN
-                        SET @primer_semestre := @primer_semestre + IFNULL((SELECT SUM(detalles.cantidad) 
+                        SET @primer_semestre := @primer_semestre + IFNULL((SELECT SUM(detalles.cantidad)
                             FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
                             WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = @mes_aux AND anio = anio)),0);
                      	END IF;
-                            
+
                         IF (@mes_aux + 6) >= mes_inicio AND (@mes_aux + 6) <= mes_fin THEN
-                        SET @segundo_semestre := @segundo_semestre + IFNULL((SELECT SUM(detalles.cantidad) 
+                        SET @segundo_semestre := @segundo_semestre + IFNULL((SELECT SUM(detalles.cantidad)
                             FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
                             WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = @mes_aux + 6 AND anio = anio)),0);
                      	END IF;
                         SET @mes_aux := @mes_aux + 1;
                     END WHILE;
 
-            SELECT @num_articulos_consumidos AS "TIPOS DE ARTICULOS", @primer_semestre AS "TOTAL DEL PRIMER SEMESTRE", 
-    		  	@segundo_semestre AS "TOTAL DEL SEGUNDO SEMESTRE", 
-    			  IFNULL((SELECT CASE 
+            SELECT @num_articulos_consumidos AS "TIPOS DE ARTICULOS", @primer_semestre AS "TOTAL DEL PRIMER SEMESTRE",
+    		  	@segundo_semestre AS "TOTAL DEL SEGUNDO SEMESTRE",
+    			  IFNULL((SELECT CASE
     			  	WHEN (1 >= mes_inicio AND 1 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
     				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 1 AND periodos.anio = anio))
     			  	ELSE 0
     			  END),0) AS "ENE",
-    			  IFNULL((SELECT CASE 
+    			  IFNULL((SELECT CASE
     			  	WHEN (2 >= mes_inicio AND 2 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
     				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 2 AND periodos.anio = anio))
     			  	ELSE 0
     			  END),0) AS "FEB",
-    			  IFNULL((SELECT CASE 
+    			  IFNULL((SELECT CASE
     			  	WHEN (3 >= mes_inicio AND 3 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
     				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 3 AND periodos.anio = anio))
     			  	ELSE 0
     			  END),0) AS "MAR",
-    			  IFNULL((SELECT CASE 
+    			  IFNULL((SELECT CASE
     			  	WHEN (4 >= mes_inicio AND 4 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
     				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 4 AND periodos.anio = anio))
     			  	ELSE 0
     			  END),0) AS "ABR",
-    			  IFNULL((SELECT CASE 
+    			  IFNULL((SELECT CASE
     			  	WHEN (5 >= mes_inicio AND 5 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
     				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 5 AND periodos.anio = anio))
     			  	ELSE 0
     			  END),0) AS "MAY",
-    			  IFNULL((SELECT CASE 
+    			  IFNULL((SELECT CASE
     			  	WHEN (6 >= mes_inicio AND 6 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
     				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 6 AND periodos.anio = anio))
     			  	ELSE 0
     			  END),0) AS "JUN",
-    			  IFNULL((SELECT CASE 
+    			  IFNULL((SELECT CASE
     			  	WHEN (7 >= mes_inicio AND 7 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
     				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 7 AND periodos.anio = anio))
     			  	ELSE 0
     			  END),0) AS "JUL",
-    			  IFNULL((SELECT CASE 
+    			  IFNULL((SELECT CASE
     			  	WHEN (8 >= mes_inicio AND 8 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
     				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 8 AND periodos.anio = anio))
     			  	ELSE 0
     			  END),0) AS "AGOS",
-    			  IFNULL((SELECT CASE 
+    			  IFNULL((SELECT CASE
     			  	WHEN (9 >= mes_inicio AND 9 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
     				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 9 AND periodos.anio = anio))
     			  	ELSE 0
     			  END),0) AS "SEPT",
-    			  IFNULL((SELECT CASE 
+    			  IFNULL((SELECT CASE
     			  	WHEN (10 >= mes_inicio AND 10 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
     				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 10 AND periodos.anio = anio))
     			  	ELSE 0
     			  END),0) AS "OCT",
-    			  IFNULL((SELECT CASE 
+    			  IFNULL((SELECT CASE
     			  	WHEN (11 >= mes_inicio AND 11 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
     				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 11 AND periodos.anio = anio))
     			  	ELSE 0
     			  END),0) AS "NOV",
-    			  IFNULL((SELECT CASE 
+    			  IFNULL((SELECT CASE
     			  	WHEN (12 >= mes_inicio AND 12 <= mes_fin) THEN (SELECT SUM(detalles.cantidad) FROM detalles INNER JOIN consumos ON consumos.id_consumo = detalles.id_consumo
     				  WHERE consumos.id_periodo = (SELECT id_periodo FROM periodos WHERE periodos.no_mes = 12 AND periodos.anio = anio))
     			  	ELSE 0
     			  END),0) AS "DIC",
     			  FORMAT(SUM(@primer_semestre + @segundo_semestre),0) AS "TOTAL";
-                            
+
             END
         ');
 
@@ -1902,11 +1904,11 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             SQL SECURITY DEFINER
             BEGIN
                 SET @periodo := (SELECT id_periodo FROM periodos WHERE periodos.no_mes = mes AND periodos.anio = anio);
-                
-                SELECT articulo.clave AS "COD.", articulo.descripcion AS "DESCRIPCION", consumo.folio AS "VALE", unidad.descripcion AS "UNIDAD", 
+
+                SELECT articulo.clave AS "COD.", articulo.descripcion AS "DESCRIPCION", consumo.folio AS "VALE", unidad.descripcion AS "UNIDAD",
                         detalle.cantidad AS "CANT.", articulo.precio_unitario AS "COSTO UNIT.", (detalle.cantidad * articulo.precio_unitario) AS "IMPORTE",
-                        (SELECT cat_oficinas.descripcion FROM cat_oficinas WHERE cat_oficinas.oficina = 0 AND cat_oficinas.ubpp = (SELECT cat_oficinas.ubpp FROM cat_oficinas 
-                                WHERE consumo.id_oficina = cat_oficinas.id)) AS "DEPARTAMENTO", 
+                        (SELECT cat_oficinas.descripcion FROM cat_oficinas WHERE cat_oficinas.oficina = 0 AND cat_oficinas.ubpp = (SELECT cat_oficinas.ubpp FROM cat_oficinas
+                                WHERE consumo.id_oficina = cat_oficinas.id)) AS "DEPARTAMENTO",
                         (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id) AS "TOTAL DE ARTICULOS",
                         (SELECT SUM(detalles.cantidad * articulo.precio_unitario) FROM detalles WHERE detalles.id_articulo = articulo.id) AS "TOTAL"
                 FROM cat_articulos articulo
@@ -1917,8 +1919,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 WHERE consumo.id_periodo = @periodo ORDER BY articulo.descripcion DESC;
 
                 SELECT cuenta.sscta AS "SSCTA", cuenta.nombre AS "PARTIDA", IFNULL((SELECT COUNT(id) FROM c_pedido_consumo),0) AS "CONSUMOS";
-                
-                SELECT COUNT(DISTINCT(detalle.id_consumo)) AS "CONSUMOS", SUM(detalle.cantidad) AS "CANTIDAD DE ARTICULOS", 
+
+                SELECT COUNT(DISTINCT(detalle.id_consumo)) AS "CONSUMOS", SUM(detalle.cantidad) AS "CANTIDAD DE ARTICULOS",
 							SUM(detalle.cantidad * articulo.precio_unitario) AS "IMPORTES TOTALES"
                 FROM cat_cuentas_contables partida
 					 INNER JOIN cat_articulos articulo ON articulo.id_cuenta  = partida.id
@@ -1945,17 +1947,17 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SELECT tb1.sscta AS "SSCTA", tb1.nombre AS "PARTIDA", tb2.clave AS "COD.", tb2.descripcion AS "DESCRIPCION", tb2.unidad AS "UNIDAD", tb2.canti AS "CANT.", 
+                SELECT tb1.sscta AS "SSCTA", tb1.nombre AS "PARTIDA", tb2.clave AS "COD.", tb2.descripcion AS "DESCRIPCION", tb2.unidad AS "UNIDAD", tb2.canti AS "CANT.",
 					  	FORMAT(tb2.costo,2) AS "COSTO UNIT.", FORMAT(tb2.importe,2) AS "IMPORTE", FORMAT(tb2.inversion,2) AS "INV. FIN." FROM
 					  (
 					  	SELECT cat_cuentas_contables.sscta AS sscta, cat_cuentas_contables.nombre AS nombre, cat_cuentas_contables.id AS cod
 					  	FROM cat_cuentas_contables
-					  )tb1 INNER JOIN 
+					  )tb1 INNER JOIN
 					  (
 					  	SELECT DISTINCT(articulo.clave) AS clave, articulo.id_cuenta AS cod, articulo.descripcion AS descripcion, unidad.descripcion AS unidad,
 					  		IFNULL((SELECT CASE
 							  	WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT arti.existencias FROM cat_articulos arti WHERE arti.id = articulo.id)
-							  	ELSE (SELECT inven.existencias FROM inventario_inicial_final inven INNER JOIN cat_articulos ON cat_articulos.id = inven.id_articulo 
+							  	ELSE (SELECT inven.existencias FROM inventario_inicial_final inven INNER JOIN cat_articulos ON cat_articulos.id = inven.id_articulo
 								WHERE inven.id_articulo = articulo.id AND inven.id_periodo = (SELECT id_periodo FROM periodos WHERE no_mes = mes AND anio = anio))
 							END),0) AS canti,
 							IFNULL((SELECT CASE
@@ -1988,12 +1990,12 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
 					  END),0) AS articulos,
 					  IFNULL((SELECT CASE
 					  	WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT SUM(articulo.existencias * articulo.precio_unitario) FROM cat_articulos articulo)
-					  	ELSE (SELECT SUM(inventario.existencias * inventario.precio_promedio) FROM inventario_inicial_final inventario WHERE inventario.id_periodo = (SELECT id_periodo FROM periodos 
+					  	ELSE (SELECT SUM(inventario.existencias * inventario.precio_promedio) FROM inventario_inicial_final inventario WHERE inventario.id_periodo = (SELECT id_periodo FROM periodos
 						  WHERE no_mes = mes AND anio = anio))
 					  END),0) AS importes,
 					  IFNULL((SELECT CASE
 					  	WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT SUM(articulo.existencias * articulo.precio_unitario) FROM cat_articulos articulo)
-					  	ELSE (SELECT SUM(inventario.existencias * inventario.precio_promedio) FROM inventario_inicial_final inventario WHERE inventario.id_periodo = (SELECT id_periodo FROM periodos 
+					  	ELSE (SELECT SUM(inventario.existencias * inventario.precio_promedio) FROM inventario_inicial_final inventario WHERE inventario.id_periodo = (SELECT id_periodo FROM periodos
 						  WHERE no_mes = mes AND anio = anio))
 					  END),0) AS invent
 				  )tb1;
@@ -2020,7 +2022,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 SET @mes_max := mes_fin;
                 SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                 SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
-                    
+
                 myloop: WHILE IFNULL(@periodo_min, 0) = 0 DO
                     SET @mes_min := @mes_min + 1;
                     IF @mes_min > @mes_max THEN
@@ -2029,7 +2031,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         SET @periodo_min := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_min AND anio = anio);
                     END IF;
                 END WHILE myloop;
-                
+
                 myloop: WHILE IFNULL(@periodo_max, 0) = 0 DO
                     SET @mes_max := @mes_max - 1;
                     IF @mes_max < @mes_min THEN
@@ -2038,7 +2040,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         SET @periodo_max := (SELECT id_periodo FROM periodos WHERE no_mes = @mes_max AND anio = anio);
                     END IF;
                 END WHILE myloop;
-                
+
                 SET @condicion1 := (SELECT IF(IFNULL(@periodo_min, 0) = 0, 1, 0));
 
                 IF @condicion1 = 0 THEN
@@ -2051,24 +2053,24 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                     WHERE compra.id_periodo BETWEEN @periodo_min AND @periodo_max;
 
                     WHILE @periodo_aux <= @periodo_max DO
-                        SELECT IFNULL((SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                        SELECT IFNULL((SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                         AND compra.id_periodo = @aux_periodos),0) AS "CANT.",
-                        IFNULL((SELECT (detalles.cantidad * detalles.precio_unitario) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                        IFNULL((SELECT (detalles.cantidad * detalles.precio_unitario) FROM detalles WHERE detalles.id_articulo = articulo.id
                         AND compra.id_periodo = @aux_periodos),0) AS "IMP."
                         FROM cat_articulos articulo
                         INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id
                         INNER JOIN compras compra ON compra.id_compra = detalle.id_compra
                         WHERE compra.id_periodo BETWEEN @periodo_min AND @periodo_max;
-                        
-                        SELECT SUM(detalles.cantidad) AS "MES CANT.", SUM(detalles.cantidad * detalles.precio_unitario) AS "MES IMP." 
+
+                        SELECT SUM(detalles.cantidad) AS "MES CANT.", SUM(detalles.cantidad * detalles.precio_unitario) AS "MES IMP."
                         FROM detalles INNER JOIN compras ON compras.id_compra = detalles.id_compra WHERE compras.id_periodo = @periodo_aux;
 
                         SET @periodo_aux := @periodo_aux + 1;
                     END WHILE;
 
-                    SELECT (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                    SELECT (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id
                     AND compra.id_periodo BETWEEN @periodo_min AND @periodo_max) AS "CANT.",
-                    (SELECT SUM(detalles.cantidad * detalles.precio_unitario) FROM detalles WHERE detalles.id_articulo = articulo.id 
+                    (SELECT SUM(detalles.cantidad * detalles.precio_unitario) FROM detalles WHERE detalles.id_articulo = articulo.id
                     AND compra.id_periodo BETWEEN @periodo_min AND @periodo_max) AS "IMP."
                     FROM cat_articulos articulo
                     INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id

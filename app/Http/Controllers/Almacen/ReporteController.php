@@ -21,8 +21,9 @@ class ReporteController extends Controller
      */
     public function index()
     {
+        $years = DB::select('SELECT DISTINCT anio FROM periodos');
         $departamentos = DB::select("call sp_obtener_departamentos");
-        return view('almacen.reportes', compact('departamentos'));
+        return view('almacen.reportes', compact('departamentos', 'years'));
     }
 
     /**

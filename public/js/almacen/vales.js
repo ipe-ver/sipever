@@ -261,4 +261,18 @@ function llenarOrden (index) {
 		parent.appendChild(input);
 	}
 
+	var tipo = null;
+	var radios = document.getElementsByName('tipo');
+	for(var i = 0, length1 = radios.length; i < length1; i++){
+		if(radios[i].checked){
+			tipo=radios[i];
+		}
+	}
+	console.log(tipo);
+
+	var input_aux = document.createElement("input");
+	input_aux.setAttribute("type","hidden");
+	input_aux.setAttribute("name", "extemporaneo");
+	input_aux.setAttribute("value", `${tipo.value}`);
+	parent.appendChild(input_aux);
 }

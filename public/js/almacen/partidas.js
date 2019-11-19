@@ -84,7 +84,7 @@ var i;
             boton.addEventListener('click', function(){
                 var btn_editar_aux = document.getElementById('btn_editar'+index);
                 var btn_eliminar_aux = document.getElementById('btn_eliminar'+index);
-                cerrarPaneles(btn_editar_aux, btn_editar_aux);
+                cerrarPaneles(btn_editar_aux, btn_eliminar_aux);
                 //Se agrega el metodo click al boton
                 btn_editar_aux.addEventListener("click",function(){
                     var panel_aux = document.getElementById("Partida"+index);

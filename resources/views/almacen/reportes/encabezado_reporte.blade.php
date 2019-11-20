@@ -91,6 +91,17 @@
           <h4 style="word-wrap: break-word; width: 50%; margin-left: 27%; padding:10px; ">{{$mensaje}}</h4>
       </div>
     </header>
-    @yield('content')
+    <div class="hijo">
+      <table class="table">
+      <thead>
+        <tr>
+          @foreach($headers as $header)
+              <th style="white-space: nowrap;">{{$header}}</th>
+          @endforeach
+        </tr>
+      </thead>
+        @yield('content')
+      </table>
+    </div>
   </body>
 </html>

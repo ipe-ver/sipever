@@ -73,6 +73,12 @@
         margin-right: -15px;
         margin-left: -15px;
       }
+
+      .signature {
+        border: 0;
+        border-bottom: 1px solid #000;
+      }
+
     </style>
     <header>
       <div class="header" style="text-align: center;">
@@ -102,6 +108,30 @@
       </thead>
         @yield('content')
       </table>
+      @if($tipo == 'poliza')
+      <div style="margin-top: 15%; font-size: 12px; text-align: center; display: block;">
+          <table class="table" style="text-align: center;">
+            <tr>
+              <td>
+                <input style="width: 250px; margin-left: 15%;" type="text" class="signature" />
+              </td>
+              <td>
+                <input style="width: 250px; margin-left: 15%;" type="text" class="signature" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <p><b>ING. CRESENCIANO DOMINGUEZ SANCHEZ</b></p>
+                <p>REVISÓ</p>
+              </td>
+              <td>
+                <p><b>C.P. MANUEL GUZMÁN TRUJILLO</b></p>
+                <P>AUTORIZÓ</P>
+              </td>
+            </tr>
+          </table>
+      </div>
+      @endif
     </div>
   </body>
 </html>

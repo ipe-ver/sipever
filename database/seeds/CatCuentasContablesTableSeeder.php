@@ -26,7 +26,9 @@ class CatCuentasContablesTableSeeder extends Seeder
             [ 'cta' => '1113', 'scta' => '2900', 'sscta' => '2991', 'nombre' => 'MATERIALES Y SUMINISTROS VARIOS', 'ctaarmo' => '1.1.5.1.1.4.11', 'nomarmo' => 'MATERIALES Y SUMINISTROS VARIOS', 'grupo' => 'B', 'estatus' => '1'],
             [ 'cta' => '1113', 'scta' => '2700', 'sscta' => '2721', 'nombre' => 'PRENDAS DE PROTECCIÓN', 'ctaarmo' => '1.1.5.1.1.12.1', 'nomarmo' => 'PRENDAS DE PROTECCIÓN', 'grupo' => 'B', 'estatus' => '1'],
             [ 'cta' => '1113', 'scta' => '3300', 'sscta' => '3361', 'nombre' => 'SERVICIO DE FOTOCOPIADO E IMPRESIÓN DE FORMA', 'ctaarmo' => '1.1.5.1.1.10.1', 'nomarmo' => 'SERVICIO DE FOTOCOPIADO E IMPRESIÓN DE FORMA', 'grupo' => 'B', 'estatus' => '1'],
-            [ 'cta' => '1113', 'scta' => '2100', 'sscta' => '2111', 'nombre' => 'ÚTILES DE ESCRITORIO Y DE OFICINA', 'ctaarmo' => '1.1.5.1.1.1.5', 'nomarmo' => 'ÚTILES DE ESCRITORIO Y DE OFICINA', 'grupo' => 'B', 'estatus' => '1']
+            [ 'cta' => '1113', 'scta' => '2100', 'sscta' => '2111', 'nombre' => 'ÚTILES DE ESCRITORIO Y DE OFICINA', 'ctaarmo' => '1.1.5.1.1.1.5', 'nomarmo' => 'ÚTILES DE ESCRITORIO Y DE OFICINA', 'grupo' => 'B', 'estatus' => '1'],
+            [ 'cta' => '1113', 'scta' => '2900', 'sscta' => '2941', 'nombre' => 'REFACCIONES Y ACCESORIOS DE EQUIPO DE COMPUTO', 'ctaarmo' => '1.1.5.1.1.4.13', 'nomarmo' => 'REFACCIONES Y ACCESORIOS DE EQUIPO DE COMPUTO', 'grupo' => 'B', 'estatus' => '1'],
+            [ 'cta' => '1113', 'scta' => '2900', 'sscta' => '2961', 'nombre' => 'REFACCIONES Y ACCESORIOS MENORES DE EQUIPO DE TRANSPORTE', 'ctaarmo' => '1.1.5.1.1.4.13', 'nomarmo' => 'REFACCIONES Y ACCESORIOS MENORES DE EQUIPO DE TRANSPORTE', 'grupo' => 'B', 'estatus' => '1']
         );
         //Ciclo
         foreach ($cuentas as $cuenta) {

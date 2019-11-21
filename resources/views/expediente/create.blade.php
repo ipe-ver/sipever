@@ -20,7 +20,7 @@
 		                	<!--  PRIMER FORMULARIO DATOS PERSONALES -->
 							<div class="box box-primary">
 								<div class="box-header with-border">
-									<h3 class="box-title">Datos Personales</h3>
+									<h3 class="box-title">Datos Generales</h3>
 										<div class="box-tools pull-right">
 											<button type="button" class="btn btn-box-tool" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
 					                         	<i class="fa fa-plus"></i>
@@ -30,13 +30,13 @@
 							</div>
 							<div id="collapseOne" class="panel-collapse collapse in">
 		                      <div class="card-body">
-		                      	<div class="box-body" id="datos_personales"></div>
+		                      	<div class="box-body" id="datos_generales"></div>
 		                      </div>
 		                    </div> 
 		                    <!--  SEGUNDO FORMULARIO DATOS DOMICILIO -->
 		                    <div class="box box-primary">
 								<div class="box-header with-border">
-									<h3 class="box-title">Datos del Domicilio</h3>
+									<h3 class="box-title">Datos Personales</h3>
 										<div class="box-tools pull-right">
 											
 											<button type="button" class="btn btn-box-tool" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
@@ -47,13 +47,13 @@
 							</div>
 							<div id="collapseTwo" class="panel-collapse collapse">
 		                      <div class="card-body">
-		                      	<div class="box-body" id="datos_domicilio"></div>
+		                      	<div class="box-body" id="datos_personales"></div>
 		                      </div>
 				                    </div> 
 		                    <!--  TERCERO FORMULARIO DATOS LABORAL -->
 		                    <div class="box box-primary">
 								<div class="box-header with-border">
-									<h3 class="box-title">Datos Profesionales</h3>
+									<h3 class="box-title">Datos del Domicilio</h3>
 										<div class="box-tools pull-right">
 											
 											<button type="button" class="btn btn-box-tool" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
@@ -64,13 +64,13 @@
 							</div>
 							<div id="collapseThree" class="panel-collapse collapse">
 		                      <div class="card-body">
-		                      	<div class="box-body" id="datos_profesionales"></div>
+		                      	<div class="box-body" id="datos_domicilio"></div>
 		                      </div>
 		                    </div> 
-		                    <!--  CUARTO FORMULARIO DATOS DE LAS PLAZAS 
+		                      <!-- CUARTO FORMULARIO DATOS DE LAS PLAZAS -->
 		                    <div class="box box-primary">
 								<div class="box-header with-border">
-									<h3 class="box-title">Datos de Plazas</h3>
+									<h3 class="box-title">Datos Profesionales</h3>
 										<div class="box-tools pull-right">
 											
 											<button type="button" class="btn btn-box-tool" data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
@@ -78,10 +78,10 @@
 					                 		</button>
 					                 	</div>
 								</div>
-							</div>-->
+							</div>
 							<div id="collapseFour" class="panel-collapse collapse">
 		                      <div class="card-body">
-		                      	<div class="box-body" id="datos_plazas"></div>
+		                      	<div class="box-body" id="datos_profesionales"></div>
 		                      </div>
 		                    </div> 
 						</div>   <!--  accordion --> 

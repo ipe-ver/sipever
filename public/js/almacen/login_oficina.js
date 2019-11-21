@@ -46,7 +46,8 @@ $(document).ready(function(){
 		        		document.cookie=`__office_session=${resultdata['officeCode']}; expires=${now.toUTCString()}; path=/`;
 		        		window.location.reload();
 		        	}else if(resultdata['code']==400){
-		        		alert('Código inválido');
+		        		var msg = '<label class="error" for="officeCode">Codigo inválido</label>';
+          				$('#officeCode').addClass('inputTxtError').after(msg);
 		        		$("#loaderLogin").hide();
 		        	}else if(resultdata['code']==505){
 		        		alert('Error de servidor o base de datos, porfavor contacte al departamento de tecnologías de la información.');

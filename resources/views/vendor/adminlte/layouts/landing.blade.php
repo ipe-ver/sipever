@@ -28,6 +28,9 @@
 		<!-- HoldOn.js -->
 		{!! Html::style('components/hold-on/HoldOn.min.css') !!} 
 
+		<!-- angel font-->
+		{!! Html::style('css/example.css') !!}	
+		{!! Html::style('css/autocomplite.css') !!}	
 
 		<style>
 			.user-body{
@@ -83,7 +86,11 @@
 								<li style="text-align:right;">
 									<div class="input-group">
 										<span class="input-group-addon" style="background-color: #F3EFE0;"><i class="fa fa-phone"></i></span>
-										<input id="search" name="search" type="text" class="form-control" placeholder="Buscar extensiones..." style="background-color: #F3EFE0;">
+										
+										<form autocomplete="off" action="/action_page.php">
+  										<div class="autocomplete" style="width:300px;">
+   										 <input id="myInput" type="text" name="myCountry" placeholder="Que extension Buscas" style="background-color: #F3EFE0;">
+ 												 </div>
 									</div>
 							
 								</li>
@@ -217,8 +224,8 @@
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Servicios Generales</a></li>--}}
 							<li><a href="{!! url('/recursos_humanos') !!}"><i class="fa fa-spinner"></i> Recursos Humanos</a></li>
 							<li><a href="{!! url('/tecnologias') !!}"><i class="fa fa-spinner"></i> Tecnologías de la Información</a></li>
-							{{--<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Sub. Prestac. Institucionales</a></li>
-							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Prestaciones Económicas</a></li>
+							<li><a href="{!! url('/prestaciones') !!}"><i class="fa fa-spinner"></i> Prestaciones Economicas </a></li>
+							{{--<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Sub. Prestaciones Administrativas</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Banco de Datos</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Vigencia de Derechos</a></li>
 							<li><a href="UI/sliders.html"><i class="fa fa-spinner"></i> Sub. de Finanzas</a></li>
@@ -390,6 +397,11 @@
 
 		</script>
 
+
+
+
+autocomplite
+		{!! HTML::script('js/autocomplite.js') !!}
 		{!! HTML::script('js/funcionesgral.js') !!}
 		
 		

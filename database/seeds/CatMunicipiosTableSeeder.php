@@ -89,7 +89,7 @@ class CatMunicipiosTableSeeder extends Seeder
             ['clave' => '36', 'nombre' => 'CANDELARIA', 'id_estado' => '05'],
             ['clave' => '37', 'nombre' => 'CANDELARIA', 'id_estado' => '05'],
             ['clave' => '38', 'nombre' => 'CANDELARIA', 'id_estado' => '05'],
-            ['clave' => '999', 'nombre' => 'NO ESPECIFICADO', 'id_estado' => '05']
+            ['clave' => '999', 'nombre' => 'NO ESPECIFICADO', 'id_estado' => '05'],
             
 		);
 

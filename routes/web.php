@@ -170,7 +170,13 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'expediente', 'as' => 'exped
 	Route::get('/recursos_humanos/nomina', function () { return view('areas.nomina'); });
 	Route::get('/recursos_humanos/personal', function () { return view('areas.personal'); });
 
+	/*******************************************************************************************************
+											DEPARTAMENTO DE PRESTACIONES ADMMINISTRATIVAS
+ 	******************************************************************************************************/
+	//Depatamento de Prestaciones 
+	Route::get('/prestaciones', function () { return view('areas.prestaciones'); });
 
+	
 	// MOSTRAR LA INFORMACION DE LOS ACTIVOS Y PENSIONADOS EN LA TABLA DE LA PAGINA PRINCIPAL
 	//Route::get('get_usuarios','Expediente\ExpedienteController@getExpedientes');
 

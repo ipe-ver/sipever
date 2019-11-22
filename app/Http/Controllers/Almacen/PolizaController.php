@@ -30,15 +30,15 @@ class PolizaController extends Controller
         $conta = $request->input('conta');
         $no_mes = $request->input('numMes');
         $anio = $request->input('year');
-
+        $tipo='poliza';
         $mes_nombre = $this->nombre_mes($no_mes);
         $ruta = "";
-        $headers = [];
+        $headers = ['CTA','SCTA','SSCTA','CONCEPTO','CARGOS','ABONOS','TOTALES'];
         $mensaje = "";
         $nombre_archivo="";
 
         if($almacen == "checked"){
-            $mensaje = "Poliza de almacén";
+            $mensaje = "Reporte de Poliza de almacén";
             $nombre_archivo="POLIZALMAC";
             $ruta = "almacen.polizas.poliza_almacen";
         }elseif($conta == "checked"){
@@ -62,8 +62,7 @@ class PolizaController extends Controller
 
         $fecha = date("d/M/Y");
         $hora = date("h:i a");
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView($ruta,compact('mensaje','fecha','hora','logo_b64', 'headers'));
-
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView($ruta,compact('mensaje','fecha','hora','logo_b64', 'headers','tipo'))->setPaper('letter', 'portrait');
         return $pdf->stream($nombre_archivo);
     }
 

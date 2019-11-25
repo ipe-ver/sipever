@@ -1085,7 +1085,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
                 INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
                 INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
-                WHERE partidas.nombre = partida;
+                WHERE partidas.nombre = partida GROUP BY articulos.id;
                             
                 IF mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN
 	                SELECT partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", IFNULL(COUNT(*),0) AS "CODIFICACIONES",
@@ -1144,7 +1144,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
                 INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
                 INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
-						 ORDER BY partidas.sscta ASC, articulos.descripcion ASC;
+                GROUP BY articulos.id ORDER BY partidas.sscta ASC, articulos.descripcion ASC;
                             
                 IF mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN
 	                SELECT partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", IFNULL(COUNT(*),0) AS "CODIFICACIONES",

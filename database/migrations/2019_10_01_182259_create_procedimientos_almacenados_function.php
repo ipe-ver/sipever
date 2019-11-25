@@ -1820,7 +1820,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         detalle.cantidad AS "CANT.", FORMAT(articulo.precio_unitario,2) AS "COSTO UNIT.", FORMAT((detalle.cantidad * articulo.precio_unitario),2) AS "IMPORTE",
                         (SELECT cat_oficinas.descripcion FROM cat_oficinas WHERE cat_oficinas.oficina = 0 AND cat_oficinas.ubpp = (SELECT cat_oficinas.ubpp FROM cat_oficinas
                                 WHERE consumo.id_oficina = cat_oficinas.id)) AS "DEPARTAMENTO",
-                        (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id) AS "TOTAL DE ARTICULOS",
+                        (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id AND consumo.id_consumo = detalles.id_consumo) AS "TOTAL DE ARTICULOS",
                         FORMAT((SELECT SUM(detalles.cantidad * articulo.precio_unitario) FROM detalles WHERE detalles.id_articulo = articulo.id),2) AS "TOTAL"
                 FROM cat_articulos articulo
                 INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id

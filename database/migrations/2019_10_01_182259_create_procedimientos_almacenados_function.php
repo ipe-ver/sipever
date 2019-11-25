@@ -1085,7 +1085,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
                 INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
                 INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
-                WHERE partidas.nombre = partida;
+                WHERE partidas.nombre = partida GROUP BY articulos.id;
                             
                 IF mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN
 	                SELECT partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", IFNULL(COUNT(*),0) AS "CODIFICACIONES",
@@ -1144,7 +1144,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 INNER JOIN cat_unidades_almacen unidades ON articulos.id_unidad = unidades.id
                 INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
                 INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
-						 ORDER BY partidas.sscta ASC, articulos.descripcion ASC;
+                GROUP BY articulos.id ORDER BY partidas.sscta ASC, articulos.descripcion ASC;
                             
                 IF mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN
 	                SELECT partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", IFNULL(COUNT(*),0) AS "CODIFICACIONES",
@@ -1820,7 +1820,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                         detalle.cantidad AS "CANT.", FORMAT(articulo.precio_unitario,2) AS "COSTO UNIT.", FORMAT((detalle.cantidad * articulo.precio_unitario),2) AS "IMPORTE",
                         (SELECT cat_oficinas.descripcion FROM cat_oficinas WHERE cat_oficinas.oficina = 0 AND cat_oficinas.ubpp = (SELECT cat_oficinas.ubpp FROM cat_oficinas
                                 WHERE consumo.id_oficina = cat_oficinas.id)) AS "DEPARTAMENTO",
-                        (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id) AS "TOTAL DE ARTICULOS",
+                        (SELECT SUM(detalles.cantidad) FROM detalles WHERE detalles.id_articulo = articulo.id AND consumo.id_consumo = detalles.id_consumo) AS "TOTAL DE ARTICULOS",
                         FORMAT((SELECT SUM(detalles.cantidad * articulo.precio_unitario) FROM detalles WHERE detalles.id_articulo = articulo.id),2) AS "TOTAL"
                 FROM cat_articulos articulo
                 INNER JOIN detalles detalle ON detalle.id_articulo = articulo.id

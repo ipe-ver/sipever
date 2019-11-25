@@ -13,7 +13,7 @@
         var token = $('meta[name="csrf-token"]').attr('content');
         if(ubpp_aux){
             $.ajax({
-                url: "/almacen/departamentos/buscaroficina",
+                url: "departamentos/buscaroficina",
                 type: "POST",
                 dataType: "json",
                 data: {ubpp: ubpp_aux, _token:token},

@@ -7,7 +7,7 @@
         var token = $('meta[name="csrf-token"]').attr('content');
         if(partida_aux){
             $.ajax({
-                url: "/almacen/facturas/buscarArticulo",
+                url: "facturas/buscarArticulo",
                 type: "POST",
                 dataType: "json",
                 data: {partida: partida_aux, _token:token},

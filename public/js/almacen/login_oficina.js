@@ -30,7 +30,7 @@ $(document).ready(function(){
 			sha256.update(codigo);
 			var result = sha256.digest("hex");
 			$.ajax({
-				url: "/almacen/oficinas/login",
+				url: "almacen/oficinas/login",
 		        type: "POST",
 		        dataType: "json",
 		        data: {code:result, _token:token},

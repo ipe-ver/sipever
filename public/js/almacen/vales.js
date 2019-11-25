@@ -154,14 +154,15 @@ function getDetalles(fecha, folio, button){
 		if(!panel_padre.hasAttribute("deployed")){
 			var token = $('meta[name="csrf-token"]').attr('content');
 		    $.ajax({
-		        url: "/almacen/vales/getDetalles",
+		        url: "vales/getDetalles",
 		        type: "POST",
 		        dataType: "json",
 		        data: {fecha:fecha, folio:folio, _token:token},
 		        beforeSend: function(){
 		            $("#loader").show();
+		            console.log(this.url);
 		        },
-		        error: function(){
+		        error: function(event){
 		        	var message = document.getElementById("messageCol");
 	                var mensaje = document.createElement("div");
 	                mensaje.setAttribute("class", "alert-container");
@@ -180,6 +181,7 @@ function getDetalles(fecha, folio, button){
 	                message.appendChild(mensaje);
 	                cargarMetodo();
 	                panel_padre.setAttribute("deployed", "true");
+	                console.log(event);
 	                $("#loader").hide();
 		        },
 		        success: function(datos){

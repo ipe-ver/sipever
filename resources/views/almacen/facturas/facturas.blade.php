@@ -91,7 +91,7 @@
                             <p>IVA %</p>
                         </label>
                     </div>
-                    <input type="number" name="iva" placeholder="IVA" class="form-control" value="0" id="iva" min="1" required>
+                    <input type="number" name="iva" placeholder="IVA" class="form-control" value="0" id="iva" min="1" readonly required>
                 </div>
                 <div class="col-sm-3" style="max-width: 11%;">
                     <div class="text-center">

@@ -101,9 +101,6 @@ class ValeController extends Controller
         }catch(Exception $e){
             return back()->withErrors([$e->message(),'Error al accesar a la base de datos, porfavor contacte al departamento de tecnologías de la información']);
         }
-
-        dd($request->all());
-
     }
 
     /**
@@ -208,7 +205,7 @@ class ValeController extends Controller
             return back()->withErrors([$mensaje]);
         }
 
-        if($tipo == 'consumo'){
+        if($tipo == 'Consumo'){
             //Preparamos la llamada al procedimiento remoto
             $query = $db->prepare('CALL sp_consumo(?,@clave)');
 
@@ -218,7 +215,6 @@ class ValeController extends Controller
                 $query->closeCursor();
                 //accedemos al valor de retorno para regresar la vista correspondiente.
                 $results = $db->query('SELECT @clave AS result')->fetch(PDOConnection::FETCH_ASSOC);
-                dd($results);
                 if ($results) {
                     // Obtenemos la clave generada
                     $clave_generada = $results['result'];

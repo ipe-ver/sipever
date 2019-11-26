@@ -18,13 +18,23 @@ class ArticuloController extends Controller
     public function index()
     {
         $no_index = 0;
-        $partidas = DB::select("call sp_get_grupos");
-        $unidades = DB::select("call sp_get_unidades");
-        $articulos = DB::select("call sp_get_articulos(?)", array($no_index));
-        $no_partida = 0;
+        $partidas = [];
+        $unidades = [];
+        $articulos = [];
+        $no_partida = 1;
+       try {
+            $no_index = 0;
+            $partidas = DB::select("call sp_get_grupos");
+            $unidades = DB::select("call sp_get_unidades");
+            $articulos = DB::select("call sp_get_articulos(?)", array($no_index));
+            $no_partida = 0;
 
-        return view('almacen.articulos.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
-            'articulos'=>$articulos, 'index' => $no_index, 'no_partida' => $no_partida]);
+            return view('almacen.articulos.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
+                'articulos'=>$articulos, 'index' => $no_index, 'no_partida' => $no_partida]);
+       } catch (Exception $e) {
+           return view('almacen.articulos.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
+                'articulos'=>$articulos, 'index' => $no_index, 'no_partida' => $no_partida])->withErrors(['Error al conectarse con la base de datos, favor de contactar al departamento de tecnologías de la información']);
+       }
     }
 
     /**

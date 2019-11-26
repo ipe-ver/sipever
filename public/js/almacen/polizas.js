@@ -43,7 +43,10 @@ $(document).ready(function(){
         }
     });
     $('#genPoliza').on("click",function(event){
-        $('#loader').show();
+        var polizaForm = document.getElementById('polizaForm');
+        if(polizaForm.checkValidity()){
+            $('#loader').show();
+        }
     });
 });
 

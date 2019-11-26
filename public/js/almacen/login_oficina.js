@@ -21,7 +21,6 @@ $(document).ready(function(){
 	}
 	$("#btnLogin").on('click',function(event){
 		event.preventDefault();
-		clearLabels();
 		var token = $('meta[name="csrf-token"]').attr('content');
 		var codigo = $("#officeCode").val();
 		var form = document.getElementById("oficina_login");
@@ -53,6 +52,11 @@ $(document).ready(function(){
 		        		$("#loaderLogin").hide();
 		        	}
 		        },
+		        error: function(){
+		        	alert('Error al conectarse con la base de datos\nPorfavor contecte al departamento de tecnologías de la información');
+		        	$("#loaderLogin").hide();
+		        },
+		        timeout:5000
 			});
 		}else{
 			var msg = '<label class="error" for="officeCode">Porfavor ingrese su codigo de oficina</label>';

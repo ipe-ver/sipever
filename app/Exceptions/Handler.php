@@ -4,6 +4,8 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Arr;
 
 class Handler extends ExceptionHandler
 {
@@ -46,6 +48,26 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($exception instanceof QueryException){
+            $stack = collect($exception->getTrace())->map(function ($trace) {
+                return Arr::except($trace, ['args']);
+            })->all();
+            $array = array('message'=>$exception->getMessage());
+            $mensaje_aux = explode("]", iconv("utf-8", "utf-8//ignore", $array['message']));
+            
+            if(sizeof($mensaje_aux) > 2){
+                $mensaje = explode("\r", $mensaje_aux[2])[0];
+            }else{
+                $mensaje = 'Error en transacción';
+            }
+           
+            $error = [
+                'codigo' => $exception->getCode(),
+                'file' => $exception->getFile(),
+                'mensaje' => $mensaje,
+            ];
+            return response()->view('almacen.error', compact('error', 'stack'));
+        }
         return parent::render($request, $exception);
     }
 }

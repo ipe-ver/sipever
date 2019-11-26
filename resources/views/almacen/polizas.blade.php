@@ -63,7 +63,7 @@
                 <div class="sp sp4"></div>
             </div>
         </div>
-        <form action="{{route('almacen.polizas.generar')}}" method = "POST">
+        <form action="{{route('almacen.polizas.generar')}}" method = "POST" id="polizaForm">
             @csrf
             @method("POST")
             <div class="row justify-content-md-center">

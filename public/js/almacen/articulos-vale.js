@@ -22,7 +22,12 @@ $(document).ready(function(){
                        $('select[name="articulos"]').append('<option value="'+ data.clave + ' '+ data.descripcion_u_medida +'">'+ data.descripcion +'</option>');
                     });
                     $("#loader").hide();
-                }
+                },
+                error: function(){
+                    alert('Error al conectarse con la base de datos\nPorfavor contecte al departamento de tecnologías de la información');
+                    $("#loader").hide();
+                },
+                timeout:5000
             });
         } else{
             $('select[name="articulos"]').empty();

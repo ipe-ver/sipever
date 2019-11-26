@@ -1,12 +1,11 @@
 var close = document.getElementsByClassName("closebtn");
-var i;
 /*
  * Con esta función se carga el funcionamiento de las notificaciones
 */
  $("#loader").show();
  $(document).ready(function(){
     $("#loader").hide();
-    for (i = 0; i < close.length; i++) {
+    for (var i = 0; i < close.length; i++) {
         close[i].onclick = function(){
             var div = this.parentElement;
             div.style.opacity = "0";
@@ -36,7 +35,7 @@ var i;
         for(var index = listas.length-1; index >=0; index--){
             listas[index].setAttribute("id", listas[index].id+i);
         }
-     }
+    }
 
 
     //Se asignan los ids a los botones de edición y eliminación.
@@ -128,6 +127,28 @@ var i;
             });
         }
     }
+
+    var crearArticulo = document.getElementById('btn-guardar');
+    crearArticulo.addEventListener("click",function(event){
+        var newArticulo = document.getElementById('newArticulo');
+        if(newArticulo.checkValidity()){
+           if(!validateNew()){
+              event.preventDefault();
+              alert('Los datos ingresados son incorrectos')
+           }
+        }
+    });
+
+    var cancelar = document.getElementById('btn-cancelar');
+    cancelar.addEventListener("click", function(){
+        clearOrden();
+    });
+
+     $(document).keyup(function(event){
+        if(event.keyCode==27){
+            clearOrden();
+        }
+    });
 });
 
 /**
@@ -148,16 +169,102 @@ function cerrarPaneles(btn_editar, btn_eliminar){
             botones_delete[i].setAttribute("disabled","true");
         }
     }
+}
 
-    var paneles = document.getElementsByClassName('panel-menu');
-    for (var i = paneles.length - 1; i >= 0; i--) {
-        var campos = paneles[i].getElementsByClassName('panel-body')[0].getElementsByTagName("input");
-        for (var index = campos.length-1; index >= 0; index--) {
-            campos[index].setAttribute("id", campos[index].id+i);
-        }
-        var listas = paneles[i].getElementsByClassName('panel-body')[0].getElementsByTagName("select");
-        for(var index = listas.length-1; index >=0; index--){
-            listas[index].setAttribute("id", listas[index].id+i);
-        }
-     }
+function validateEach(index){
+    var articuloClave = $(`#articuloClave${index}`);
+    var articuloDescripcion = $(`#articuloDescripcion${index}`);
+    var articuloExistencias = $(`#articuloExistencias${index}`);
+    var articuloUnidad = $('#articuloUnidad');
+    var articuloStock_min = $('#articuloStock_min');
+    var articuloStock_max = $('#articuloStock_max');
+    var articuloPrecio = $('#articuloPrecio');
+
+    if(isNaN(parseFloat(articuloClave.val()))){
+        return false;
+    }
+
+    if(!isNaN(parseFloat(articuloDescripcion.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloExistencias.val()))){
+        return false;
+    }
+
+    if(!isNaN(parseFloat(articuloUnidad.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloStock_min.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloStock_max.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloPrecio.val()))){
+        return false;
+    }
+    return true;
+}
+
+
+function validateNew(){
+
+    var articuloClave = $('#articuloClave');
+    var articuloDescripcion = $('#articuloDescripcion');
+    var articuloExistencias = $('#articuloExistencias');
+    var articuloUnidad = $('#articuloUnidad');
+    var articuloStock_min = $('#articuloStock_min');
+    var articuloStock_max = $('#articuloStock_max');
+    var articuloPrecio = $('#articuloPrecio');
+
+    if(isNaN(parseFloat(articuloClave.val()))){
+        return false;
+    }
+
+    if(!isNaN(parseFloat(articuloDescripcion.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloExistencias.val()))){
+        return false;
+    }
+
+    if(!isNaN(parseFloat(articuloUnidad.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloStock_min.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloStock_max.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloPrecio.val()))){
+        return false;
+    }
+    return true;
+}
+
+function clearOrden(){
+    var articuloClave = $('#articuloClave');
+    var articuloDescripcion = $('#articuloDescripcion');
+    var articuloExistencias = $('#articuloExistencias');
+    var articuloUnidad = $('#articuloUnidad');
+    var articuloStock_min = $('#articuloStock_min');
+    var articuloStock_max = $('#articuloStock_max');
+    var articuloPrecio = $('#articuloPrecio');
+
+    articuloClave.val('');
+    articuloDescripcion.val('');
+    articuloExistencias.val('');
+    articuloUnidad.val('');
+    articuloStock_min.val('');
+    articuloStock_max.val('');
+    articuloPrecio.val('');
 }

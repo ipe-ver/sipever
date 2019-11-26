@@ -29,9 +29,9 @@
 					</a>
 		           </div>
 		           <div class="col-xs-2">
-					<a class="nombre_modulo" href="{!! route('almacen.periodo.index') !!}">
-						<i class="fas fa-lock"></i>
-						<span>Cerrar mes</span>
+					<a class="nombre_modulo" href="{!! route('almacen.facturas.index') !!}">
+						<i class="fas fa-file-invoice-dollar"></i>
+						<span>Facturas</span>
 					</a>
 		           </div>
 		           <div class="col-xs-2">
@@ -47,9 +47,9 @@
 					</a>
 		           </div>
 		           <div class="col-xs-2">
-					<a class="nombre_modulo" href="{!! route('almacen.facturas.index') !!}">
-						<i class="fas fa-file-invoice-dollar"></i>
-						<span>Facturas</span>
+					<a class="nombre_modulo" href="{!! route('almacen.periodo.index') !!}">
+						<i class="fas fa-lock"></i>
+						<span>Cerrar mes</span>
 					</a>
 		           </div>
 		       @elseif(Auth::user()->hasRole('almacen_capturista'))
@@ -57,6 +57,12 @@
 						<a class="nombre_modulo" href="{!! route('almacen.vales.index') !!}">
 							<i class="fas fa-inbox"></i>
 							<span>Vales</span>
+						</a>
+		           </div>
+		           <div class="col-xs-2">
+						<a class="nombre_modulo" href="{!! route('almacen.facturas.index') !!}">
+							<i class="fas fa-file-invoice-dollar"></i>
+							<span>Facturas</span>
 						</a>
 		           </div>
 		           <div class="col-xs-2">
@@ -69,12 +75,6 @@
 						<a class="nombre_modulo" href="{!! route('almacen.partidas.index') !!}">
 							<i class="fas fa-layer-group"></i>
 							<span>Partidas</span>
-						</a>
-		           </div>
-		           <div class="col-xs-2">
-						<a class="nombre_modulo" href="{!! route('almacen.facturas.index') !!}">
-							<i class="fas fa-file-invoice-dollar"></i>
-							<span>Facturas</span>
 						</a>
 		           </div>
 		       @else

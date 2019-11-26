@@ -20,10 +20,10 @@ class CreateTableInventarioInicialFinal extends Migration
             $table->integer('id_articulo')->unsigned();
             $table->foreign('id_articulo')->references('id')->on('cat_articulos');
 
-            $table->integer('cant_inicial');
-            $table->integer('existencias');
-            $table->double('precio_inicial');
-            $table->double('precio_promedio');
+            $table->integer('cant_inicial')->default(0);
+            $table->integer('existencias')->default(0);
+            $table->double('precio_inicial')->default(0);
+            $table->double('precio_promedio')->default(0);
             $table->boolean('estatus')->default(1);
 
             $table->timestamps();

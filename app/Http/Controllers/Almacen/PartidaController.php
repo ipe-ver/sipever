@@ -104,6 +104,9 @@ class PartidaController extends Controller
         $nombre_aux = $input['nombre'];
         $nombre =strtoupper($nombre_aux);
         $grupo=$input['grupo'];
+        if(sizeof($grupo)>1){
+            return back()->with('warning','Los datos ingresdos no son correctos');
+        }
         $nomarmo_aux = $input['nomarmo'];
         $nomarmo = strtoupper($nomarmo_aux);
 

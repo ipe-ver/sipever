@@ -8,7 +8,7 @@ $(document).ready(function(){
         var token = $('meta[name="csrf-token"]').attr('content');
         if(partida_aux){
             $.ajax({
-                url: "/almacen/vales/buscarArticulo",
+                url: "vales/buscarArticulo",
                 type: "POST",
                 dataType: "json",
                 data: {partida: partida_aux, _token:token},
@@ -22,7 +22,12 @@ $(document).ready(function(){
                        $('select[name="articulos"]').append('<option value="'+ data.clave + ' '+ data.descripcion_u_medida +'">'+ data.descripcion +'</option>');
                     });
                     $("#loader").hide();
-                }
+                },
+                error: function(){
+                    alert('Error al conectarse con la base de datos\nPorfavor contecte al departamento de tecnologías de la información');
+                    $("#loader").hide();
+                },
+                timeout:5000
             });
         } else{
             $('select[name="articulos"]').empty();

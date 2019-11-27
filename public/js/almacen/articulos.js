@@ -1,12 +1,12 @@
+var articulo_edit = [];
 var close = document.getElementsByClassName("closebtn");
-var i;
 /*
  * Con esta función se carga el funcionamiento de las notificaciones
 */
  $("#loader").show();
  $(document).ready(function(){
     $("#loader").hide();
-    for (i = 0; i < close.length; i++) {
+    for (var i = 0; i < close.length; i++) {
         close[i].onclick = function(){
             var div = this.parentElement;
             div.style.opacity = "0";
@@ -20,6 +20,11 @@ var i;
                 }
             }, 1000);
         }
+    }
+
+    var forms = document.getElementsByClassName('articuloForm');
+    for(var i = 0, length1 = forms.length; i < length1; i++){
+        forms[i].id=`articuloForm${i}`;
     }
 
     // Con las siguientes funciones se asignan los ids correspondientes para cada elemento dentro de los paneles de artículos.
@@ -36,7 +41,7 @@ var i;
         for(var index = listas.length-1; index >=0; index--){
             listas[index].setAttribute("id", listas[index].id+i);
         }
-     }
+    }
 
 
     //Se asignan los ids a los botones de edición y eliminación.
@@ -71,6 +76,23 @@ var i;
             contadores[i]=0;
         }
         for (let index = 0; index < botones.length; index++) {
+            const panel_aux = document.getElementById("Articulo"+index);
+            var boton_guardar_aux = panel_aux.getElementsByClassName('btn-submit')[0];
+            boton_guardar_aux.addEventListener('click',function(event){
+                var form_aux = document.getElementById(`articuloForm${index}`);
+                if(form_aux.checkValidity()){
+                    if(!validateEach(index)){
+                        event.preventDefault();
+                        alert('Los datos ingresados son incorrectos');
+                    }
+                }
+            });
+
+            var boton_cancelar_aux = panel_aux.getElementsByClassName('btn-cancel')[0];
+            boton_cancelar_aux.addEventListener('click', function(){
+                cancelar_edicion(index);
+            });
+
             const boton = botones[index];
             /*Las siguientes tres funciones asignan los ids de los paneles que se van a desplegar al dar click
              * sobre el boton de despliegue que esta dentro del encabezado del panel.
@@ -79,13 +101,13 @@ var i;
             boton.setAttribute("data-target", "#collapseArticulo"+index);
             //Cada vez que se le de click al botón de despliegue...
             boton.addEventListener('click', function(){
+                setEditando(index);
                 var btn_editar_aux = document.getElementById('btn_editar'+index);
                 var btn_eliminar_aux = document.getElementById('btn_eliminar'+index);
                 cerrarPaneles(btn_editar_aux, btn_eliminar_aux);
                 //Se agrega el metodo click al boton
                 btn_editar_aux.addEventListener("click",function(){
                     //Se asignan los métodos a los botones de editar y eliminar
-                    var panel_aux = document.getElementById("Articulo"+index);
                     var campos_aux = panel_aux.getElementsByClassName('panel-body')[0].getElementsByTagName("input");
                     for (var x = 0; x < campos_aux.length; x++) {
                         if(campos_aux[x].getAttribute("id")!='articuloEstatus'+index && campos_aux[x].getAttribute("id")!='articuloPrecio'+index){
@@ -128,6 +150,28 @@ var i;
             });
         }
     }
+
+    var crearArticulo = document.getElementById('btn-guardar');
+    crearArticulo.addEventListener("click",function(event){
+        var newArticulo = document.getElementById('newArticulo');
+        if(newArticulo.checkValidity()){
+           if(!validateNew()){
+              event.preventDefault();
+              alert('Los datos ingresados son incorrectos');
+           }
+        }
+    });
+
+    var cancelar = document.getElementById('btn-cancelar');
+    cancelar.addEventListener("click", function(){
+        clearOrden();
+    });
+
+    $(document).keyup(function(event){
+        if(event.keyCode==27){
+            clearOrden();
+        }
+    });
 });
 
 /**
@@ -148,16 +192,150 @@ function cerrarPaneles(btn_editar, btn_eliminar){
             botones_delete[i].setAttribute("disabled","true");
         }
     }
+}
 
-    var paneles = document.getElementsByClassName('panel-menu');
-    for (var i = paneles.length - 1; i >= 0; i--) {
-        var campos = paneles[i].getElementsByClassName('panel-body')[0].getElementsByTagName("input");
-        for (var index = campos.length-1; index >= 0; index--) {
-            campos[index].setAttribute("id", campos[index].id+i);
-        }
-        var listas = paneles[i].getElementsByClassName('panel-body')[0].getElementsByTagName("select");
-        for(var index = listas.length-1; index >=0; index--){
-            listas[index].setAttribute("id", listas[index].id+i);
-        }
-     }
+function validateEach(index){
+    var articuloClave = $(`#articuloClave${index}`);
+    var articuloDescripcion = $(`#articuloDescripcion${index}`);
+    var articuloExistencias = $(`#articuloExistencias${index}`);
+    var articuloUnidad = $(`#articuloUnidad${index}`);
+    var articuloStock_min = $(`#articuloStock${index}`);
+    var articuloPrecio = $(`#articuloPrecio${index}`);
+
+
+    if(isNaN(parseFloat(articuloClave.val()))){
+        return false;
+    }
+
+    if(!isNaN(parseFloat(articuloDescripcion.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloExistencias.val()))){
+        return false;
+    }
+
+    if(!isNaN(parseFloat(articuloUnidad.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloStock_min.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloStock_max.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloPrecio.val()))){
+        return false;
+    }
+
+    if(parseFloat(articuloExistencias.val())<parseFloat(articuloStock_min.val())){
+        return false;
+    }
+    return true;
+}
+
+
+function validateNew(){
+
+    var articuloClave = $('#articuloClave');
+    var articuloDescripcion = $('#articuloDescripcion');
+    var articuloExistencias = $('#articuloExistencias');
+    var articuloUnidad = $('#articuloUnidad');
+    var articuloStock_min = $('#articuloStock_min');
+    var articuloStock_max = $('#articuloStock_max');
+    var articuloPrecio = $('#articuloPrecio');
+
+    if(isNaN(parseFloat(articuloClave.val()))){
+        return false;
+    }
+
+    if(!isNaN(parseFloat(articuloDescripcion.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloExistencias.val()))){
+        return false;
+    }
+
+    if(!isNaN(parseFloat(articuloUnidad.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloStock_min.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloStock_max.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(articuloPrecio.val()))){
+        return false;
+    }
+
+    if(parseFloat(articuloExistencias.val())<parseFloat(articuloStock_min.val())){
+        return false;
+    }
+
+    if(parseFloat(articuloExistencias.val())>parseFloat(articuloStock_max.val())){
+        return false;
+    }
+
+    if(parseFloat(articuloStock_max.val())<parseFloat(articuloStock_min.val())){
+        return false;
+    }
+
+    return true;
+}
+
+function clearOrden(){
+    var articuloClave = $('#articuloClave');
+    var articuloDescripcion = $('#articuloDescripcion');
+    var articuloExistencias = $('#articuloExistencias');
+    var articuloUnidad = $('#articuloUnidad');
+    var articuloStock_min = $('#articuloStock_min');
+    var articuloStock_max = $('#articuloStock_max');
+    var articuloPrecio = $('#articuloPrecio');
+
+    articuloClave.val('');
+    articuloDescripcion.val('');
+    articuloExistencias.val('');
+    articuloUnidad.val('');
+    articuloStock_min.val('');
+    articuloStock_max.val('');
+    articuloPrecio.val('');
+}
+
+function cancelar_edicion(index){
+    $(`#articuloClave${index}`).val(articulo_edit[0]);
+    $(`#articuloDescripcion${index}`).val(articulo_edit[1]);
+    $(`#articuloExistencias${index}`).val(articulo_edit[2]);
+    $(`#articuloUnidad${index}`).val(articulo_edit[3]);
+    $(`#articuloStock${index}`).val(articulo_edit[4]);
+    $(`#articuloPrecio${index}`).val(articulo_edit[5]);
+    const panel_aux = document.getElementById("Articulo"+index);
+    var campos_aux = panel_aux.getElementsByClassName('panel-body')[0].getElementsByTagName("input");
+    for (var x = 0; x < campos_aux.length; x++) {
+        campos_aux[x].setAttribute("disabled", "true");
+    }
+    var select_aux = panel_aux.getElementsByClassName('panel-body')[0].getElementsByTagName("select");
+    for (var x = 0; x < select_aux.length; x++) {
+        select_aux[x].setAttribute("disabled", "true");
+    }
+    var botones_aux = panel_aux.getElementsByClassName('panel-body')[0].getElementsByTagName("button");
+    for (var x = 0; x < botones_aux.length; x++) {
+        botones_aux[x].setAttribute("disabled", "true");
+    }
+}
+
+function setEditando(index){
+    articulo_edit[0] = $(`#articuloClave${index}`).val();
+    articulo_edit[1] = $(`#articuloDescripcion${index}`).val();
+    articulo_edit[2] = $(`#articuloExistencias${index}`).val();
+    articulo_edit[3] = $(`#articuloUnidad${index}`).val();
+    articulo_edit[4] = $(`#articuloStock${index}`).val();
+    articulo_edit[5] = $(`#articuloPrecio${index}`).val();
 }

@@ -7,12 +7,10 @@
   <body>
     <style type="text/css" media="screen">
       @page { margin: 10px 25px; }
-
       body{
         font-family: Panton;
         src:url('{{public_path('fonts/Panton-Regular.otf')}}');
       }
-
       header {
         position: fixed;
         top: 0px;
@@ -24,7 +22,6 @@
         page-break-after: always;
       }
       .hijo:last-child { page-break-after: never; }
-
       .header{
           border-bottom-style: solid;
           border-bottom-color: #A9ADCC;
@@ -34,37 +31,29 @@
         margin-bottom: 1rem;
         background-color: transparent;
       }
-
       .table th,
       .table td {
         padding: 0.75rem;
         vertical-align: top;
       }
-
       .table th{
         font-size: 11px;
       }
-
       .table tbody td{
         font-size: 11px;
       }
-
       .table thead{
          border-bottom: 2px solid #dee2e6;
       }
-
       .table thead th {
         vertical-align: bottom;
       }
-
       .table tbody + tbody {
         border-top: 2px solid #dee2e6;
       }
-
       .table .table {
         background-color: #fff;
       }
-
       .row {
         display: -ms-flexbox;
         display: inline-flex;
@@ -73,12 +62,10 @@
         margin-right: -15px;
         margin-left: -15px;
       }
-
       .signature {
         border: 0;
         border-bottom: 1px solid #000;
       }
-
     </style>
     <header>
       <div class="header" style="text-align: center;">

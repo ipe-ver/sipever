@@ -17,6 +17,7 @@
 			<td >0</td>
 			<td >0</td>
 			<td >0</td>
+			<td >938</td>
 		</tr>
 		<tr>
 			<td>7</td>
@@ -34,6 +35,7 @@
 			<td >0</td>
 			<td >0</td>
 			<td >0</td>
+			<td >938</td>
 		</tr>
 		<tr>
 			<td>7</td>
@@ -51,6 +53,7 @@
 			<td >0</td>
 			<td >0</td>
 			<td >0</td>
+			<td >938</td>
 		</tr>
 	</tbody>
 @endsection

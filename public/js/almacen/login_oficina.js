@@ -19,9 +19,23 @@ $(document).ready(function(){
 	}else{
 		$("#loaderLogin").hide();
 	}
+
+	$("#visualizar").on('click', function(){
+		var officeCode = document.getElementById('officeCode');
+		if($('#officeCode').attr('type') == 'password'){
+			officeCode.setAttribute('type', 'text');
+			$('#ojo').removeClass('fa-eye');
+			$('#ojo').addClass('fa-eye-slash');
+		}else{
+			officeCode.setAttribute('type', 'password');
+			$('#ojo').removeClass('fa-eye-slash');
+			$('#ojo').addClass('fa-eye');
+		}
+
+	});
+
 	$("#btnLogin").on('click',function(event){
 		event.preventDefault();
-		clearLabels();
 		var token = $('meta[name="csrf-token"]').attr('content');
 		var codigo = $("#officeCode").val();
 		var form = document.getElementById("oficina_login");
@@ -30,7 +44,7 @@ $(document).ready(function(){
 			sha256.update(codigo);
 			var result = sha256.digest("hex");
 			$.ajax({
-				url: "/almacen/oficinas/login",
+				url: "almacen/oficinas/login",
 		        type: "POST",
 		        dataType: "json",
 		        data: {code:result, _token:token},
@@ -54,6 +68,11 @@ $(document).ready(function(){
 		        		$("#loaderLogin").hide();
 		        	}
 		        },
+		        error: function(){
+		        	alert('Error al conectarse con la base de datos\nPorfavor contecte al departamento de tecnologías de la información');
+		        	$("#loaderLogin").hide();
+		        },
+		        timeout:5000
 			});
 		}else{
 			var msg = '<label class="error" for="officeCode">Porfavor ingrese su codigo de oficina</label>';

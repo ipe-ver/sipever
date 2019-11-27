@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
 use Doctrine\DBAL\Driver\PDOConnection;
+use Illuminate\Database\QueryException;
 use Exception;
 use File;
 use DB;
@@ -80,31 +81,32 @@ class ReporteController extends Controller
                 return back()->with('warning','Las fechas ingresadas no son correctas');
             }
         }
+        $papel = null;
+        $orientacion= null;
 
         if ($validConsumo == "checked"){
             $mensaje = 'Reporte para validación de consumos';
             $nombre_archivo="REPVALIDCONS";
             $ruta = "almacen.reportes.reporte_validacion_cons";
-            $headers = ['FOLIO', 'CUENTA CODIF.', 'DESCRIPCIÓN', 'UNIDAD', 'CANT.', 'COSTO', 'IMPORTE'];
-            $orientacion = 'portrait';
             $papel = 'letter';
-            $tipo = 'reporte';
+            $orientacion='portrait';
+            $headers = ['FOLIO.','CUENTA CODIF.', 'DESCRIPCIÓN', 'UNIDAD', 'CANT.', 'COSTO', 'IMPORTE'];
         }elseif ($consDepto == "checked") {
             $mensaje = 'Reporte de consumos por departamento';
             $nombre_archivo="REPCONSDEPTO";
             $ruta = "almacen.reportes.reporte_consumos_depto";
-            $orientacion = 'portrait';
+            $headers=['FOLIO','CODIF.','DESCRIPCION','UNIDAD','CANT.','COSTO UNIT.','IMPORTE'];
             $papel = 'letter';
-            $headers = ['FOLIO', 'CODIF.', 'DESCRIPCIÓN', 'UNIDAD', 'CANT.', 'COSTO', 'IMPORTE'];
-            $tipo = 'reporte';
+            $orientacion='landscape';
         }elseif ($auxAlmacen == "checked"){
             $mensaje = 'Reporte auxiliar de almacén general';
-            $headers = ['CODIF.', 'DESCRIPCIÓN', 'DEPARTAMENTO', 'UNIDAD', 'CANT.', 'COSTO UNIT.', 'IMPORTE', 'INV FIN.'];
             $nombre_archivo="REPAUXALM";
             $orientacion = 'landscape';
             $papel = 'letter';
             $ruta = "almacen.reportes.reporte_auxiliar";
-            $tipo = 'reporte';
+            $headers=['CODIF.','DESCRIPCION','UNIDAD','CANT.','COSTO UNIT.','IMPORTE', 'INV. FIN'];
+            $papel = 'letter';
+            $orientacion='portrait';
         }elseif ($existencias == "checked"){
             $mensaje = 'Reporte final de existencias';
             $nombre_archivo="REPFINALEXIST";
@@ -112,41 +114,42 @@ class ReporteController extends Controller
             $orientacion = 'portrait';
             $papel = 'letter';
             $headers = ['CODIF.', 'DESCRIPCIÓN', 'UNIDAD', 'CANT.', 'COSTO', 'IMPORTE'];
-            $tipo = 'reporte';
+            $papel = 'letter';
+            $orientacion='portrait';
         }elseif ($consArticulo == "checked"){
             $mensaje = 'Concentrado de consumos por artículo';
             $nombre_archivo="CONCENTCONSARTI";
             $ruta = "almacen.reportes.cons_p_articulo";
             $headers = ['CODIF.', 'DESCRIPCIÓN', 'UNIDAD', 'ENE. ', 'FEB. ', 'MAR. ', 'ABR. ', 'MAY. ', 'JUN. ', 'JUL. ', 'AGO. ', 'SEPT.', 'OCT.', 'NOV.','DIC.', 'TOT. DEL AÑO'];
-            $orientacion = 'landscape';
             $papel = 'legal';
-            $tipo = 'concentrado';
+            $orientacion='landscape';
         }elseif ($compArticulo == "checked"){
             $mensaje = 'Concentrado de compras por artículo';
             $nombre_archivo="CONCENTCOMPART";
             $ruta = "almacen.reportes.compras_p_articulo";
-            $headers = ['CODIF.', 'DESCRIPCIÓN', 'ENE. ', 'FEB. ', 'MAR. ', 'ABR. ', 'MAY. ', 'JUN. ', 'JUL. ', 'AGO. ', 'SEPT.', 'OCT.', 'NOV.','DIC.', 'TOTAL'];
-            $orientacion = 'landscape';
+            if($mesIni > 6) {
+                $headers = ['CODIF.', 'DESCRIPCIÓN','JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE', 'TOTAL SEMESTRAL'];
+            }else{
+                $headers = ['CODIF.', 'DESCRIPCIÓN', 'ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO','JUNIO', 'TOTAL SEMESTRAL'];
+            }
             $papel = 'legal';
-            $tipo = 'concentrado';
+            $orientacion='landscape';
         }elseif ($existArticulo == "checked"){
             $mensaje = 'Concentrado de existencias por artículo';
             $nombre_archivo="CONCENTEXISTART";
             $ruta = "almacen.reportes.existencias_p_articulo";
             //Preparamos la llamada al procedimiento remoto
             //$query = $db->prepare('CALL sp_concentrado_existencias(?,?,?)');
-            $headers = ['CODIF.', 'DESCRIPCIÓN', 'UNIDAD', 'ENE. ', 'FEB. ', 'MAR. ', 'ABR. ', 'MAY. ', 'JUN. ', 'JUL. ', 'AGO. ', 'SEPT.', 'OCT.', 'NOV.','DIC.'];
-            $orientacion = 'landscape';
+            $headers = ['CODIF.', 'DESCRIPCIÓN', 'UNIDAD', 'ENE. ', 'FEB. ', 'MAR. ', 'ABR. ', 'MAY. ', 'JUN. ', 'JUL. ', 'AGO. ', 'SEPT.', 'OCT.', 'NOV.','DIC.', 'TOT. DEL AÑO'];
             $papel = 'legal';
-            $tipo = 'concentrado';
+            $orientacion='landscape';
         }elseif ($consAreaArt == "checked"){
             $mensaje = 'Concentrado de consumos por área y artículo';
             $nombre_archivo="CONCENTCONSAART";
             $ruta = "almacen.reportes.consumos_p_area";
             $headers = ['CODIF.', 'DESCRIPCIÓN', 'UNIDAD', 'ENE. ', 'FEB. ', 'MAR. ', 'ABR. ', 'MAY. ', 'JUN. ', 'JUL. ', 'AGO. ', 'SEPT.', 'OCT.', 'NOV.','DIC.', 'TOT. DEL AÑO'];
-            $orientacion = 'landscape';
             $papel = 'legal';
-            $tipo = 'concentrado';
+            $orientacion='landscape';
         }else{
            return back()->with('warning',"Porfavor seleccione un tipo de reporte");
         }
@@ -158,6 +161,7 @@ class ReporteController extends Controller
         }
 
         if($query){
+            dd('Haciendo la query');
             //Hacemos un binding de los parámetros, así protegemos nuestra
             //llamada de una posible inyección sql
             $query->bindParam(1,$numMesInicio);
@@ -176,7 +180,8 @@ class ReporteController extends Controller
                 //accedemos al valor de retorno para regresar la vista correspondiente.
                 $results = $query->fetch(PDOConnection::FETCH_OBJ);
             } catch (Exception $e) {
-                return back()->withErrors([$e->message]);
+                throw new QueryException("Error Processing Request", 1);
+                
             }
         }
 
@@ -184,16 +189,14 @@ class ReporteController extends Controller
         $fecha_nombre=date("Ymd");
         $hora_nombre=date("Hi");
         $nombre_archivo = "{$fecha_nombre}_{$nombre_archivo}_{$hora_nombre}";
-
+        $tipo = 'reporte';
         $archivo = file_get_contents(public_path("/img_system/banner_principal.png"));
         $imagen_b64 = base64_encode($archivo);
         $logo_b64 = "data:image/png;base64,{$imagen_b64}";
         $fecha = date("d/M/Y");
         $hora = date("h:i a");
         $pdf = null;
-
         $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView($ruta,compact('mensaje','fecha','hora','logo_b64', 'headers', 'tipo'))->setPaper($papel, $orientacion);
-        
 
         return $pdf->stream($nombre_archivo);
     }

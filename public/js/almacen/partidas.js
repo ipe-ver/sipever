@@ -1,12 +1,12 @@
+var partida_edit = [];
 var close = document.getElementsByClassName("closebtn");
-var i;
 /*
  * Con esta función se carga el funcionamiento de las notificaciones
 */
  $("#loader").show();
  $(document).ready(function(){
     $("#loader").hide();
-    for (i = 0; i < close.length; i++) {
+    for (var i = 0; i < close.length; i++) {
         close[i].onclick = function(){
             var div = this.parentElement;
             div.style.opacity = "0";
@@ -22,11 +22,17 @@ var i;
         }
     }
 
+    var forms = document.getElementsByClassName('partidaForm');
+    for(var i = 0, length1 = forms.length; i < length1; i++){
+        forms[i].id=`partidaForm${i}`;
+    }
+
     // Con las siguientes funciones se asignan los ids correspondientes para cada elemento dentro de los paneles de artículos.
     // Se asigna el id al panel
     var paneles = document.getElementsByClassName('panel-menu');
     for (var i = paneles.length - 1; i >= 0; i--) {
         paneles[i].setAttribute("id", "Partida"+i);
+        //Se asignan los ids corrspondientes a los elementos del panel
         var campos = paneles[i].getElementsByClassName('panel-body')[0].getElementsByTagName("input");
         for (var index = campos.length-1; index >= 0; index--) {
             campos[index].setAttribute("id", campos[index].id+i);
@@ -72,6 +78,28 @@ var i;
             contadores[i]=0;
         }
         for (let index = 0; index < botones.length; index++) {
+            const panel_aux = document.getElementById("Partida"+index);
+            var boton_guardar_aux = panel_aux.getElementsByClassName('btn-submit')[0];
+            boton_guardar_aux.addEventListener('click', function(event){
+                var form_aux = document.getElementById(`partidaForm${index}`);
+                event.preventDefault();
+                console.log(form_aux);
+                if(form_aux.checkValidity()){
+                    event.preventDefault();
+                    ('form completo');
+                    if(!validateEach(index)){
+                        event.preventDefault();
+                        console.log('si pasó')
+                        alert('Los datos ingresados son incorrectos');
+                    }
+                }
+            });
+            var form_aux = document.getElementById(`partidaForm${index}`);
+            var boton_cancelar_aux = form_aux.getElementsByClassName('btn-cancel')[0];
+            boton_cancelar_aux.addEventListener('click', function(){
+                cancelar_edicion(index);
+            });
+
             const boton = botones[index];
             /*Las siguientes tres funciones asignan los ids de los paneles que se van a desplegar al dar click
              * sobre el boton de despliegue que esta dentro del encabezado del panel.
@@ -82,6 +110,7 @@ var i;
 
             //Cada vez que se le de click al botón de despliegue...
             boton.addEventListener('click', function(){
+                setEditando(index);
                 var btn_editar_aux = document.getElementById('btn_editar'+index);
                 var btn_eliminar_aux = document.getElementById('btn_eliminar'+index);
                 cerrarPaneles(btn_editar_aux, btn_eliminar_aux);
@@ -119,6 +148,26 @@ var i;
             });
         }
     }
+    var crearPartida = document.getElementById('btn-guardar');
+    crearPartida.addEventListener("click",function(event){
+        var newPartida = document.getElementById('newPartida');
+        if(newPartida.checkValidity()){
+           if(!validateNew()){
+              event.preventDefault();
+              alert('Los datos ingresados son incorrectos');
+           }
+        }
+    });
+    var cancelar = document.getElementById('btn-cancelar');
+    cancelar.addEventListener("click", function(){
+        clearOrden();
+    });
+
+    $(document).keyup(function(event){
+        if(event.keyCode==27){
+            clearOrden();
+        }
+    });
 });
 
 function cerrarPaneles(btn_editar, btn_eliminar){
@@ -134,4 +183,139 @@ function cerrarPaneles(btn_editar, btn_eliminar){
             botones_delete[i].setAttribute("disabled","true");
         }
     }
+}
+
+function validateEach(index){
+
+    var partidaCta = $(`#partidaCta${index}`);
+    var partidaScta = $(`#partidaScta${index}`);
+    var partidaSscta = $(`#partidaSscta${index}`);
+    var partidaNombre = $(`#partidaNombre${index}`);
+    var partidaGrupo = $(`#partidaGrupo${index}`);
+    var partidaCtaArm = $(`#partidaCtaArm${index}`);
+    var partidaNombreArm = $(`#partidaNombreArm${index}`);
+
+    if(isNaN(parseFloat(partidaCta.val().replace('.','')))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(partidaScta.val().replace('.','')))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(partidaSscta.val().replace('.','')))){
+        return false;
+    }
+
+    if(!isNaN(parseFloat(partidaNombre.val()))){
+        return false;
+    }
+
+    if(!isNaN(parseFloat(partidaGrupo.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(partidaCtaArm.val().replace('.','')))){
+        return false;
+    }
+
+    if(!isNaN(parseFloat(partidaNombreArm.val()))){
+        return false;
+    }
+
+    return true;
+}
+
+
+function validateNew(){
+
+    var partidaCta = $('#partidaCta');
+    var partidaScta = $('#partidaScta');
+    var partidaSscta = $('#partidaSscta');
+    var partidaNombre = $('#partidaNombre');
+    var partidaGrupo = $('#partidaGrupo');
+    var partidaCtaArm = $('#partidaCtaArm');
+    var partidaNombreArm = $('#partidaNombreArm');
+
+    if(isNaN(parseFloat(partidaCta.val().replace('.','')))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(partidaScta.val().replace('.','')))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(partidaSscta.val().replace('.','')))){
+        return false;
+    }
+
+    if(!isNaN(parseFloat(partidaNombre.val()))){
+        return false;
+    }
+
+    if(!isNaN(parseFloat(partidaGrupo.val()))){
+        return false;
+    }
+
+    if(isNaN(parseFloat(partidaCtaArm.val().replace('.','')))){
+        return false;
+    }
+
+    if(!isNaN(parseFloat(partidaNombreArm.val()))){
+        return false;
+    }
+
+    return true;
+}
+
+function clearOrden(){
+    var partidaCta = $('#partidaCta');
+    var partidaScta = $('#partidaScta');
+    var partidaSscta = $('#partidaSscta');
+    var partidaNombre = $('#partidaNombre');
+    var partidaGrupo = $('#partidaGrupo');
+    var partidaCtaArm = $('#partidaCtaArm');
+    var partidaNombreArm = $('#partidaNombreArm');
+
+    partidaCta.val('');
+    partidaScta.val('');
+    partidaSscta.val('');
+    partidaNombre.val('');
+    partidaGrupo.val('');
+    partidaCtaArm.val('');
+    partidaNombreArm.val('');
+}
+
+function cancelar_edicion(index){
+    $(`#partidaCta${index}`).val(partida_edit[0]);
+    $(`#partidaScta${index}`).val(partida_edit[1]);
+    $(`#partidaSscta${index}`).val(partida_edit[2]);
+    $(`#partidaNombre${index}`).val(partida_edit[3]);
+    $(`#partidaGrupo${index}`).val(partida_edit[4]);
+    $(`#partidaCtaArm${index}`).val(partida_edit[5]);
+    $(`#partidaNombreArm${index}`).val(partida_edit[6]);
+
+    const panel_aux = document.getElementById("Partida"+index);
+    var campos_aux = panel_aux.getElementsByClassName('panel-body')[0].getElementsByTagName("input");
+    for (var x = 0; x < campos_aux.length; x++) {
+        campos_aux[x].setAttribute("disabled", "true");
+    }
+    var select_aux = panel_aux.getElementsByClassName('panel-body')[0].getElementsByTagName("select");
+    for (var x = 0; x < select_aux.length; x++) {
+        select_aux[x].setAttribute("disabled", "true");
+    }
+    var botones_aux = panel_aux.getElementsByClassName('panel-body')[0].getElementsByTagName("button");
+    for (var x = 0; x < botones_aux.length; x++) {
+        botones_aux[x].setAttribute("disabled", "true");
+    }
+}
+
+function setEditando(index){
+    partida_edit[0] = $(`#partidaCta${index}`).val();
+    partida_edit[1] = $(`#partidaScta${index}`).val();
+    partida_edit[2] = $(`#partidaSscta${index}`).val();
+    partida_edit[3] = $(`#partidaNombre${index}`).val();
+    partida_edit[4] = $(`#partidaGrupo${index}`).val();
+    partida_edit[5] = $(`#partidaCtaArm${index}`).val();
+    partida_edit[6] = $(`#partidaNombreArm${index}`).val();
 }

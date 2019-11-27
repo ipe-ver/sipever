@@ -64,8 +64,10 @@ $(document).ready(function(){
     });
     var selectDepto = document.getElementById("selectDepto");
     var selectOficina = document.getElementById("selectOficina");
-    selectDepto.style.display = 'none';
-    selectOficina.style.display = 'none';
+    if(selectDepto && selectOficina){
+        selectDepto.style.display = 'none';
+        selectOficina.style.display = 'none';
+    }
 
     $('#genReporte').on("click",function(event){
         var form = document.getElementById("reportesForm");
@@ -142,7 +144,7 @@ function unSoloMes(checkBox){
         selectYearFin.removeAttribute("required");
         selectYearFin.setAttribute("disabled", "true");
         selectYearFin.style.display = 'none';
-        checkbox.value=true;
+        checkBox.value=true;
     }else{
         lblYearInicio.innerHTML = "Año Inicio";
         lblMesInicio.innerHTML = "Mes Inicial";
@@ -156,7 +158,7 @@ function unSoloMes(checkBox){
         selectYearFin.removeAttribute("disabled");
         selectYearFin.setAttribute("required", "");
         selectYearFin.style.display = 'table';
-        checkbox.value=false;
+        checkBox.value=false;
     }
 
 }

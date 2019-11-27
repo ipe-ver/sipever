@@ -53,19 +53,42 @@ class FacturaController extends Controller
         if($subtotal != $total_aux){
             return back()->with('warning','Advertencia, los precios no coinciden con el total, verifique los datos de la factura');
         }
+        if($total_aux > 101000){
+            return back()->with('warning','Advertencia, Está registando un precio que excede el límite permitido, favor de contactar el Departamento de tecnologías de la información');
+        }
 
         if(empty($articulos)){
             return back()->with('warning','Porfavor ingrese al menos un articulo');
         }else{
+            date_default_timezone_set('America/Mexico_City');
+            $dia = date("d");
+            $no_mes=date("n");
+            $anio=date("Y");
             $nombreProveedor = $request->proveedor;
             $fecha_movimiento = $request->fecha_ingreso;
             $no_factura = $request->noFactura;
             $fecha_facturacion = $request->fecha_facturacion;
+            $parts_fact = explode('-',$fecha_facturacion);
+            $parts_mov=explode('-',$fecha_movimiento);
+
+            if ($parts_fact[0] > $parts_mov[0]) {
+                return back()->with('warning', "Las fechas ingresadas no son válidas, porfavor asegurese de ingresar la información correcta");
+            }elseif ($parts_fact[1]>$parts_mov[1]) {
+                return back()->with('warning', "Las fechas ingresadas no son válidas, porfavor asegurese de ingresar la información correcta");
+            }elseif($parts_fact[2]>$parts_mov[2]){
+                return back()->with('warning', "Las fechas ingresadas no son válidas, porfavor asegurese de ingresar la información correcta");
+            }
+
+            if ($parts_fact[0] > $anio || $parts_mov[0] > $anio) {
+                return back()->with('warning', "Las fechas ingresadas no son válidas, porfavor asegurese de ingresar la información correcta");
+            }elseif ($parts_fact[1] > $no_mes || $parts_mov[1] > $no_mes) {
+                return back()->with('warning', "Las fechas ingresadas no son válidas, porfavor asegurese de ingresar la información correcta");
+            }elseif($parts_fact[2] > $dia || $parts_mov[2] > $dia){
+                return back()->with('warning', "Las fechas ingresadas no son válidas, porfavor asegurese de ingresar la información correcta");
+            }
+
             $iva=$request->iva;
             $subtotal = $request->subtotal;
-            date_default_timezone_set('America/Mexico_City');
-            $no_mes=date("n");
-            $anio=date("Y");
             //Obtenemos los datos de la conexión con la base de datos
             $db = DB::connection()->getPdo();
             //Establecemos la conexión

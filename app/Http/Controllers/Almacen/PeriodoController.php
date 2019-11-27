@@ -27,7 +27,7 @@ class PeriodoController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -95,17 +95,44 @@ class PeriodoController extends Controller
     public function cerrar_mes(Request $request){
         $no_mes = $request->input('numMes');
         $anio = $request->input('year');
-        
-            $result = DB::select('CALL sp_cerrar_periodo(?,?)', array($no_mes, $anio))[0]->result;
 
-            if ($result==3) {
-                return redirect()->route('almacen.polizas.index')->with('success', 'Mes cerrado exitosamente, favor de generar la poliza correspondiente');
-            }elseif ($result ==2) {
-                return redirect()->route('almacen.periodo.index')->with('warning', "Error al generar nuevo mes, asgurese de que sea el mes y año correctos \nSi el problema persiste contacte al departamento de tegnologías de la información");
-            }else{
-                return redirect()->route('almacen.periodo.index')->withErrors(['msg', "Error de base de datos \n Contacte al departamento de tecnologías de la información"]);
+        $periodos = DB::select('SELECT * FROM periodos');
+        $meses = [];
+        $years = [];
+
+        foreach ($periodos as $periodo) {
+            foreach ($periodo as $key => $value) {
+                if($key == 'no_mes'){
+                    array_push($meses,$value);
+                }elseif ($key == 'anio') {
+                    array_push($years,$value);
+                }
             }
-        
+        }
+
+        if(!in_array($no_mes, $meses) || !in_array($anio, $years)){
+            return redirect()->route('almacen.periodo.index')->with('warning', "El mes ingresado no existe o está cerrado, intente mas tarde\nSi el problema persiste contacte al departamento de tecnologías de la información");
+        }
+        $estatus = $this->getStatus($no_mes, $anio, $periodos);
+        if($estatus != 1){
+            return redirect()->route('almacen.periodo.index')->with('warning', "El mes ingresado no existe o está cerrado, intente mas tarde\nSi el problema persiste contacte al departamento de tecnologías de la información");
+        }
+        $result = DB::select('CALL sp_cerrar_periodo(?,?)', array($no_mes, $anio))[0]->result;
+        if ($result==3) {
+            return redirect()->route('almacen.polizas.index')->with('success', 'Mes cerrado exitosamente, favor de generar la poliza correspondiente');
+        }elseif ($result ==2) {
+            return redirect()->route('almacen.periodo.index')->with('warning', "Error al generar nuevo mes, asgurese de que sea el mes y año correctos \nSi el problema persiste contacte al departamento de tegnologías de la información");
+        }else{
+            return redirect()->route('almacen.periodo.index')->withErrors(['msg', "Error de base de datos \n Contacte al departamento de tecnologías de la información"]);
+        }
+    }
+
+    private function getStatus($no_mes, $anio, $periodos){
+        foreach ($periodos as $periodo) {
+            if($periodo->no_mes == $no_mes && $periodo->anio==$anio){
+                return $periodo->estatus;
+            }
+        }
     }
 
 }

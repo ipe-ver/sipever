@@ -63,7 +63,7 @@
                 <div class="sp sp4"></div>
             </div>
         </div>
-        <form action="{{route('almacen.polizas.generar')}}" method = "POST">
+        <form action="{{route('almacen.polizas.generar')}}" method = "POST" id="polizaForm">
             @csrf
             @method("POST")
             <div class="row justify-content-md-center">
@@ -109,7 +109,6 @@
             </div>
             <div class="row" style="align-items: center; margin-bottom: 10px; margin-top: 10px;">
                 <div class="container-fluid pull-right" style="display: inline-flex; align-items: center; padding-right: 5%">
-                    <button style="margin-right: 3%;" type="button" id="btn-cancelar" class="btn btn-cancel">Cancelar</button>
                     <button id="genPoliza" type="submit" id="btn-cerrar" class="btn btn-submit">Generar poliza</button>
                 </div>
             </div>

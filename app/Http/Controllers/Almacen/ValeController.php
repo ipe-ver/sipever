@@ -101,9 +101,6 @@ class ValeController extends Controller
         }catch(Exception $e){
             return back()->withErrors([$e->message(),'Error al accesar a la base de datos, porfavor contacte al departamento de tecnologías de la información']);
         }
-
-        dd($request->all());
-
     }
 
     /**
@@ -207,6 +204,7 @@ class ValeController extends Controller
             $mensaje = "{$e->getMessage()} \n Contacte al departamento de tecnologías de la información";
             return back()->withErrors([$mensaje]);
         }
+
         if($tipo == 'Consumo'){
             //Preparamos la llamada al procedimiento remoto
             $query = $db->prepare('CALL sp_consumo(?,@clave)');

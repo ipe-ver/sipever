@@ -16,8 +16,16 @@
             </div>
           </div>
           <div id="form_clave" class="container-fluid">
-            <label for="officeCode">Código de oficina</label>
-            <input id="officeCode" type="password" name="officeCode" class="form-control" placeholder="Código de oficina" required>
+            <div class="row">
+              <div class="col-md-9">
+                <input id="officeCode" type="password" name="officeCode" class="form-control" placeholder="Código de oficina" required>
+              </div>
+              <div class="col-md-2">
+                <button type="button" style="background-color: transparent; border-color: transparent;" id="visualizar">
+                  <i id="ojo" class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">

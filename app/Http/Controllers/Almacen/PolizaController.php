@@ -41,16 +41,18 @@ class PolizaController extends Controller
             $mensaje = "Reporte de Poliza de almacén";
             $nombre_archivo="POLIZALMAC";
             $ruta = "almacen.polizas.poliza_almacen";
+            $headers = ['CTA.', 'SCTA', 'SSCTA', 'CONCEPTO.', 'CARGOS', 'ABONOS', "TOTALES\n(CONSUMOS)"];
         }elseif($conta == "checked"){
             $mensaje="Poliza para contabilidad y presupuesto";
             $nombre_archivo="POLIZACONTPRESUP";
             $ruta = "almacen.polizas.contabilidad_presup";
+            $headers = ['CTA.', 'SCTA', 'SSCTA', 'CONCEPTO.', 'CARGOS', 'ABONOS'];
         }else{
             return back()->with('warning',"Porfavor seleccione un tipo de poliza");
         }
 
         $mensaje = "{$mensaje} correspondiente al mes de {$mes_nombre} de {$anio}";
-
+        $tipo='poliza';
         date_default_timezone_set('America/Mexico_City');
         $fecha_nombre=date("Ymd");
         $hora_nombre=date("Hi");
@@ -62,7 +64,8 @@ class PolizaController extends Controller
 
         $fecha = date("d/M/Y");
         $hora = date("h:i a");
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView($ruta,compact('mensaje','fecha','hora','logo_b64', 'headers','tipo'))->setPaper('letter', 'portrait');
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView($ruta,compact('mensaje','fecha','hora','logo_b64', 'headers','tipo'));
+
         return $pdf->stream($nombre_archivo);
     }
 

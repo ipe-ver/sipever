@@ -18,13 +18,23 @@ class ArticuloController extends Controller
     public function index()
     {
         $no_index = 0;
-        $partidas = DB::select("call sp_get_grupos");
-        $unidades = DB::select("call sp_get_unidades");
-        $articulos = DB::select("call sp_get_articulos(?)", array($no_index));
-        $no_partida = 0;
+        $partidas = [];
+        $unidades = [];
+        $articulos = [];
+        $no_partida = 1;
+       try {
+            $no_index = 0;
+            $partidas = DB::select("call sp_get_grupos");
+            $unidades = DB::select("call sp_get_unidades");
+            $articulos = DB::select("call sp_get_articulos(?)", array($no_index));
+            $no_partida = 0;
 
-        return view('almacen.articulos.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
-            'articulos'=>$articulos, 'index' => $no_index, 'no_partida' => $no_partida]);
+            return view('almacen.articulos.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
+                'articulos'=>$articulos, 'index' => $no_index, 'no_partida' => $no_partida]);
+       } catch (Exception $e) {
+           return view('almacen.articulos.articulos',['grupos'=>$partidas, 'unidades'=>$unidades,
+                'articulos'=>$articulos, 'index' => $no_index, 'no_partida' => $no_partida])->withErrors(['Error al conectarse con la base de datos, favor de contactar al departamento de tecnologías de la información']);
+       }
     }
 
     /**
@@ -98,10 +108,13 @@ class ArticuloController extends Controller
     {
 
         $clave = $request->clave;
-        $descripcion = $request->descripcion;
+        $descripcion_aux = $request->descripcion;
+        $descripcion=$this->eliminar_tildes($descripcion_aux);
         $existencias = $request->existencias;
         $unidad = $request->unidad;
         $precio_unitario=$request->precio_unitario;
+        $precio_unitario = str_replace(',','', $precio_unitario);
+        $precio_unitario = floatval($precio_unitario);
         $stock_minimo =$request->stock_minimo;
         $stock_maximo = $request->stock_maximo;
         $partida = $request->partida;
@@ -161,10 +174,13 @@ class ArticuloController extends Controller
     public function update(Request $request)
     {
         $clave = $request->clave;
-        $descripcion = $request->descripcion;
+        $descripcion_aux = $request->descripcion;
+        $descripcion=$this->eliminar_tildes($descripcion_aux);
         $existencias = $request->existencias;
         $unidad = $request->unidad;
         $precio_unitario=$request->precio_unitario;
+        $precio_unitario = str_replace(',','', $precio_unitario);
+        $precio_unitario = floatval($precio_unitario);
         $stock_minimo = $request->stock_minimo;
         $partida = $request->partida;
 
@@ -197,5 +213,45 @@ class ArticuloController extends Controller
         }
     }
 
+    public function eliminar_tildes($cadena_aux){
+
+        //Codificamos la cadena en formato utf8 en caso de que nos de errores
+        $cadena = utf8_encode($cadena_aux);
+
+        //Ahora reemplazamos las letras
+        $cadena = str_replace(
+            array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä'),
+            array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A'),
+            $cadena
+        );
+
+        $cadena = str_replace(
+            array('é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë'),
+            array('e', 'e', 'e', 'e', 'E', 'E', 'E', 'E'),
+            $cadena );
+
+        $cadena = str_replace(
+            array('í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î'),
+            array('i', 'i', 'i', 'i', 'I', 'I', 'I', 'I'),
+            $cadena );
+
+        $cadena = str_replace(
+            array('ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô'),
+            array('o', 'o', 'o', 'o', 'O', 'O', 'O', 'O'),
+            $cadena );
+
+        $cadena = str_replace(
+            array('ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü'),
+            array('u', 'u', 'u', 'u', 'U', 'U', 'U', 'U'),
+            $cadena );
+
+        $cadena = str_replace(
+            array('ñ', 'Ñ', 'ç', 'Ç'),
+            array('n', 'N', 'c', 'C'),
+            $cadena
+        );
+
+        return strtoupper($cadena);
+    }
     
 }

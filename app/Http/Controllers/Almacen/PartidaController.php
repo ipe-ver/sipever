@@ -40,6 +40,14 @@ class PartidaController extends Controller
         $nomarmo_aux = $request->nomarmo;
         $nomarmo = strtoupper($nomarmo_aux);
 
+        if (!is_numeric($cta) || !is_numeric($scta) || !is_numeric($sscta) || !is_numeric($ctaarmo)){
+             return back()->with('warning','Los datos ingresdos no son correctos');
+        }
+
+        if(strlen($grupo)>1){
+            return back()->with('warning','Los datos ingresdos no son correctos');
+        }
+
         try {
             DB::select("call sp_almacenar_grupo(?,?,?,?,?,?,?,?)", array($cta, $scta, $sscta, $nombre, $ctaarmo, $nomarmo, $grupo, 1));
             return redirect()->route('almacen.partidas.index')
@@ -104,7 +112,7 @@ class PartidaController extends Controller
         $nombre_aux = $input['nombre'];
         $nombre =strtoupper($nombre_aux);
         $grupo=$input['grupo'];
-        if(sizeof($grupo)>1){
+        if(strlen($grupo)>1){
             return back()->with('warning','Los datos ingresdos no son correctos');
         }
         $nomarmo_aux = $input['nomarmo'];

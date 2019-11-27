@@ -34,11 +34,11 @@ class PartidaController extends Controller
         $scta = $request->scta;
         $sscta = $request->sscta;
         $nombre_aux = $request->nombre;
-        $nombre = $this->eliminar_tildes($nombre_aux);
+        $nombre = strtoupper($nombre_aux);
         $grupo=$request->grupo;
         $ctaarmo = $request->ctaarmo;
         $nomarmo_aux = $request->nomarmo;
-        $nomarmo = $this->eliminar_tildes($nomarmo_aux);
+        $nomarmo = strtoupper($nomarmo_aux);
 
         try {
             DB::select("call sp_almacenar_grupo(?,?,?,?,?,?,?,?)", array($cta, $scta, $sscta, $nombre, $ctaarmo, $nomarmo, $grupo, 1));
@@ -97,12 +97,15 @@ class PartidaController extends Controller
         $cta = $input['cta'];
         $scta = $input['scta'];
         $sscta = $input['sscta'];
+        $ctaarmo = str_replace('.','',$input['ctaarmo']);
+        if (!is_numeric($cta) || !is_numeric($scta) || !is_numeric($sscta) || !is_numeric($ctaarmo)){
+             return back()->with('warning','Los datos ingresdos no son correctos');
+        }
         $nombre_aux = $input['nombre'];
-        $nombre = $this->eliminar_tildes($nombre_aux);
+        $nombre =strtoupper($nombre_aux);
         $grupo=$input['grupo'];
-        $ctaarmo = $input['ctaarmo'];
         $nomarmo_aux = $input['nomarmo'];
-        $nomarmo = $this->eliminar_tildes($nomarmo_aux);
+        $nomarmo = strtoupper($nomarmo_aux);
 
         try {
             DB::select("call sp_actualizar_grupo(?,?,?,?,?,?,?,?,?)", array($id, $cta, $scta, $sscta, $nombre, $ctaarmo, $nomarmo, $grupo, 1));

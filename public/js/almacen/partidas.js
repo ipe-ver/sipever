@@ -24,7 +24,7 @@ var close = document.getElementsByClassName("closebtn");
 
     var forms = document.getElementsByClassName('partidaForm');
     for(var i = 0, length1 = forms.length; i < length1; i++){
-        forms[i].id=`articuloForm${i}`;
+        forms[i].id=`partidaForm${i}`;
     }
 
     // Con las siguientes funciones se asignan los ids correspondientes para cada elemento dentro de los paneles de artículos.
@@ -80,11 +80,16 @@ var close = document.getElementsByClassName("closebtn");
         for (let index = 0; index < botones.length; index++) {
             const panel_aux = document.getElementById("Partida"+index);
             var boton_guardar_aux = panel_aux.getElementsByClassName('btn-submit')[0];
-            boton_guardar_aux.addEventListener('click',function(event){
-                var form_aux = document.getElementById(`articuloForm${index}`);
+            boton_guardar_aux.addEventListener('click', function(event){
+                var form_aux = document.getElementById(`partidaForm${index}`);
+                event.preventDefault();
+                console.log(form_aux);
                 if(form_aux.checkValidity()){
+                    event.preventDefault();
+                    ('form completo');
                     if(!validateEach(index)){
                         event.preventDefault();
+                        console.log('si pasó')
                         alert('Los datos ingresados son incorrectos');
                     }
                 }

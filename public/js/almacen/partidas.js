@@ -94,8 +94,8 @@ var close = document.getElementsByClassName("closebtn");
                     }
                 }
             });
-
-            var boton_cancelar_aux = panel_aux.getElementsByClassName('btn-cancel')[0];
+            var form_aux = document.getElementById(`partidaForm${index}`);
+            var boton_cancelar_aux = form_aux.getElementsByClassName('btn-cancel')[0];
             boton_cancelar_aux.addEventListener('click', function(){
                 cancelar_edicion(index);
             });

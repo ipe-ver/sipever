@@ -74,9 +74,11 @@
                         <div class="col-xs-1 text-nowrap">{{ $partida->sscta}} </div>
                     	<div class="col-sm-5 desc-cuenta text-nowrap">{{$partida->nombre}}</div>
                     	<div class="pull-right">
-                            <button class = "btn btn-collapse btn-edit" id="btn_editar" disabled="true">
-                                <i class="fas fa-pen">  </i>
-                            </button>
+                            @if(Auth::user()->hasRole('almacen_admin'))
+                                <button class = "btn btn-collapse btn-edit" id="btn_editar" disabled="true">
+                                    <i class="fas fa-pen">  </i>
+                                </button>
+                            @endif
                             @if(Auth::user()->hasRole('almacen_admin'))
                                 <button class="btn btn-collapse btn-delete" id="btn_eliminar" data-toggle="modal" data-target="#eliminarPartida" disabled >
                                     <i class="fas fa-trash-alt">  </i>

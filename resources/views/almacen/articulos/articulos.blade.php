@@ -152,7 +152,7 @@
                     </div>
                 </div>
                 <div id="collapseArticulo" class="collapse panel-collapse ">
-                    <form method="POST" action="{{route('almacen.articulos.actualizarArticulo')}}">
+                    <form method="POST" action="{{route('almacen.articulos.actualizarArticulo')}}" class="articuloForm">
                         @csrf
                         @method("POST")
                         <div class="panel-body">
@@ -167,7 +167,7 @@
                                 <div class="row">
                                     <input name="clave" type="text" class="col-sm-1 colm-form form-control" id="articuloClave" placeholder="Clave" value="{{$articulo->clave}}" disabled="true" required>
                                     <input name="descripcion" type="text" class="col-md-6 colm-form form-control" id="articuloDescripcion" placeholder="Descripcion" value="{{$articulo->descripcion}}" disabled="true">
-                                    <input name="existencias" type="text" class="col-sm-1 colm-form-md form-control" id="articuloExistencias" placeholder="Descripcion" value="{{$articulo->existencias}}" disabled="true" required readonly>
+                                    <input name="existencias" type="text" class="col-sm-1 colm-form-md form-control" id="articuloExistencias" placeholder="Existencias" value="{{$articulo->existencias}}" disabled="true" required readonly>
                                     <select name="unidad" class="col-sm-2 colm-form form-control" dir="ltr" id="articuloUnidad" disabled required>
                                         <option>{{$articulo->descripcion_u_medida}}</option>
                                         @foreach($unidades as $unidad)
@@ -185,17 +185,17 @@
                                 </div>
                                 <div class="row">
                                     @if(Auth::user()->hasRole('almacen_admin'))
-                                        <input name="stock_minimo" type="text" class="col-md-2 colm-form-md form-control" id="articuloStock" placeholder="Descripcion" value="{{$articulo->stock_minimo}}" disabled="true" required>
+                                        <input name="stock_minimo" type="text" class="col-md-2 colm-form-md form-control" id="articuloStock" placeholder="Stock Min" value="{{$articulo->stock_minimo}}" disabled="true" required>
                                     @else
-                                        <input name="stock_minimo" type="text" class="col-md-2 colm-form-md form-control" id="articuloStock" placeholder="Descripcion" value="{{$articulo->stock_minimo}}" disabled="true" required readonly>
+                                        <input name="stock_minimo" type="text" class="col-md-2 colm-form-md form-control" id="articuloStock" placeholder="Stock Min" value="{{$articulo->stock_minimo}}" disabled="true" required readonly>
                                     @endif
-                                    <input name="precio_unitario" type="text" class="col-sm-1 colm-form-md form-control" id="articuloPrecio" placeholder="Descripcion" value="{{$articulo->precio_unitario}}" readonly required>
+                                    <input name="precio_unitario" type="text" class="col-sm-1 colm-form-md form-control" id="articuloPrecio" placeholder="Precio" value="{{$articulo->precio_unitario}}" readonly required>
                                     @if($articulo->estatus == 0)
-                                        <input type="text" class="col-sm-2 colm-form-md form-control" id="articuloEstatus" value="De baja" placeholder="Existencias" disabled="true" readonly>
+                                        <input type="text" class="col-sm-2 colm-form-md form-control" id="articuloEstatus" value="De baja" placeholder="Estatus" disabled="true" readonly>
                                     @elseif($articulo->existencias > $articulo->stock_minimo)
-                                        <input type="text" class="col-sm-2 colm-form-md form-control" name="" id="articuloEstatus" value="En stock" placeholder="Existencias" disabled="true" readonly>
+                                        <input type="text" class="col-sm-2 colm-form-md form-control" name="" id="articuloEstatus" value="En stock" placeholder="Estatus" disabled="true" readonly>
                                     @elseif($articulo->existencias == $articulo->stock_minimo)
-                                        <input type="text" class="col-sm-2 colm-form-md form-control" name="" id="articuloEstatus" value="Stock bajo" placeholder="Existencias" disabled="true" readonly>
+                                        <input type="text" class="col-sm-2 colm-form-md form-control" name="" id="articuloEstatus" value="Stock bajo" placeholder="Estatus" disabled="true" readonly>
                                     @endif
                                     <select name="partida" class="col-sm-6 colm-form form-control" dir="ltr" id="articuloGrupo" required disabled>
                                         <option value="{{$articulo->descripcion_cuenta}}">{{$articulo->descripcion_cuenta}}</option>

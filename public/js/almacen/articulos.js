@@ -1,3 +1,4 @@
+var articulo_edit = [];
 var close = document.getElementsByClassName("closebtn");
 /*
  * Con esta función se carga el funcionamiento de las notificaciones
@@ -19,6 +20,11 @@ var close = document.getElementsByClassName("closebtn");
                 }
             }, 1000);
         }
+    }
+
+    var forms = document.getElementsByClassName('articuloForm');
+    for(var i = 0, length1 = forms.length; i < length1; i++){
+        forms[i].id=`articuloForm${i}`;
     }
 
     // Con las siguientes funciones se asignan los ids correspondientes para cada elemento dentro de los paneles de artículos.
@@ -70,6 +76,23 @@ var close = document.getElementsByClassName("closebtn");
             contadores[i]=0;
         }
         for (let index = 0; index < botones.length; index++) {
+            const panel_aux = document.getElementById("Articulo"+index);
+            var boton_guardar_aux = panel_aux.getElementsByClassName('btn-submit')[0];
+            boton_guardar_aux.addEventListener('click',function(event){
+                var form_aux = document.getElementById(`articuloForm${index}`);
+                if(form_aux.checkValidity()){
+                    if(!validateEach(index)){
+                        event.preventDefault();
+                        alert('Los datos ingresados son incorrectos');
+                    }
+                }
+            });
+
+            var boton_cancelar_aux = panel_aux.getElementsByClassName('btn-cancel')[0];
+            boton_cancelar_aux.addEventListener('click', function(){
+                cancelar_edicion(index);
+            });
+
             const boton = botones[index];
             /*Las siguientes tres funciones asignan los ids de los paneles que se van a desplegar al dar click
              * sobre el boton de despliegue que esta dentro del encabezado del panel.
@@ -83,8 +106,8 @@ var close = document.getElementsByClassName("closebtn");
                 cerrarPaneles(btn_editar_aux, btn_eliminar_aux);
                 //Se agrega el metodo click al boton
                 btn_editar_aux.addEventListener("click",function(){
+                    setEditando(index);
                     //Se asignan los métodos a los botones de editar y eliminar
-                    var panel_aux = document.getElementById("Articulo"+index);
                     var campos_aux = panel_aux.getElementsByClassName('panel-body')[0].getElementsByTagName("input");
                     for (var x = 0; x < campos_aux.length; x++) {
                         if(campos_aux[x].getAttribute("id")!='articuloEstatus'+index && campos_aux[x].getAttribute("id")!='articuloPrecio'+index){
@@ -134,7 +157,7 @@ var close = document.getElementsByClassName("closebtn");
         if(newArticulo.checkValidity()){
            if(!validateNew()){
               event.preventDefault();
-              alert('Los datos ingresados son incorrectos')
+              alert('Los datos ingresados son incorrectos');
            }
         }
     });
@@ -175,10 +198,9 @@ function validateEach(index){
     var articuloClave = $(`#articuloClave${index}`);
     var articuloDescripcion = $(`#articuloDescripcion${index}`);
     var articuloExistencias = $(`#articuloExistencias${index}`);
-    var articuloUnidad = $('#articuloUnidad');
-    var articuloStock_min = $('#articuloStock_min');
-    var articuloStock_max = $('#articuloStock_max');
-    var articuloPrecio = $('#articuloPrecio');
+    var articuloUnidad = $(`#articuloUnidad${index}`);
+    var articuloStock_min = $(`#articuloStock${index}`);
+    var articuloPrecio = $(`#articuloPrecio${index}`);
 
     if(isNaN(parseFloat(articuloClave.val()))){
         return false;
@@ -267,4 +289,35 @@ function clearOrden(){
     articuloStock_min.val('');
     articuloStock_max.val('');
     articuloPrecio.val('');
+}
+
+function cancelar_edicion(index){
+    $(`#articuloClave${index}`).val(articulo_edit[0]);
+    $(`#articuloDescripcion${index}`).val(articulo_edit[1]);
+    $(`#articuloExistencias${index}`).val(articulo_edit[2]);
+    $(`#articuloUnidad${index}`).val(articulo_edit[3]);
+    $(`#articuloStock${index}`).val(articulo_edit[4]);
+    $(`#articuloPrecio${index}`).val(articulo_edit[5]);
+    const panel_aux = document.getElementById("Articulo"+index);
+    var campos_aux = panel_aux.getElementsByClassName('panel-body')[0].getElementsByTagName("input");
+    for (var x = 0; x < campos_aux.length; x++) {
+        campos_aux[x].setAttribute("disabled", "true");
+    }
+    var select_aux = panel_aux.getElementsByClassName('panel-body')[0].getElementsByTagName("select");
+    for (var x = 0; x < select_aux.length; x++) {
+        select_aux[x].setAttribute("disabled", "true");
+    }
+    var botones_aux = panel_aux.getElementsByClassName('panel-body')[0].getElementsByTagName("button");
+    for (var x = 0; x < botones_aux.length; x++) {
+        botones_aux[x].setAttribute("disabled", "true");
+    }
+}
+
+function setEditando(index){
+    articulo_edit[0] = $(`#articuloClave${index}`).val();
+    articulo_edit[1] = $(`#articuloDescripcion${index}`).val();
+    articulo_edit[2] = $(`#articuloExistencias${index}`).val();
+    articulo_edit[3] = $(`#articuloUnidad${index}`).val();
+    articulo_edit[4] = $(`#articuloStock${index}`).val();
+    articulo_edit[5] = $(`#articuloPrecio${index}`).val();
 }

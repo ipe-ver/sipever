@@ -19,6 +19,21 @@ $(document).ready(function(){
 	}else{
 		$("#loaderLogin").hide();
 	}
+
+	$("#visualizar").on('click', function(){
+		var officeCode = document.getElementById('officeCode');
+		if($('#officeCode').attr('type') == 'password'){
+			officeCode.setAttribute('type', 'text');
+			$('#ojo').removeClass('fa-eye');
+			$('#ojo').addClass('fa-eye-slash');
+		}else{
+			officeCode.setAttribute('type', 'password');
+			$('#ojo').removeClass('fa-eye-slash');
+			$('#ojo').addClass('fa-eye');
+		}
+
+	});
+
 	$("#btnLogin").on('click',function(event){
 		event.preventDefault();
 		var token = $('meta[name="csrf-token"]').attr('content');

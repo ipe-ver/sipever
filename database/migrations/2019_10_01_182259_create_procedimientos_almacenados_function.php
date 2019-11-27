@@ -28,7 +28,8 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             CONTAINS SQL
             SQL SECURITY DEFINER
             BEGIN
-                SELECT * FROM cat_proveedores;
+                SELECT * FROM cat_proveedores
+                ORDER BY nombre;
             END
         ');
 
@@ -1065,7 +1066,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             SQL SECURITY DEFINER
             BEGIN
                 SELECT DISTINCT(partidas.sscta) AS "SSCTA", partidas.nombre AS "PARTIDA", articulos.clave AS "CODIFICACION", articulos.descripcion AS "DESCRIPCION",
-                    unidades.descripcion AS "UNIDAD", 
+                    unidades.descripcion AS "UNIDAD",
 					  IFNULL((SELECT CASE
 					  	WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT articulos.existencias)
 					  	ELSE (SELECT inventa.existencias FROM inventario_inicial_final inventa INNER JOIN cat_articulos artis ON inventa.id_articulo = artis.id
@@ -1086,7 +1087,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
                 INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
                 WHERE partidas.nombre = partida GROUP BY articulos.id;
-                            
+
                 IF mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN
 	                SELECT partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", IFNULL(COUNT(*),0) AS "CODIFICACIONES",
 	                    IFNULL(SUM(articulos.existencias),0) AS "CANTIDAD DE ARTICULOS", FORMAT(IFNULL(SUM(articulos.precio_unitario * articulos.existencias),0),2) AS "SUBTOTAL"
@@ -1124,7 +1125,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
             BEGIN
 
                 SELECT DISTINCT(partidas.sscta) AS "SSCTA", partidas.nombre AS "PARTIDA", articulos.clave AS "CODIFICACION", articulos.descripcion AS "DESCRIPCION",
-                    unidades.descripcion AS "UNIDAD", 
+                    unidades.descripcion AS "UNIDAD",
 					IFNULL((SELECT CASE
 					    WHEN mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN (SELECT articulos.existencias)
 					    ELSE (SELECT inventa.existencias FROM inventario_inicial_final inventa INNER JOIN cat_articulos artis ON inventa.id_articulo = artis.id
@@ -1145,7 +1146,7 @@ class CreateProcedimientosAlmacenadosFunction extends Migration
                 INNER JOIN cat_cuentas_contables partidas ON articulos.id_cuenta = partidas.id
                 INNER JOIN inventario_inicial_final inventario ON articulos.id = inventario.id_articulo
                 GROUP BY articulos.id ORDER BY partidas.sscta ASC, articulos.descripcion ASC;
-                            
+
                 IF mes = MONTH(NOW()) AND anio = YEAR(NOW()) THEN
 	                SELECT partidas.sscta AS "SSCTA", partidas.nombre AS "PARTIDA", IFNULL(COUNT(*),0) AS "CODIFICACIONES",
 	                    IFNULL(SUM(articulos.existencias),0) AS "CANTIDAD DE ARTICULOS", FORMAT(IFNULL(SUM(articulos.precio_unitario * articulos.existencias),0),2) AS "SUBTOTAL"

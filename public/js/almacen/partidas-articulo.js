@@ -40,52 +40,58 @@
         var descripcion = $('select[id="selectArticulo"] option:selected').text();
         var precio = $('input[name="precio"]').val();
         var cantidad = $('input[name="cantidad"]').val();
-        if(comprobarValores(new Array(clave,descripcion,precio,cantidad))){
-            for (var i = 0; i < inputs.length-1; i++) {
-                inputs[i] = document.createElement("input");
-                inputs[i].setAttribute("class", "form-control");
-                inputs[i].setAttribute("type", "text");
-                inputs[i].setAttribute("readonly", "");
-            }
+        if(!isNaN(parseFloat(cantidad)) && !isNaN(parseFloat(precio))){
+            if(comprobarValores(new Array(clave,descripcion,precio,cantidad))){
+                for (var i = 0; i < inputs.length-1; i++) {
+                    inputs[i] = document.createElement("input");
+                    inputs[i].setAttribute("class", "form-control");
+                    inputs[i].setAttribute("type", "text");
+                    inputs[i].setAttribute("readonly", "");
+                }
 
-            inputs[4] = document.createElement("button");
-            inputs[4].setAttribute("class", "btn-collapse");
-            inputs[4].setAttribute("type", "button");
-            inputs[4].innerHTML="&times;"
-            inputs[4].addEventListener("click", function(){
-                row_articulo.remove();
-                var subtotal_calc = calcularSubtotal();
-                $('input[id="subtotal"]').val(subtotal_calc);
-                calcularTotal(subtotal_calc);
-            });
+                inputs[4] = document.createElement("button");
+                inputs[4].setAttribute("class", "btn-collapse");
+                inputs[4].setAttribute("type", "button");
+                inputs[4].innerHTML="&times;"
+                inputs[4].addEventListener("click", function(){
+                    row_articulo.remove();
+                    var subtotal_calc = calcularSubtotal();
+                    $('input[id="subtotal"]').val(subtotal_calc);
+                    calcularTotal(subtotal_calc);
+                });
 
-            inputs[0].setAttribute("name", "claveArticulo[]");
-            inputs[0].setAttribute("value", clave);
-            inputs[1].setAttribute("name", "descripcionArticulo[]");
-            inputs[1].setAttribute("value", descripcion);
-            inputs[2].setAttribute("name", "precioArticulo[]");
-            inputs[2].setAttribute("value", precio);
-            inputs[3].setAttribute("name", "cantidadArticulo[]");
-            inputs[3].setAttribute("value", cantidad);
-            for (var i = 0; i < inputs.length; i++) {
-                var td_input = document.createElement("td");
-                td_input.appendChild(inputs[i]);
-                row_articulo.appendChild(td_input);
+                inputs[0].setAttribute("name", "claveArticulo[]");
+                inputs[0].setAttribute("value", clave);
+                inputs[1].setAttribute("name", "descripcionArticulo[]");
+                inputs[1].setAttribute("value", descripcion);
+                inputs[2].setAttribute("name", "precioArticulo[]");
+                inputs[2].setAttribute("value", precio);
+                inputs[3].setAttribute("name", "cantidadArticulo[]");
+                inputs[3].setAttribute("value", cantidad);
+                for (var i = 0; i < inputs.length; i++) {
+                    var td_input = document.createElement("td");
+                    td_input.appendChild(inputs[i]);
+                    row_articulo.appendChild(td_input);
+                }
+                $('select[id="selectPartida"]').val("");
+                $('select[name="articulos"]').empty();
+                $('select[name="articulos"]').append('<option value="">Seleccione un artículo</option>');
+                $('input[name="precio"]').val("");
+                $('input[name="cantidad"]').val("");
+                $('table[id="articulos_factura"]').append(row_articulo);
+                var subtotal_calculado = calcularSubtotal();
+                $('input[id="subtotal"]').val(subtotal_calculado);
+                calcularTotal(subtotal_calculado);
+            }else{
+                alert("Porfavor complete todos los campos");
+                /*var alertcont=document.createElement("div");
+                alertcont.setAttribute("class", "alert-container");*/
             }
-            $('select[id="selectPartida"]').val("");
-            $('select[name="articulos"]').empty();
-            $('select[name="articulos"]').append('<option value="">Seleccione un artículo</option>');
-            $('input[name="precio"]').val("");
-            $('input[name="cantidad"]').val("");
-            $('table[id="articulos_factura"]').append(row_articulo);
-            var subtotal_calculado = calcularSubtotal();
-            $('input[id="subtotal"]').val(subtotal_calculado);
-            calcularTotal(subtotal_calculado);
         }else{
-            alert("Porfavor complete todos los campos");
-            /*var alertcont=document.createElement("div");
-            alertcont.setAttribute("class", "alert-container");*/
-        }
+                alert("Los datos ingresados no son correctos");
+                /*var alertcont=document.createElement("div");
+                alertcont.setAttribute("class", "alert-container");*/
+            }
     });
 
     $('button[id="btn-cancelar"]').on("click",clrscr);

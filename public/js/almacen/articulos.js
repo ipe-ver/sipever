@@ -202,6 +202,7 @@ function validateEach(index){
     var articuloStock_min = $(`#articuloStock${index}`);
     var articuloPrecio = $(`#articuloPrecio${index}`);
 
+
     if(isNaN(parseFloat(articuloClave.val()))){
         return false;
     }
@@ -227,6 +228,10 @@ function validateEach(index){
     }
 
     if(isNaN(parseFloat(articuloPrecio.val()))){
+        return false;
+    }
+
+    if(parseFloat(articuloExistencias.val())<parseFloat(articuloStock_min.val())){
         return false;
     }
     return true;
@@ -270,6 +275,19 @@ function validateNew(){
     if(isNaN(parseFloat(articuloPrecio.val()))){
         return false;
     }
+
+    if(parseFloat(articuloExistencias.val())<parseFloat(articuloStock_min.val())){
+        return false;
+    }
+
+    if(parseFloat(articuloExistencias.val())>parseFloat(articuloStock_max.val())){
+        return false;
+    }
+
+    if(parseFloat(articuloStock_max.val())<parseFloat(articuloStock_min.val())){
+        return false;
+    }
+
     return true;
 }
 

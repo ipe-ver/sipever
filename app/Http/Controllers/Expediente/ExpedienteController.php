@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Model\Catalogos\ActivosPensionados;
-use App\Model\Catalogos\Situacion;
 
 class ExpedienteController extends Controller
 {
@@ -17,7 +16,6 @@ class ExpedienteController extends Controller
     *********************************************************************************************/
     private $catEdoCivil;  
     private $catVivienda;
-    private $catSituacion;
 
     
     /*********************************************************************************************
@@ -32,7 +30,6 @@ class ExpedienteController extends Controller
     {
         $this->catEdoCivil           = \App\Model\Catalogos\EstadoCivil::select('id as valor','nombre as descripcion')->orderBy('id')->get();
         $this->catVivienda           = \App\Model\Catalogos\Vivienda::select('id as valor','nombre as descripcion')->orderBy('descripcion')->get(); 
-        $this->catSituacion          = \App\Model\Catalogos\Situacion::select('clave as valor','nombre as descripcion')->orderBy('descripcion')->get(); 
 
     } //fin del constructor
 
@@ -51,9 +48,8 @@ class ExpedienteController extends Controller
     {
         $catEdoCivil = $this->catEdoCivil;
         $catVivienda = $this->catVivienda;
-        $catSituacion = $this->catSituacion;
 
-        return view('expediente.create', compact('catEdoCivil', 'catVivienda', 'catSituacion'));
+        return view('expediente.create', compact('catEdoCivil', 'catVivienda'));
     }
 
     /**
@@ -174,7 +170,6 @@ class ExpedienteController extends Controller
                          'actpen' => $actpen,
                          'catEdoCivil' => $this->catEdoCivil,
                          'catVivienda' => $this->catVivienda,
-                         'catSituacion' => $this->catSituacion,
                      ]);
     }
 

@@ -30,15 +30,15 @@ class PolizaController extends Controller
         $conta = $request->input('conta');
         $no_mes = $request->input('numMes');
         $anio = $request->input('year');
-        $tipo='poliza';
+
         $mes_nombre = $this->nombre_mes($no_mes);
         $ruta = "";
-        $headers = ['CTA','SCTA','SSCTA','CONCEPTO','CARGOS','ABONOS','TOTALES'];
+        $headers = [];
         $mensaje = "";
         $nombre_archivo="";
 
         if($almacen == "checked"){
-            $mensaje = "Reporte de Poliza de almacén";
+            $mensaje = "Poliza de almacén";
             $nombre_archivo="POLIZALMAC";
             $ruta = "almacen.polizas.poliza_almacen";
             $headers = ['CTA.', 'SCTA', 'SSCTA', 'CONCEPTO.', 'CARGOS', 'ABONOS', "TOTALES\n(CONSUMOS)"];

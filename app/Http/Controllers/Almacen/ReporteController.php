@@ -65,9 +65,6 @@ class ReporteController extends Controller
         $ruta = "";
         $headers = [];
         $nombre_archivo="";
-        $orientacion = '';
-        $papel = '';
-        $tipo = '';
         $db = DB::connection()->getPdo();
         //Establecemos la conexión
         $db->setAttribute(PDOConnection::ATTR_ERRMODE, PDOConnection::ERRMODE_EXCEPTION);
@@ -101,8 +98,6 @@ class ReporteController extends Controller
         }elseif ($auxAlmacen == "checked"){
             $mensaje = 'Reporte auxiliar de almacén general';
             $nombre_archivo="REPAUXALM";
-            $orientacion = 'landscape';
-            $papel = 'letter';
             $ruta = "almacen.reportes.reporte_auxiliar";
             $headers=['CODIF.','DESCRIPCION','UNIDAD','CANT.','COSTO UNIT.','IMPORTE', 'INV. FIN'];
             $papel = 'letter';
@@ -111,8 +106,6 @@ class ReporteController extends Controller
             $mensaje = 'Reporte final de existencias';
             $nombre_archivo="REPFINALEXIST";
             $ruta = "almacen.reportes.reporte_final_existencias";
-            $orientacion = 'portrait';
-            $papel = 'letter';
             $headers = ['CODIF.', 'DESCRIPCIÓN', 'UNIDAD', 'CANT.', 'COSTO', 'IMPORTE'];
             $papel = 'letter';
             $orientacion='portrait';

@@ -124,7 +124,7 @@
             <div id="collapsePartida" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div class="container-fluid">
-                        <form action="{{route('almacen.partidas.actualizar',$partida->id)}}">
+                        <form action="{{route('almacen.partidas.actualizar',$partida->id)}}" class="partidaForm">
                             @csrf
                             @method('POST')
                             <div class="row">

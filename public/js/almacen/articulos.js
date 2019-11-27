@@ -167,7 +167,7 @@ var close = document.getElementsByClassName("closebtn");
         clearOrden();
     });
 
-     $(document).keyup(function(event){
+    $(document).keyup(function(event){
         if(event.keyCode==27){
             clearOrden();
         }

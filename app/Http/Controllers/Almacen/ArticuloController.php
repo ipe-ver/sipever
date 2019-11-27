@@ -112,6 +112,9 @@ class ArticuloController extends Controller
         $existencias = $request->existencias;
         $unidad = $request->unidad;
         $precio_unitario=$request->precio_unitario;
+        $precio_unitario = str_replace(',','', $precio_unitario);
+        $precio_unitario = floatval($precio_unitario);
+        dd($request->precio_unitario, $precio_unitario);
         $stock_minimo =$request->stock_minimo;
         $stock_maximo = $request->stock_maximo;
         $partida = $request->partida;
@@ -175,6 +178,8 @@ class ArticuloController extends Controller
         $existencias = $request->existencias;
         $unidad = $request->unidad;
         $precio_unitario=$request->precio_unitario;
+        $precio_unitario = str_replace(',','', $precio_unitario);
+        $precio_unitario = floatval($precio_unitario);
         $stock_minimo = $request->stock_minimo;
         $partida = $request->partida;
 

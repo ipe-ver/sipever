@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
             })->all();
             $array = array('message'=>$exception->getMessage());
             $mensaje_aux = explode("]", iconv("utf-8", "utf-8//ignore", $array['message']));
-            
+            dd(iconv("utf-8", "utf-8//ignore", $array['message']));
             if(sizeof($mensaje_aux) > 2){
                 $mensaje = explode("\r", $mensaje_aux[2])[0];
             }else{

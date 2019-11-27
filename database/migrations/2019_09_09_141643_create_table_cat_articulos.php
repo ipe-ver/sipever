@@ -22,7 +22,7 @@ class CreateTableCatArticulos extends Migration
             $table->integer('stock_minimo')->nullable();
             $table->integer('stock_maximo')->nullable();
             $table->integer('existencias')->nullable();
-            $table->double('precio_unitario')->nullable();
+            $table->float('precio_unitario',15,2)->nullable();
 
             $table->integer('id_cuenta')->unsigned();
             $table->foreign('id_cuenta')->references('id')->on('cat_cuentas_contables');  

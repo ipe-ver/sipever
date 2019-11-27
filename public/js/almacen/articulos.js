@@ -101,12 +101,12 @@ var close = document.getElementsByClassName("closebtn");
             boton.setAttribute("data-target", "#collapseArticulo"+index);
             //Cada vez que se le de click al botón de despliegue...
             boton.addEventListener('click', function(){
+                setEditando(index);
                 var btn_editar_aux = document.getElementById('btn_editar'+index);
                 var btn_eliminar_aux = document.getElementById('btn_eliminar'+index);
                 cerrarPaneles(btn_editar_aux, btn_eliminar_aux);
                 //Se agrega el metodo click al boton
                 btn_editar_aux.addEventListener("click",function(){
-                    setEditando(index);
                     //Se asignan los métodos a los botones de editar y eliminar
                     var campos_aux = panel_aux.getElementsByClassName('panel-body')[0].getElementsByTagName("input");
                     for (var x = 0; x < campos_aux.length; x++) {

@@ -49,7 +49,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'almacen', 'as' => 'almacen.
     Route::post('/articulos/crear','Almacen\ArticuloController@create')->name('articulos.nuevoArticulo');
     Route::post('/partidas/crear','Almacen\PartidaController@create')->name('partidas.nuevaPartida');
     Route::get('/partidas/actualizar/{id}','Almacen\PartidaController@update')->name('partidas.actualizar');
-    Route::get('/partidas/eliminar/{id}','Almacen\PartidaController@destroy')->name('partidas.eliminar');
+    Route::post('/partidas/eliminar','Almacen\PartidaController@destroy')->name('partidas.eliminar');
     Route::post('/departamentos/buscaroficina', 'Almacen\ReporteController@getOficinas');
     Route::post('/facturas/buscarArticulo', 'Almacen\FacturaController@getArticulos');
     Route::post('/factura/registrar','Almacen\FacturaController@registrarFactura')->name('facturas.registrar');
@@ -89,7 +89,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'catalogos', 'as' => 'catalo
 	// CATALOGO DE ROLES
 	Route::get('/roles', function() { return view('catalogos.roles'); }); //Carga la vista de roles
 	Route::get('/get_roles','Catalogos\RolesController@get_roles'); //Obtiene los roles
-	Route::get('/add_rol', 'Catalogos\RolesController@create'); //LLeva al formulario de Guardar 
+	Route::get('/add_rol', 'Catalogos\RolesController@create'); //LLeva al formulario de Guardar
 	Route::post('/save_rol', 'Catalogos\RolesController@store'); //Guarda la información del rol
 	Route::put('/update_rol/{id}', 'Catalogos\RolesController@update'); //Edita la información del empleado
 	Route::get('/roles/edit/{id}','Catalogos\RolesController@edit'); //LLeva al formulario de Editar
@@ -102,14 +102,14 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'catalogos', 'as' => 'catalo
 	Route::post('/permisos/edit/{id}','Catalogos\PermisosController@edit'); //LLeva al formulario de Editar
 	Route::put('/permisos/update/{id}', 'Catalogos\PermisosController@update'); //Edita la información del permiso
 
-	// CATALOGO DE EMPLEADOS	
+	// CATALOGO DE EMPLEADOS
 	Route::get('/empleados', function() { return view('catalogos.empleado'); }); //Carga la vista de empleados
 	Route::get('/get_empleados','Catalogos\EmpleadoController@get_empleados');	//Obtiene los empleados
 	Route::get('/add_empleado', 'Catalogos\EmpleadoController@create');//LLeva al formulario de Guardar
 	Route::post('/empleado', 'Catalogos\EmpleadoController@store'); //Guarda la información del empleado
 	Route::get('/empleados/edit/{id}','Catalogos\EmpleadoController@edit'); //LLeva al formulario de Editar
 	Route::put('/empleados/update/{id}', 'Catalogos\EmpleadoController@update'); //Edita la información del empleado
-	
+
 });
 
 

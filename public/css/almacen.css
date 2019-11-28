@@ -367,6 +367,29 @@ section.content{
   box-shadow: 0 5px #999;
 }
 
+.btn-eliminar, .btn-eliminar:focus{
+    background-color: #7C2E0C;
+    border-color: #000000;
+    border-radius: 5px;
+    color: #FFFFFA;
+    opacity: 1;
+    margin-top: 0;
+    cursor: pointer;
+}
+
+.btn-eliminar[type="button"]:active, .btn-eliminar[type="submit"]:active{
+  background-color: #b05a35;
+  color: #FFFFFA;
+  box-shadow: 0 0 #666;
+  transform: translateY(4px);
+}
+
+.btn-eliminar:hover{
+  background-color: #aa3f10;
+  color: #FFFFFA;
+  box-shadow: 0 5px #999;
+}
+
 .btn-cancel, .btn-cancel:focus{
   background-color: transparent;
   border-color: #000000;

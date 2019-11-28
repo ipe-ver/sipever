@@ -135,10 +135,10 @@ class PartidaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-         $input = Input::only('nombre');
-         $nombre = trim($input['nombre']);
+         $nombre = $request->nombre;
+         $id= $request->id;
          if(empty($nombre)){
             return back()->with('warning','Porfavor seleccione una partida para reasignar los artículos');
          } else{

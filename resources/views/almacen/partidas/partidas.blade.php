@@ -97,7 +97,10 @@
                         <div class="modal-header">
                             <h3 class="modal-title" id="eliminarPartidaLabel">Eliminar Partida</h3>
                         </div>
-                        <form action="{{route('almacen.partidas.eliminar', $partida->id)}}" method="get" accept-charset="utf-8">
+                        <form action="{{route('almacen.partidas.eliminar')}}" method="post" accept-charset="utf-8">
+                            @csrf
+                            @method('POST')
+                            <input type="hidden" name="id" value="{{$partida->id}}">
                             <div class="modal-body">
                                 <h5>Para eliminar la partida {{$partida->nombre}} debe reasignar sus artículos a otra partida</h5>
                                 <select name="nombre" class="col-sm-6 form-control" dir="ltr" id="articuloGrupo" required >
@@ -113,7 +116,7 @@
                                 <div class="col-md-5 colm-form-btns pull-right">
                                     <div class="pull-right">
                                         <button type="button" id="btn-cancelar" data-dismiss="modal" class="btn btn-cancel">Cancelar</button>
-                                        <button type="submit" id="btn-guardar" class="btn btn-submit">Eliminar Partida</button>
+                                        <button type="submit" id="btn-eliminar" class="btn btn-eliminar">Eliminar Partida</button>
                                     </div>
                                 </div>
                             </div>

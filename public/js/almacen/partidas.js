@@ -78,18 +78,14 @@ var close = document.getElementsByClassName("closebtn");
             contadores[i]=0;
         }
         for (let index = 0; index < botones.length; index++) {
-            const panel_aux = document.getElementById("Partida"+index);
+            var panel_aux = document.getElementById("Partida"+index);
             var boton_guardar_aux = panel_aux.getElementsByClassName('btn-submit')[0];
             boton_guardar_aux.addEventListener('click', function(event){
                 var form_aux = document.getElementById(`partidaForm${index}`);
-                event.preventDefault();
-                console.log(form_aux);
                 if(form_aux.checkValidity()){
+                    console.log(index);
                     event.preventDefault();
-                    ('form completo');
                     if(!validateEach(index)){
-                        event.preventDefault();
-                        console.log('si pasó')
                         alert('Los datos ingresados son incorrectos');
                     }
                 }
@@ -153,6 +149,7 @@ var close = document.getElementsByClassName("closebtn");
         var newPartida = document.getElementById('newPartida');
         if(newPartida.checkValidity()){
            if(!validateNew()){
+            console.log('linea 153');
               event.preventDefault();
               alert('Los datos ingresados son incorrectos');
            }
